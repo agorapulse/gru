@@ -4,7 +4,6 @@ import com.agorapulse.gru.AbstractClient
 import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
-import com.agorapulse.gru.minions.HttpMinion
 import groovy.transform.CompileStatic
 import okhttp3.OkHttpClient
 
