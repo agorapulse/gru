@@ -1,0 +1,4 @@
+dependencies {
+    compile project(':gru')
+    compile "org.grails:grails-web-testing-support:${grailsTestingSupportVersion}"
+}

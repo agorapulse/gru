@@ -1,0 +1,6 @@
+dependencies {
+    compile "com.google.guava:guava:${guavaVersion}"
+    compile "joda-time:joda-time:${jodaTimeVersion}"
+    compile "org.spockframework:spock-core:$spockVersion"
+    compile "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
+}

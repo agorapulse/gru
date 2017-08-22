@@ -1,0 +1,178 @@
+buildscript {
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.2'
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
+    }
+}
+
+plugins {
+    id 'org.ajoberstar.github-pages' version '1.3.1'
+}
+
+apply plugin: 'org.asciidoctor.convert'
+
+allprojects {
+    repositories {
+        jcenter()
+        mavenCentral()
+        maven {
+            url "https://repo.grails.org/grails/core"
+        }
+        maven {
+            url 'https://repo.spring.io/release/'
+        }
+    }
+}
+
+
+dependencies {
+    // https://mvnrepository.com/artifact/io.spring.asciidoctor/spring-asciidoctor-extensions
+    asciidoctor group: 'io.spring.asciidoctor', name: 'spring-asciidoctor-extensions', version: '0.1.1.RELEASE'
+
+}
+
+String currentVersion = '0.1.0'
+
+version = currentVersion
+
+subprojects {
+    apply plugin: 'groovy'
+    apply plugin: 'checkstyle'
+    apply plugin: 'codenarc'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    group = 'com.agorapulse'
+
+    sourceCompatibility = 1.7
+    targetCompatibility = 1.7
+
+    repositories {
+       jcenter()
+    }
+
+    // don't forget to update version in CaseReportFormSerializer
+    version = currentVersion
+
+    jar {
+        manifest.attributes provider: 'gradle'
+    }
+
+    checkstyle {
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    }
+
+    codenarc {
+        configFile = rootProject.file('config/codenarc.xml')
+    }
+
+    test {
+        reports {
+            junitXml.enabled = true
+            html.enabled = true
+        }
+    }
+
+
+
+    // publishing
+    publishing {
+        publications {
+            groovyMaven(MavenPublication) {
+                from components.java
+
+                artifact sourcesJar {
+                    classifier "sources"
+                }
+
+                artifact javadocJar {
+                    classifier "javadoc"
+                }
+            }
+        }
+    }
+
+// set bintrayUser & bintrayKey in gradle.properties
+    bintray {
+
+        user = getPropertyOrUseDefault('bintrayUser', 'fake_user')
+        key = getPropertyOrUseDefault('bintrayKey', 'fake_key')
+        publications = ['groovyMaven']
+
+        def projectName = project.name
+        def projectDescription = project.description
+
+        pkg {
+            websiteUrl = 'http://metadataregistry.github.io/spreadsheet-builder/'
+            issueTrackerUrl = 'https://github.com/MetadataRegistry/spreadsheet-builder/issues'
+            vcsUrl = 'https://github.com/MetadataRegistry/spreadsheet-builder.git'
+
+            repo = 'model-catalogue' // or your repo name
+            userOrg = 'metadata'
+            name = projectName       // somehow project.* doesn't work in this closure
+            desc = projectDescription
+            licenses = ['Apache-2.0']
+        }
+        // dryRun = true // whether to run this as dry-run, without deploying
+    }
+
+    // custom tasks for creating source/javadoc jars
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar, javadocJar
+    }
+
+}
+
+// asciidoctor publishing
+asciidoctor {
+
+    sourceDir = file('docs')
+
+    resources {
+        from(sourceDir) {
+            include 'css/**', 'images/**'
+        }
+    }
+
+    attributes 'docinfo1': ['version': currentVersion],
+            'imagesdir': 'images',
+            'source-highlighter': 'highlight.js',
+            'stylesdir': 'css',
+            icons: 'font',
+            'toc': 'left',
+            version: project.version,
+            'projectUrl': 'https://github.com/MetadataRegistry/spreadsheet-builder'
+}
+
+githubPages {
+    repoUri = 'https://github.com/MetadataRegistry/spreadsheet-builder.git'
+
+    credentials {
+        username = getPropertyOrUseDefault('githubToken', '')
+        password = ''
+    }
+
+    pages {
+        from file(asciidoctor.outputDir.path + '/html5')
+    }
+}
+
+publishGhPages.dependsOn asciidoctor
+
+String getPropertyOrUseDefault(String propertyName, String defaultValue) {
+    hasProperty(propertyName) ? getProperty(propertyName) : defaultValue
+}

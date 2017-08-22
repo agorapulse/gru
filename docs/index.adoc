@@ -1,0 +1,491 @@
+Gru - Grails Unit Testing Framework
+===================================
+
+[.ribbon]
+image::ribbon.png[link={projectUrl}]
+
+Gru is Grails unit testing framework which tests controllers in context of other
+Grails artifacts such as url mappings or interceptors. Gru steals a lot from
+link:https://testing.grails.org/latest/guide/index.html[Grails Testing Support]
+
+.Minimal Usage
+[source,groovy]
+----
+import grails.testing.web.controllers.ControllerUnitTest
+import org.agorapulse.gru.Gru
+import org.junit.Rule
+import spock.lang.Specification
+
+class MoonControllerSpec extends Specification
+    implements ControllerUnitTest<MoonController> {                                     // <1>
+
+    @Rule Gru<MoonControllerSpec> gru = Gru.steal(this)                                 // <2>
+
+    void 'get the moon'() {
+        expect:
+            gru.test controller.&moon, {                                                // <3>
+                get '/moons/earth/moon'                                                 // <4>
+            }
+    }
+}
+----
+<1> The only requirement for specification is that it must implement `ControllerUnitTest`
+<2> `Gru` must be used as JUnit `@Rule` and initialized with the specification object
+<3> `Gru` executes the action under test to verify it doesn't throw any exceptions and it returns status `200`
+<4> `Gru` verifies that executing `GET` request to URL `/moons/earth/moon` actually executes the action under test
+
+
+If you declare test in `expect:` block then the verification happens automatically.
+You can also call `gru.verify()` manually to fully leverage Spock's power such as interaction based testing.
+
+.Splitting Test and Verification Phase
+[source,groovy]
+----
+import grails.testing.web.controllers.ControllerUnitTest
+import org.agorapulse.gru.Gru
+import org.junit.Rule
+import spock.lang.Specification
+
+class MoonControllerSpec extends Specification
+    implements ControllerUnitTest<MoonController> {
+
+    @Rule Gru<MoonControllerSpec> gru = Gru.steal(this)
+
+    void 'get the moon'() {
+        given:
+            MoonService moonService = Mock(MoonService)
+            controller.moonService = moonService                                        // <1>
+        when:
+            gru.test controller.&moon, {                                                // <2>
+                get '/moons/earth/moon'
+            }
+        then:
+            1 * moonService.findByPlanetAndName("earth", "moon")                        // <3>
+            gru.verify()                                                                // <4>
+    }
+}
+----
+<1> `moonService` of the controller is replaced with mock
+<2> `moon` action is executed within the test method
+<3> Spock verifies that `findByPlanetAndName` method was called once
+<4> `Gru` verifies url mapping presence, returned http status and no exception being thrown
+
+
+Basic HTTP Customisation and Verification
+-----------------------------------------
+
+Each Gru tests begins with HTTP interaction. It support following HTTP methods: `head`, `post`, `put`, `patch`,
+`delete`, `options`, `trace` and `get`. If URL is not specified, it defaults to `"$controllerName/$actionName"`.
+Parameters are extracted using the appropriate URL mapping but additional parameters can be supplied. You can also
+specify HTTP headers.
+
+Following expectations are supported:
+
+* `status` - defaults to `200` or `302` is `redirect` is expected, you can access `HttpStatus` constants directly inside `expect` definition
+* `headers` - map of expected headers, can be called multiple times
+* `redirect` - redirect URI including parameters
+* `forward` - forwarded URI including parameters
+
+
+.Status
+[source, groovy]
+----
+void 'steal the moon'() {
+    expect:
+        gru.test controller.&steal, {
+            delete '/moons/earth/moon'                                                  // <1>
+            expect {
+                status NO_CONTENT                                                       // <2>
+            }
+        }
+}
+----
+<1> pretend executing `DELETE` request on `/moons/earth/moon` URL
+<2> expect the action respond with `HttpStatus.NO_CONTENT
+
+.Headers
+[source, groovy]
+----
+void 'enter secret chamber'() {
+    expect:
+        gru.test controller.&enter, {
+            post '/rooms/enter/secret-chamber', {
+                headers Authorization: 'Bearer IAMKevin'                                // <1>
+            }
+            expect {
+                headers 'X-Alarm-Message': 'Success'                                    // <2>
+            }
+        }
+}
+----
+<1> `Authorization` header is sent with the mock request
+<2> Test fails if the controller does not respond with header `X-Alarm-Message` with value `Success`
+
+.Redirect and Parameters
+[source, groovy]
+----
+void 'create new moon'() {
+    expect:
+        gru.test controller.&save, {
+            post '/moons/earth', {
+                params name: 'Lucy'                                                     // <1>
+            }
+            expect {
+                redirect '/moons/earth/lucy'                                            // <2>
+            }
+        }
+}
+----
+
+<1> Adds parameter `name` to the mock request
+<2> Expects redirecting to detail `/moons/earth/lucy` after new moon is created
+
+.Forward
+[source, groovy]
+----
+void 'create new moon on planet which does not exist'() {
+    expect:
+        gru.test controller.&save, {
+            post '/moons/pluto', {
+                params name: 'Charon'
+            }
+            expect {
+                forward '/errors/notAPlanet?id=pluto'                                   // <1>
+            }
+        }
+}
+----
+<1> Verifies that the action is forwarded to URI `/errors/notAPlanet?id=pluto`
+
+Model Verification
+------------------
+If your controller returns model object, you can verify this object using `model` method inside `expect` definition.
+
+.Model
+[source, groovy]
+----
+void 'get the moon'() {
+    expect:
+        gru.test controller.&moon, {
+            get '/moons/earth/moon'
+            expect {
+                model name: 'Moon'                                                      // <1>
+            }
+        }
+}
+----
+<1> Verifies that controller return a map with single entry `name` with value `Moon`
+
+JSON Support
+------------
+You can pretend sending JSON body as well as verifying JSON body returned by the controller. Use `json` method
+inside request definition or `expect` definition to do so. The responded JSON is verified usin https://github.com/lukas-krecan/JsonUnit[JsonUnit].
+
+.JSON
+[source, groovy]
+----
+void 'create new moon'() {
+    expect:
+        gru.test controller.&save, {
+            post '/moons/earth', {
+                json 'createNewMoonRequest.json'                                        // <1>
+            }
+            expect {
+                json 'createNewMoonResponse.json'                                       // <2>
+            }
+        }
+}
+----
+
+.createNewMoonResponse.json
+[source, json]
+----
+{
+    "name": "Moon",
+    "created": "${json-unit.matches:isoDateNow}"
+}
+----
+
+<1> Pretends sending JSON request loaded from file, see note for file location
+<2> Verifies the similarity of returned file using `JsonUnit`, see note for file location
+
+
+
+[NOTE]
+JSON files are loaded relatively to directory having the same name as the current specification and it is placed
+in the same directory corresponding the package of the the current specification. For example if your specification name
+is `org.example.ExampleSpec` then `createNewMoonResponse.json` file's path should be `org/example/ExampleSpec/createNewMoonResponse.json`.
+
+[TIP]
+Fixture JSON files are created automatically if missing. Empty object (`{}`) is created for missing request JSON file and JSON file
+with the content same as the one returned from the controller is created if response file is missing but exception is thrown
+so you have to run the test again and verify it is repeatable. Fixture files are generated inside directory from system property `TEST_RESOURCES_FOLDER` or
+in `src/test/resources` relatively to the working directory. See the following example how to easily set the property in Gradle.
+
+.Setting Directory for Generated Fixtures in Gradle
+[source,groovy]
+----
+test {
+    systemProperty 'TEST_RESOURCES_FOLDER', new File(project.projectDir, 'src/test/resources').canonicalPath
+}
+----
+
+JsonUnit Primer
+~~~~~~~~~~~~~~~
+
+There are built in and custom placeholders which can be used when evaluating the JSON response:
+
+.Default JsonUnit Placeholders
+[options="header"]
+|=======================================================================================================================
+| Placeholder                       | Description
+| `"${json-unit.ignore}"`           | Ignore content of the propery
+| `"${json-unit.regex}[A-Z]+"`      | Content must match regular expression
+| `"${json-unit.any-string}"`       | Any string
+| `"${json-unit.any-boolean}"`      | Any boolean
+| `"${json-unit.any-number}"`       | Any number
+|=======================================================================================================================
+
+
+.Custom Placeholders
+[options="header"]
+|=======================================================================================================================
+| Placeholder                                       | Description
+| `"${json-unit.matches:positiveIntegerString}"`    | Any account id (currently numerical strings)
+| `"${json-unit.matches:isoDate}"`                  | Any date in ISO format
+| `"${json-unit.matches:isoDateNow}"`               | ISO within last hour
+| `"${json-unit.matches:url}"`                      | Any URL (string parsable by `java.net.URL`)
+|=======================================================================================================================
+
+
+You can customize `JsonUnit` fluent assertion within `json` block inside `expect` definition:
+
+.JsonUnit Customisation
+[source, groovy]
+----
+void 'create new moon'() {
+    expect:
+        gru.test controller.&save, {
+            post '/moons/earth', {
+                json 'createNewMoonRequest.json'
+            }
+            expect {
+                json 'createNewMoonResponse.json'
+                json {
+                    withTolerance(0.1)                                                  // <1>
+                    .withMatcher(                                                       // <2>
+                        'negativeIntegerString',
+                        MatchesPattern.matchesPattern(/-\d+/)
+                    )
+                }
+            }
+        }
+}
+----
+<1> Sets the tolerance of decimal numbers to `0.1`
+<2> Adds new matcher which can be used as `"${json-unit.matches:negativeIntegerString}"`
+
+[WARNING]
+`JsonFluentAssert` is immutable, so only last statement actually matters. That is why `.withMatcher` is called
+as method chain.
+
+URL Mappings Support
+--------------------
+By default, Gru uses URL mappings defined in `UrlMappings` in the default package. You can
+include other url mappings using `include` method inside test definition. You can use name of the mapping class
+for URL mappings declared without any package. You can include URL mappings for every test in the class by using
+`configure` method.
+
+.URL Mappings
+[source, groovy]
+----
+@Rule Gru<MoonControllerSpec> gru = Gru.steal(this).configure {
+    include 'OtherUrlMappings'                                                          // <1>
+}
+
+void 'get the moon (satellite mapping)'() {
+    expect:
+        gru.test controller.&moon, {
+            include AnotherUrlMappings                                                  // <2>
+            get '/satellite/earth/moon'                                                 // <3>
+        }
+}
+----
+<1> Include url mappings by class name for every test in the current specification
+<2> Include url mappings for single test using class reference
+<3> Mapping from different url mappings is recognized
+
+Interceptors Support
+--------------------
+If you're controller heavily depends on interceptor it is sometimes better to test the interceptors and controllers as
+a single unit. You can include interceptors into test in similar way as url mappings using the `include` method.
+Once the interceptor is included it must match the given URL otherwise exception is thrown in the verification phase.
+
+
+.Interceptors
+[source, groovy]
+----
+@Rule Gru<MoonControllerSpec> gru = Gru.steal(this).configure {
+    include VectorInterceptor                                                           // <1>
+}
+
+void 'steal the moon (satellite mapping)'() {
+    expect:
+        gru.test controller.&steal, {
+            delete '/moons/earth/moon'                                                  // <2>
+            expect {
+                status NOT_FOUND                                                        // <3>
+            }
+        }
+}
+
+----
+<1> Include interceptor for every test in the current specification
+<2> Make the same call as in one of the previous examples
+<3> But get different results as the execution flow was modified by the interceptor
+
+
+Extending Gru
+-------------
+
+Gru DSL can be easily extend. Gru uses minions whenever it is possible. `Minion` interface defines
+following 4 methods:
+
+.Minion
+[source,java]
+----
+public interface Minion<U extends ControllerUnitTest<?>> {                              // <1>
+    int getIndex();                                                                     // <2>
+    GruContext beforeRun(U unitTest, TestDefinition definition, GruContext ctx);        // <3>
+    GruContext afterRun(U unitTest, TestDefinition definition, GruContext ctx);         // <4>
+    void verify(U unitTest, TestDefinition definition, GruContext ctx)                  // <5>
+        throws AssertionError;
+}
+----
+<1> `U` refers to the class of unit test where Gru is used
+<2> `getIndex()` method return the integer number which is used to put minions to correct execution order, as usual,
+`beforeRun` and `verify` methods are executed in ascending order and `afterRun` in descending order.
+<3> `beforeRun` is run before the controller's action execution
+<4> `afterRun` is run after controller's action execution
+
+`TestDefinition` represents the object built from the DSL. `GruContext` is immutable object
+which holds any error been thrown during the execution phase and also the result of the execution.
+
+Here is an example of `Minion` which add ability to specify security role:
+
+.Role Minion
+[source,groovy]
+----
+@CompileStatic
+class RolesMinion<U extends ControllerUnitTest<?>>
+    extends AbstractMinion<U>  {                                                        // <1>
+
+    final int index = PARAMETERS_MINION_INDEX + 100                                     // <2>
+
+    String role                                                                         // <3>
+    SecurityException exception
+
+    @Override
+    GruContext beforeRun(U unitTest, TestDefinition definition, GruContext context) {
+        if (role) {
+            SecurityUtils.setRole(unitTest.controller.request,role)                     // <4>
+        }
+        return context
+    }
+
+    @Override
+    GruContext afterRun(U unitTest, TestDefintion definition, GruContext context) {
+        if (context.hasError(SecurityException)) {                                      // <5>
+            exception = context.error
+            return context.clearError(SecurityException)                                // <6>
+        }
+        return context
+    }
+
+    @Override
+    void verify(U unitTest, TestDefinition testDefinition, GruContext context)
+        throws AssertionError {
+        if (exception) {
+            throw new AssertionError("Security constraints weren't met!", exception)    // <7>
+        }
+    }
+
+}
+----
+<1> `AbstractMinion<U>` provides stub implementation of every method except `getOrder()` so you only have to implement ones which are important for you
+<2> There are constants for indicies for base types are defined directly in `Minion` interface which you can use to put your minion in desired order
+<3> Each minion holds its own state, new minions are created for each test (feature method)
+<4> Some code to set the role for the current request
+<5> You can check for specific exception being thrown from the controller's action method
+<6> You can clear the specific exception from the context
+<7> It is common to just throw `AssertionError` from the verification phase, or just use Groovy's power `assert`
+
+
+.Role Minion Usage
+[source,groovy]
+----
+void 'get the moon'() {
+    given:
+        gru.engage(new RoleMinion<MyRoleSpec>(role: 'villain'))                         <1>
+    expect:
+        gru.test controller.&moon, {
+            get '/moons/earth/moon'
+        }
+}
+----
+<1> You can add new minion to the squad with `engage` method
+
+
+Although it is possible to use use `engage` method to add new minion, it is more convenient to enhance the DSL with new
+method. As our minion is enhancing the request definition, we simply add new extension method to `RequestDefinitionBuilder` object:
+
+.Extension Class
+[source,groovy]
+----
+class SecurityGruExtensions {
+
+    static RequestDefinitionBuilder role(RequestDefinitionBuilder self,               // <1>
+        String aRole) {
+        self.command(RoleMinion) {                                                      // <2>
+            role = aRole
+        }
+    }
+
+}
+
+----
+<1> New extension method `role` will be added to `RequestDefinitionBuilder` class
+<2> `command` method will add new minion to the squad if not already present and it allows to do additional configuration such as storing the role's value, there is its counterpart `ask` if you want to get information from another minion from the squad
+
+You have to create extensions class descriptor in order to make the extension methods available in the code:
+
+.src/main/resources/META-INF/services/org.codehaus.groovy.runtime.ExtensionModule
+----
+moduleName = my-custom-gru-support                                                      # <1>
+moduleVersion = 1.0                                                                     # <2>
+extensionClasses = org.example.SecurityGruExtensions                                    # <3>
+----
+<1> Name your module whatever you want
+<2> Set the version of the module, later version always overrides the previous one if more than one gets by any reason the classpath
+<3> Add fully classified name of your extension class into `extensionClasses`
+
+See
+
+After that the new extension method can be used in any test
+
+.Using New Extension Method
+[source,groovy)
+----
+void 'get the moon'() {
+    expect:
+        gru.test controller.&moon, {
+            get '/moons/earth/moon', {
+                role 'villain'                                                          // <1>
+            }
+        }
+}
+----
+<1> You can use new extension method directly in the DSL definition
+
+NOTE: As of IntelliJ IDEA 2017.2 you get false warning about the wrong method's argument being used. There's nothing to
+do to improve it so you only have to ignore it at the moment.
