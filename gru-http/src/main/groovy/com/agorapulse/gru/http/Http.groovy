@@ -54,14 +54,7 @@ class Http extends AbstractClient {
 
     @Override
     GruContext run(Squad squad, GruContext context) {
-        String redirectUrl = squad.ask(HttpMinion) { redirectUri }
-        okhttp3.Response response
-        if (redirectUrl) {
-            // do not follow redirects if redirect uri is set
-            response = httpClient.newBuilder().followRedirects(false).build().newCall(request.buildOkHttpRequest()).execute()
-        } else {
-            response = httpClient.newCall(request.buildOkHttpRequest()).execute()
-        }
+        okhttp3.Response response = httpClient.newCall(request.buildOkHttpRequest()).execute()
 
         this.response = new GruHttpResponse(response)
 

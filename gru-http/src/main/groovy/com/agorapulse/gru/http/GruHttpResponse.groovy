@@ -20,6 +20,9 @@ class GruHttpResponse implements Client.Response {
 
     @Override
     int getStatus() {
+        if (response.priorResponse()?.redirect) {
+            return response.priorResponse().code()
+        }
         response.code()
     }
 
@@ -35,6 +38,6 @@ class GruHttpResponse implements Client.Response {
 
     @Override
     String getRedirectUrl() {
-        return response.header('Location')
+        return response.priorResponse()?.header('Location')
     }
 }
