@@ -98,7 +98,6 @@ subprojects {
 
 // set bintrayUser & bintrayKey in gradle.properties
     bintray {
-
         user = getPropertyOrUseDefault('bintrayUser', 'fake_user')
         key = getPropertyOrUseDefault('bintrayKey', 'fake_key')
         publications = ['groovyMaven']
@@ -107,12 +106,12 @@ subprojects {
         def projectDescription = project.description
 
         pkg {
-            websiteUrl = 'http://metadataregistry.github.io/spreadsheet-builder/'
-            issueTrackerUrl = 'https://github.com/MetadataRegistry/spreadsheet-builder/issues'
-            vcsUrl = 'https://github.com/MetadataRegistry/spreadsheet-builder.git'
+            websiteUrl = 'http://agorapulse.github.io/gru/'
+            issueTrackerUrl = 'https://github.com/agorapulse/gru/issues'
+            vcsUrl = 'https://github.com/agorapulse/agorapulse.git'
 
-            repo = 'model-catalogue' // or your repo name
-            userOrg = 'metadata'
+            repo = 'libs' // or your repo name
+            userOrg = 'agorapulse'
             name = projectName       // somehow project.* doesn't work in this closure
             desc = projectDescription
             licenses = ['Apache-2.0']
@@ -159,7 +158,7 @@ asciidoctor {
 }
 
 githubPages {
-    repoUri = 'https://github.com/MetadataRegistry/spreadsheet-builder.git'
+    repoUri = 'https://github.com/agorapulse/gru.git'
 
     credentials {
         username = getPropertyOrUseDefault('githubToken', '')
