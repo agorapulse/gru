@@ -22,14 +22,10 @@ class GruHttpRequest implements Client.Request {
     private final Map<String, String> parameters = [:]
     private final Request.Builder builder = new Request.Builder()
     private RequestBody body
-    private final String baseUrl
 
+    String baseUri
     String method = TestDefinitionBuilder.GET
     String uri
-
-    GruHttpRequest(String baseUrl) {
-        this.baseUrl = baseUrl
-    }
 
     @Override
     void setUri(String uri) {
@@ -57,7 +53,7 @@ class GruHttpRequest implements Client.Request {
     }
 
     Request buildOkHttpRequest() {
-        HttpUrl.Builder url = HttpUrl.parse(baseUrl).newBuilder().addPathSegments(uri)
+        HttpUrl.Builder url = baseUri ? HttpUrl.parse(baseUri).newBuilder().addPathSegments(uri) : HttpUrl.parse(uri).newBuilder()
         if (parameters) {
             if (method == TestDefinitionBuilder.GET || body) {
                 parameters.each { key, value ->

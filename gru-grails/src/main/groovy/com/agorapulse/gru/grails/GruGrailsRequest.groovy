@@ -13,6 +13,9 @@ import org.grails.plugins.testing.GrailsMockHttpServletRequest
     private final GrailsMockHttpServletRequest request
     private final ControllerUnitTest unitTest
 
+    String baseUri = ''
+    String uri = ''
+
     GruGrailsRequest(GrailsMockHttpServletRequest request, ControllerUnitTest unitTest) {
         this.request = request
         this.unitTest = unitTest
@@ -20,12 +23,13 @@ import org.grails.plugins.testing.GrailsMockHttpServletRequest
 
     @Override
     void setUri(String uri) {
-        request.requestURI = uri
+        this.uri = uri
+        updateRequestUri()
     }
 
-    @Override
-    String getUri() {
-        return request.requestURI
+    void setBaseUri(String uri) {
+        this.baseUri = uri
+        updateRequestUri()
     }
 
     @Override
@@ -51,5 +55,9 @@ import org.grails.plugins.testing.GrailsMockHttpServletRequest
     @Override
     void addParameter(String name, Object value) {
         unitTest.params.put(name, value)
+    }
+
+    private void updateRequestUri() {
+        unitTest.request.requestURI = "$baseUri$uri".replaceAll('/+', '/')
     }
 }

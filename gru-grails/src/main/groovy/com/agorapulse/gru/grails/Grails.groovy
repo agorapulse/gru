@@ -23,7 +23,7 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
     private GruGrailsResponse response
 
     private Grails(U unitTest) {
-        super('', unitTest)
+        super(unitTest)
     }
 
     @Override

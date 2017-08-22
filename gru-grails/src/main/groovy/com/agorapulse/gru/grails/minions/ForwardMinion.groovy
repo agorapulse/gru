@@ -19,7 +19,7 @@ class ForwardMinion extends AbstractMinion<Grails> {
     }
 
     @Override
-    void doVerify(Grails grails, Squad squad, GruContext context) throws AssertionError {
+    void doVerify(Grails grails, Squad squad, GruContext context) throws Throwable {
         if (forwardedUri) {
             assert forwardedUri == grails.unitTest.response.forwardedUrl
         }

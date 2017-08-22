@@ -19,7 +19,7 @@ class ModelMinion extends AbstractMinion<Grails> {
     }
 
     @Override
-    void doVerify(Grails grails, Squad squad, GruContext context) throws AssertionError {
+    void doVerify(Grails grails, Squad squad, GruContext context) throws Throwable {
         if (model != null) {
             assert context.result == model
         }

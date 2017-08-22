@@ -57,4 +57,6 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
     TestDefinitionBuilder get(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
     TestDefinitionBuilder get(String uri);
+
+    TestDefinitionBuilder baseUri(String uri);
 }

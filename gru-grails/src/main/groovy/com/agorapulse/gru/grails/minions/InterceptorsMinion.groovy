@@ -98,7 +98,7 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
     }
 
     @Override
-    void doVerify(Grails grails, Squad squad, GruContext resultAndError) throws AssertionError {
+    void doVerify(Grails grails, Squad squad, GruContext resultAndError) throws Throwable {
         if (interceptors) {
             for (Class interceptorClass in interceptors) {
                 Interceptor interceptor = grails.unitTest.applicationContext.getBean(interceptorClass) as Interceptor

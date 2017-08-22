@@ -4,6 +4,7 @@ import com.agorapulse.gru.AbstractClient
 import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
+import com.agorapulse.gru.minions.HttpMinion
 import groovy.transform.CompileStatic
 import okhttp3.OkHttpClient
 
@@ -18,13 +19,13 @@ class Http extends AbstractClient {
     private GruHttpRequest request
     private GruHttpResponse response
 
-    static Http to(String baseUrl, Object unitTest) {
-        return new Http(baseUrl, unitTest)
+    static Http steal(Object unitTest) {
+        return new Http(unitTest)
     }
 
-    private Http(String baseUrl, Object unitTest) {
-        super(baseUrl, unitTest)
-        request = new GruHttpRequest(baseUrl)
+    private Http(Object unitTest) {
+        super(unitTest)
+        request = new GruHttpRequest()
     }
 
     @Override
@@ -42,18 +43,25 @@ class Http extends AbstractClient {
 
     @Override
     void reset() {
-        request = new GruHttpRequest(baseUrl)
+        request = new GruHttpRequest()
         response = null
     }
 
     @Override
     Object getUnitTest() {
-        return unitTest
+        return this.@unitTest
     }
 
     @Override
     GruContext run(Squad squad, GruContext context) {
-        okhttp3.Response response = httpClient.newCall(request.buildOkHttpRequest()).execute()
+        String redirectUrl = squad.ask(HttpMinion) { redirectUri }
+        okhttp3.Response response
+        if (redirectUrl) {
+            // do not follow redirects if redirect uri is set
+            response = httpClient.newBuilder().followRedirects(false).build().newCall(request.buildOkHttpRequest()).execute()
+        } else {
+            response = httpClient.newCall(request.buildOkHttpRequest()).execute()
+        }
 
         this.response = new GruHttpResponse(response)
 

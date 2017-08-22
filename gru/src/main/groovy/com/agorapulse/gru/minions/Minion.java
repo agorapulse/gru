@@ -24,13 +24,7 @@ public interface Minion {
     Comparator<Minion> COMPARATOR = new Comparator<Minion>() {
         @Override
         public int compare(Minion o1, Minion o2) {
-            if (o1.getIndex() == o2.getIndex()) {
-                return 0;
-            }
-            if (o1.getIndex() < o2.getIndex()) {
-                return -1;
-            }
-            return 1;
+            return Integer.compare(o1.getIndex(), o2.getIndex());
         }
     };
 
@@ -65,10 +59,10 @@ public interface Minion {
      *
      * @param client controller unit test
      * @param squad minion's colleagues
-     * @param context context of the execution, in this phase you can't modify the context, you can just throw {@link AssertionError} based on the current context state
-     * @throws AssertionError if any of the conditions are not met
+     * @param context context of the execution, in this phase you can't modify the context, you can just throw any {@link Throwable} based on the current context state
+     * @throws Throwable if any of the conditions are not met
      */
-    void verify(Client client, Squad squad, GruContext context) throws AssertionError;
+    void verify(Client client, Squad squad, GruContext context) throws Throwable;
 
 
 }

@@ -38,7 +38,7 @@ public abstract class AbstractMinion<C extends Client> implements Minion {
     }
 
     @Override
-    public final void verify(Client client, Squad squad, GruContext context) throws AssertionError {
+    public final void verify(Client client, Squad squad, GruContext context) throws Throwable {
         try {
             C c = clientType.cast(client);
             doVerify(c, squad, context);
@@ -56,6 +56,6 @@ public abstract class AbstractMinion<C extends Client> implements Minion {
         return context;
     }
 
-    protected void doVerify(C client, Squad squad, GruContext context) throws AssertionError {}
+    protected void doVerify(C client, Squad squad, GruContext context) throws Throwable {}
 
 }

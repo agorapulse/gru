@@ -227,6 +227,12 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
         return request(uri, GET);
     }
 
+    @Override
+    public TestDefinitionBuilder baseUri(String uri) {
+        client.getRequest().setBaseUri(uri);
+        return this;
+    }
+
     private TestDefinitionBuilder request(String aUrl, String aMethod, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         client.getRequest().setUri(aUrl);
         client.getRequest().setMethod(aMethod);

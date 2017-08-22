@@ -48,6 +48,7 @@ dependencies {
     testRuntime "net.sourceforge.htmlunit:htmlunit:2.18"
 
     testCompile project(':gru-grails')
+    testCompile project(':gru-http')
 }
 
 bootRun {

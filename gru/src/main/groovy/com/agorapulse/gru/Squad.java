@@ -100,8 +100,8 @@ public class Squad {
         return ctx;
     }
 
-    void verify(Client client, GruContext context) throws AssertionError, GroovyAssertAwareMultipleFailureException {
-        List<Throwable> errors = new ArrayList<Throwable>();
+    void verify(Client client, GruContext context) throws Throwable {
+        List<Throwable> errors = new ArrayList<>();
 
         for (Minion minion : sorted) {
             try {
@@ -112,12 +112,7 @@ public class Squad {
         }
 
         if (errors.size() == 1) {
-            if (errors.get(0) instanceof AssertionError) {
-                throw (AssertionError) errors.get(0);
-
-            } else {
-                throw new AssertionError(errors.get(0));
-            }
+            throw errors.get(0);
         }
 
         if (errors.size() > 0) {

@@ -9,8 +9,7 @@ import java.util.List;
 
 public abstract class AbstractClient implements Client {
 
-    protected AbstractClient(String baseUrl, Object unitTest) {
-        this.baseUrl = baseUrl;
+    protected AbstractClient(Object unitTest) {
         this.unitTest = unitTest;
     }
 
@@ -26,12 +25,12 @@ public abstract class AbstractClient implements Client {
 
     @Override
     public String getCurrentDescription() {
-        return getRequest().getMethod() + " on " + baseUrl + getRequest().getUri();
+        return getRequest().getMethod() + " on " + getRequest().getBaseUri() + getRequest().getUri();
     }
 
     @Override
     public List<Minion> getInitialSquad() {
-        return new ArrayList<Minion>();
+        return new ArrayList<>();
     }
 
     @Override
@@ -39,6 +38,5 @@ public abstract class AbstractClient implements Client {
         return getCurrentDescription();
     }
 
-    protected final String baseUrl;
     protected final Object unitTest;
 }

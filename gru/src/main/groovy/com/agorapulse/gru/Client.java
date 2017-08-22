@@ -27,6 +27,10 @@ public interface Client {
 
     interface Request {
 
+        String getBaseUri();
+
+        void setBaseUri(String baseUri);
+
         String getUri();
 
         void setUri(String uri);

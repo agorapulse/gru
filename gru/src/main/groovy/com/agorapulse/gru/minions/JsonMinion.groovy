@@ -48,7 +48,7 @@ class JsonMinion extends AbstractMinion<Client> {
     }
 
     @Override
-    void doVerify(Client client, Squad squad, GruContext resultAndError) throws AssertionError {
+    void doVerify(Client client, Squad squad, GruContext resultAndError) throws Throwable {
         if (responseJsonFile) {
             String responseText = load(client, responseJsonFile)
             if (!responseText) {
