@@ -1,5 +1,5 @@
-Gru - Grails Unit Testing Framework
-===================================
+Gru - HTTP Testing Framework
+============================
 
 [.ribbon]
 image::ribbon.png[link={projectUrl}]

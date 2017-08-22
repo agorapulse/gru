@@ -2,7 +2,7 @@ package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.RequestDefinitionBuilder
 import com.agorapulse.gru.ResponseDefinitionBuilder
-import com.agorapulse.gru.DefaultTestDefinitionBuilder
+import com.agorapulse.gru.TestDefinitionBuilder
 import com.agorapulse.gru.grails.minions.ForwardMinion
 import com.agorapulse.gru.grails.minions.InterceptorsMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
@@ -23,7 +23,7 @@ class GrailsGruExtensions {
      * @param type class of the artifact
      * @return self
      */
-    static <U extends ControllerUnitTest<?>> DefaultTestDefinitionBuilder include(DefaultTestDefinitionBuilder self, Class type) {
+    static <U extends ControllerUnitTest<?>> TestDefinitionBuilder include(TestDefinitionBuilder self, Class type) {
         if (type.name.endsWith('UrlMappings')) {
             self.command(UrlMappingsMinion) { urlMappings.add(type) }
         } else if (type.name.endsWith('Interceptor')) {

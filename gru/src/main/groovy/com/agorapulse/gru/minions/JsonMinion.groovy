@@ -38,7 +38,7 @@ class JsonMinion extends AbstractMinion<Client> {
         if (requestJsonFile) {
             String requestText = load(client, requestJsonFile)
             if (!requestText) {
-                saveRresource(client.getFixtureLocation(requestJsonFile), '{\n\n}')
+                saveResource(client.getFixtureLocation(requestJsonFile), '{\n\n}')
                 log.warning("JSON fixture file is missing at ${client.getFixtureLocation(requestJsonFile)}. New file was created.")
                 requestText = '{}'
             }
@@ -53,7 +53,7 @@ class JsonMinion extends AbstractMinion<Client> {
             String responseText = load(client, responseJsonFile)
             if (!responseText) {
                 responseText = client.response.text
-                saveRresource(client.getFixtureLocation(responseJsonFile), JsonOutput.prettyPrint(responseText))
+                saveResource(client.getFixtureLocation(responseJsonFile), JsonOutput.prettyPrint(responseText))
                 log.warning("JSON fixture file is missing at ${client.getFixtureLocation(responseJsonFile)}. New file was created with content:\n$responseText")
             }
             assert !responseText || similar(client.response.text, responseText)
@@ -93,7 +93,7 @@ class JsonMinion extends AbstractMinion<Client> {
         stream.text
     }
 
-    private void saveRresource(String path, String content) {
+    private void saveResource(String path, String content) {
         if (!content) {
             return
         }

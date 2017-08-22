@@ -35,16 +35,12 @@ dependencies {
 
 }
 
-String currentVersion = '0.1.0'
+String currentVersion = '0.1.1'
 
 version = currentVersion
 
 subprojects {
     apply plugin: 'groovy'
-    apply plugin: 'checkstyle'
-    apply plugin: 'codenarc'
-    apply plugin: 'maven-publish'
-    apply plugin: 'com.jfrog.bintray'
 
     group = 'com.agorapulse'
 
@@ -62,14 +58,6 @@ subprojects {
         manifest.attributes provider: 'gradle'
     }
 
-    checkstyle {
-        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
-    }
-
-    codenarc {
-        configFile = rootProject.file('config/codenarc.xml')
-    }
-
     test {
         reports {
             junitXml.enabled = true
@@ -78,6 +66,23 @@ subprojects {
     }
 
 
+    if (it.name.startsWith('examples/')) {
+        // no style checks and publishing for examples
+        return
+    }
+
+    apply plugin: 'checkstyle'
+    apply plugin: 'codenarc'
+    apply plugin: 'maven-publish'
+    apply plugin: 'com.jfrog.bintray'
+
+    checkstyle {
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+    }
+
+    codenarc {
+        configFile = rootProject.file('config/codenarc.xml')
+    }
 
     // publishing
     publishing {

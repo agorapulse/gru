@@ -1,4 +1,4 @@
 rootProject.name = 'gru'
 
-include 'gru', 'gru-grails', 'gru-http'
+include 'gru', 'gru-grails', 'gru-http', 'examples/heist'
 

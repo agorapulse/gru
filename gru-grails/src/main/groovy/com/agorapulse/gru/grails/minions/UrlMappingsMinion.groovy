@@ -106,7 +106,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
         UrlMappingInfo mappingMatched = mappingInfos.find { mapping ->
             mapping.configure(unitTest.webRequest)
             return getControllerName(unitTest) == mapping.controllerName &&
-                getActionName(unitTest) != (mapping.actionName ?: controllerClass.defaultAction)
+                getActionName(unitTest) == (mapping.actionName ?: controllerClass.defaultAction)
         }
 
         if (!mappingMatched) {
