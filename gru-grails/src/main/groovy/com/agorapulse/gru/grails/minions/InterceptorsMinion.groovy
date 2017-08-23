@@ -39,7 +39,7 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
             }
 
             interceptorAdapter = grails.unitTest.applicationContext.getBean(GrailsInterceptorHandlerInterceptorAdapter)
-            interceptorAdapter.setInterceptors(grails.unitTest.applicationContext.getBeansOfType(Interceptor).values() as Interceptor[])
+            interceptorAdapter.setInterceptors(grails.unitTest.applicationContext.getBeansOfType(Interceptor, true, false).values() as Interceptor[])
 
             if (!interceptorAdapter.preHandle(grails.unitTest.request, grails.unitTest.response, null)) {
                 return context.withError(new NotHandled())
@@ -57,13 +57,15 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
 
     @Override
     @SuppressWarnings(['Instanceof', 'CatchException'])
-    GruContext doAfterRun(Grails grails, Squad squad, GruContext context) {
+    GruContext doAfterRun(Grails grails, Squad squad, GruContext ctx) {
+        GruContext context = ctx
+
         if (!interceptorAdapter) {
             return context
         }
 
         boolean preHandled = !context.hasError(NotHandled)
-        context.cleanError(NotHandled)
+        context = context.cleanError(NotHandled)
         if (context.hasError(Exception)) {
             return afterCompletionWithError(grails, context, context.error as Exception)
         }

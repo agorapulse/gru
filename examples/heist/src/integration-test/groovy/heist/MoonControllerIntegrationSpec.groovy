@@ -13,17 +13,20 @@ import spock.lang.Specification
 @Integration
 class MoonControllerIntegrationSpec extends Specification {
 
+    // tag::integrationSetup[]
     @Value('${local.server.port}')
-    Integer serverPort
+    Integer serverPort                                                                      // <1>
 
-    @Rule Gru<Http> gru = Gru.equip(Http.steal(this))
+    @Rule Gru<Http> gru = Gru.equip(Http.steal(this))                                       // <2>
 
     void setup() {
-        final String serverUrl = "http://localhost:${serverPort}"
+        final String serverUrl = "http://localhost:${serverPort}"                           // <3>
         gru.prepare {
-            baseUri serverUrl
+            baseUri serverUrl                                                               // <4>
         }
     }
+
+    // end::integrationSetup[]
 
     void 'render json'() {
         expect:

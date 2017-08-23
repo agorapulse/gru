@@ -1,215 +1,129 @@
-Gru - HTTP Testing Framework
-============================
+Gru - Groovy HTTP Testing Framework
+===================================
 
 [.ribbon]
 image::ribbon.png[link={projectUrl}]
 
-Gru is Grails unit testing framework which tests controllers in context of other
-Grails artifacts such as url mappings or interceptors. Gru steals a lot from
-link:https://testing.grails.org/latest/guide/index.html[Grails Testing Support]
+Gru is HTTP interaction testing framework with out-of-box support for Grails and REST interfaces.
 
-.Minimal Usage
-[source,groovy]
+Installation
+------------
+
+Gru is available in JCenter. You can use Grails module or HTTP module or both in your project.
+
+.Gradle Installation
+[source,groovy,subs='verbatim,attributes']
 ----
-import grails.testing.web.controllers.ControllerUnitTest
-import org.agorapulse.gru.Gru
-import org.junit.Rule
-import spock.lang.Specification
+repositories {
+    jcenter()
+}
 
-class MoonControllerSpec extends Specification
-    implements ControllerUnitTest<MoonController> {                                     // <1>
-
-    @Rule Gru<MoonControllerSpec> gru = Gru.steal(this)                                 // <2>
-
-    void 'get the moon'() {
-        expect:
-            gru.test controller.&moon, {                                                // <3>
-                get '/moons/earth/moon'                                                 // <4>
-            }
-    }
+dependencies {
+    testCompile "com.agorapulse:gru-http:{version}"                                     // <2>
+    testCompile "com.agorapulse:gru-grails:{version}"                                   // <1>
 }
 ----
-<1> The only requirement for specification is that it must implement `ControllerUnitTest`
+<1> Grails module to emulate HTTP interaction within Grails Unit tests
+<2> HTTP module for any HTTP backend
+
+
+Setup
+-----
+
+HTTP
+~~~~
+Gru can be used to test any HTTP endpoint, including Grails application running within integration tests.
+
+.Minimal HTTP Usage
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/HttpSpec.groovy[]
+----
+<1> `Gru` must be used as JUnit `@Rule` and initialized with the specification object
+<2> Set the base URL for HTTP calls
+<3> Execute HTTP GET request on `/` URI and verify it is accessible and returns `OK(200)` status code.
+
+Grails
+~~~~~~
+
+Gru for Grails tests controllers in context of other Grails artifacts such as url mappings or interceptors.
+Gru steals a lot from link:https://testing.grails.org/latest/guide/index.html[Grails Testing Support].
+
+[[minimal-grails-usage,Minimal Grails Usage]]
+.Minimal Grails Usage
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/BasicSpec.groovy[]
+----
+<1> The only requirement for Grails integration is that specification must implement `ControllerUnitTest` trait
 <2> `Gru` must be used as JUnit `@Rule` and initialized with the specification object
-<3> `Gru` executes the action under test to verify it doesn't throw any exceptions and it returns status `200`
-<4> `Gru` verifies that executing `GET` request to URL `/moons/earth/moon` actually executes the action under test
+<3> Include the appropriate `UrlMappings` so `Gru` knows which controller action should be executed
+<4> `Gru` executes action for `GET` request to URL `/moons/earth/moon` and verifies it does not throw any exception and
+it returns status `OK(200)`
 
 
-If you declare test in `expect:` block then the verification happens automatically.
+If you declare test in `expect` block then the verification happens automatically.
 You can also call `gru.verify()` manually to fully leverage Spock's power such as interaction based testing.
 
-.Splitting Test and Verification Phase
+.Minimal Grails Usage with When and Then Blocks
 [source,groovy]
 ----
-import grails.testing.web.controllers.ControllerUnitTest
-import org.agorapulse.gru.Gru
-import org.junit.Rule
-import spock.lang.Specification
-
-class MoonControllerSpec extends Specification
-    implements ControllerUnitTest<MoonController> {
-
-    @Rule Gru<MoonControllerSpec> gru = Gru.steal(this)
-
-    void 'get the moon'() {
-        given:
-            MoonService moonService = Mock(MoonService)
-            controller.moonService = moonService                                        // <1>
-        when:
-            gru.test controller.&moon, {                                                // <2>
-                get '/moons/earth/moon'
-            }
-        then:
-            1 * moonService.findByPlanetAndName("earth", "moon")                        // <3>
-            gru.verify()                                                                // <4>
-    }
-}
+include::../examples/heist/src/test/groovy/heist/SplitSpec.groovy[tag=whenThen,indent=0]
 ----
-<1> `moonService` of the controller is replaced with mock
-<2> `moon` action is executed within the test method
-<3> Spock verifies that `findByPlanetAndName` method was called once
-<4> `Gru` verifies url mapping presence, returned http status and no exception being thrown
+<1> Mock the `moonService`
+<2> Call the `test` method within the `when` block
+<3> Call `verify` method manaually
+<4> Verify Spock interactions on `moonService` in `then` block
 
 
-Basic HTTP Customisation and Verification
------------------------------------------
+Common Interactions
+-------------------
 
-Each Gru tests begins with HTTP interaction. It support following HTTP methods: `head`, `post`, `put`, `patch`,
-`delete`, `options`, `trace` and `get`. If URL is not specified, it defaults to `"$controllerName/$actionName"`.
-Parameters are extracted using the appropriate URL mapping but additional parameters can be supplied. You can also
-specify HTTP headers.
+Request
+~~~~~~~
 
-Following expectations are supported:
+Each Gru tests begins with HTTP request. There are methods for each of following HTTP methods:
+ `head`, `post`, `put`, `patch`,
+`delete`, `options`, `trace` and `get`. Each method accepts the URI to perform the request and optional request
+configuration closure.
 
-* `status` - defaults to `200` or `302` is `redirect` is expected, you can access `HttpStatus` constants directly inside `expect` definition
-* `headers` - map of expected headers, can be called multiple times
-* `redirect` - redirect URI including parameters
-* `forward` - forwarded URI including parameters
+NOTE: Grails client requires that `UrlMappings` for given URI is specified unless the mappings are defined in `UrlMappings` class
+declared in default package. See <<minimal-grails-usage>> for reference.
+
+URL Parameters
+^^^^^^^^^^^^^^
+
+You can specify additional URL parameters
 
 
-.Status
-[source, groovy]
+.Additional URL Parameters
+[source,groovy]
 ----
-void 'steal the moon'() {
-    expect:
-        gru.test controller.&steal, {
-            delete '/moons/earth/moon'                                                  // <1>
-            expect {
-                status NO_CONTENT                                                       // <2>
-            }
-        }
-}
-----
-<1> pretend executing `DELETE` request on `/moons/earth/moon` URL
-<2> expect the action respond with `HttpStatus.NO_CONTENT
-
-.Headers
-[source, groovy]
-----
-void 'enter secret chamber'() {
-    expect:
-        gru.test controller.&enter, {
-            post '/rooms/enter/secret-chamber', {
-                headers Authorization: 'Bearer IAMKevin'                                // <1>
-            }
-            expect {
-                headers 'X-Alarm-Message': 'Success'                                    // <2>
-            }
-        }
-}
-----
-<1> `Authorization` header is sent with the mock request
-<2> Test fails if the controller does not respond with header `X-Alarm-Message` with value `Success`
-
-.Redirect and Parameters
-[source, groovy]
-----
-void 'create new moon'() {
-    expect:
-        gru.test controller.&save, {
-            post '/moons/earth', {
-                params name: 'Lucy'                                                     // <1>
-            }
-            expect {
-                redirect '/moons/earth/lucy'                                            // <2>
-            }
-        }
-}
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=stealWithShrinkRay,indent=0]
 ----
 
-<1> Adds parameter `name` to the mock request
-<2> Expects redirecting to detail `/moons/earth/lucy` after new moon is created
+Request Headers
+^^^^^^^^^^^^^^^
 
-.Forward
-[source, groovy]
-----
-void 'create new moon on planet which does not exist'() {
-    expect:
-        gru.test controller.&save, {
-            post '/moons/pluto', {
-                params name: 'Charon'
-            }
-            expect {
-                forward '/errors/notAPlanet?id=pluto'                                   // <1>
-            }
-        }
-}
-----
-<1> Verifies that the action is forwarded to URI `/errors/notAPlanet?id=pluto`
+You can specify additional HTTP headers sent with the request.
 
-Model Verification
-------------------
-If your controller returns model object, you can verify this object using `model` method inside `expect` definition.
-
-.Model
-[source, groovy]
+.Request Headers
+[source,groovy]
 ----
-void 'get the moon'() {
-    expect:
-        gru.test controller.&moon, {
-            get '/moons/earth/moon'
-            expect {
-                model name: 'Moon'                                                      // <1>
-            }
-        }
-}
-----
-<1> Verifies that controller return a map with single entry `name` with value `Moon`
-
-JSON Support
-------------
-You can pretend sending JSON body as well as verifying JSON body returned by the controller. Use `json` method
-inside request definition or `expect` definition to do so. The responded JSON is verified usin https://github.com/lukas-krecan/JsonUnit[JsonUnit].
-
-.JSON
-[source, groovy]
-----
-void 'create new moon'() {
-    expect:
-        gru.test controller.&save, {
-            post '/moons/earth', {
-                json 'createNewMoonRequest.json'                                        // <1>
-            }
-            expect {
-                json 'createNewMoonResponse.json'                                       // <2>
-            }
-        }
-}
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=secretMoon,indent=0]
 ----
 
-.createNewMoonResponse.json
-[source, json]
+[[json-payload,JSON Payload]]
+JSON Payload
+^^^^^^^^^^^^
+
+You can use JSON payload from file.
+
+.JSON Payload
+[source,groovy]
 ----
-{
-    "name": "Moon",
-    "created": "${json-unit.matches:isoDateNow}"
-}
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=newMoon,indent=0]
 ----
-
-<1> Pretends sending JSON request loaded from file, see note for file location
-<2> Verifies the similarity of returned file using `JsonUnit`, see note for file location
-
-
 
 [NOTE]
 JSON files are loaded relatively to directory having the same name as the current specification and it is placed
@@ -222,16 +136,80 @@ with the content same as the one returned from the controller is created if resp
 so you have to run the test again and verify it is repeatable. Fixture files are generated inside directory from system property `TEST_RESOURCES_FOLDER` or
 in `src/test/resources` relatively to the working directory. See the following example how to easily set the property in Gradle.
 
-.Setting Directory for Generated Fixtures in Gradle
+
+Response
+~~~~~~~~
+
+Response expectation are defined using `expect` method within `test` definition.
+
+Status Code
+^^^^^^^^^^^
+
+You can specify expected response status code. Constants for HTTP status codes are available within the `expect` closure call.
+Default status is `OK(200)` which is asserted within every test. See <<redirect>> for exception.
+
+.Status Code
 [source,groovy]
 ----
-test {
-    systemProperty 'TEST_RESOURCES_FOLDER', new File(project.projectDir, 'src/test/resources').canonicalPath
-}
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=stealWithShrinkRay,indent=0]
 ----
 
+Response Headers
+^^^^^^^^^^^^^^^^
+You can specify expected response headers.
+
+.Response Headers
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=jsonHeaders,indent=0]
+----
+
+[[redirect, Redirection]]
+Redirection
+^^^^^^^^^^^
+You can specify expected redirection URI. For redirection, default status code is `FOUND(302)`.
+
+.Redirection
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=redirect,indent=0]
+----
+
+
+JSON Response
+^^^^^^^^^^^^^
+You can specify expected JSON body. The responded JSON is verified using https://github.com/lukas-krecan/JsonUnit[JsonUnit].
+
+.JSON Response
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyJson,indent=0]
+----
+
+.moonResponse.json
+[source, json]
+----
+include::../examples/heist/src/test/resources/heist/MoonControllerSpec/moonResponse.json[]
+----
+
+You can pass JsonUnit options along with the file name.
+
+.JSON Response with Options
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyJson2,indent=0]
+----
+
+.moonsResponse.json
+[source, json]
+----
+include::../examples/heist/src/test/resources/heist/MoonControllerSpec/moonsResponse.json[]
+----
+
+See <<json-payload>> for information about the expected response file location.
+
 JsonUnit Primer
-~~~~~~~~~~~~~~~
++++++++++++++++
 
 There are built in and custom placeholders which can be used when evaluating the JSON response:
 
@@ -247,11 +225,11 @@ There are built in and custom placeholders which can be used when evaluating the
 |=======================================================================================================================
 
 
-.Custom Placeholders
+.Custom Gru's Placeholders
 [options="header"]
 |=======================================================================================================================
 | Placeholder                                       | Description
-| `"${json-unit.matches:positiveIntegerString}"`    | Any account id (currently numerical strings)
+| `"${json-unit.matches:positiveIntegerString}"`    | Any positive number as string
 | `"${json-unit.matches:isoDate}"`                  | Any date in ISO format
 | `"${json-unit.matches:isoDateNow}"`               | ISO within last hour
 | `"${json-unit.matches:url}"`                      | Any URL (string parsable by `java.net.URL`)
@@ -261,180 +239,152 @@ There are built in and custom placeholders which can be used when evaluating the
 You can customize `JsonUnit` fluent assertion within `json` block inside `expect` definition:
 
 .JsonUnit Customisation
-[source, groovy]
+[source,groovy]
 ----
-void 'create new moon'() {
-    expect:
-        gru.test controller.&save, {
-            post '/moons/earth', {
-                json 'createNewMoonRequest.json'
-            }
-            expect {
-                json 'createNewMoonResponse.json'
-                json {
-                    withTolerance(0.1)                                                  // <1>
-                    .withMatcher(                                                       // <2>
-                        'negativeIntegerString',
-                        MatchesPattern.matchesPattern(/-\d+/)
-                    )
-                }
-            }
-        }
-}
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=customiseJsonUnit,indent=0]
 ----
-<1> Sets the tolerance of decimal numbers to `0.1`
-<2> Adds new matcher which can be used as `"${json-unit.matches:negativeIntegerString}"`
 
 [WARNING]
 `JsonFluentAssert` is immutable, so only last statement actually matters. That is why `.withMatcher` is called
 as method chain.
 
-URL Mappings Support
---------------------
-By default, Gru uses URL mappings defined in `UrlMappings` in the default package. You can
-include other url mappings using `include` method inside test definition. You can use name of the mapping class
-for URL mappings declared without any package. You can include URL mappings for every test in the class by using
-`configure` method.
+
+Grails Unit Test Interactions
+-----------------------------
+On top of standard HTTP interaction, Gru provides additional methods specific for Grails only.
+
+NOTE: As of IntelliJ IDEA 2017.2 you get false warnings about the wrong method's argument being used. You have to
+ignore them at the moment. Please, vote for link:https://youtrack.jetbrains.com/issue/IDEA-177530[IDEA-177530] bug to get
+this fixed soon.
+
+Artifacts
+~~~~~~~~~
+
+You can add additional Grails artifacts using `include` method. Only interceptors and URL mappings are supported
+at the moment.
+
+URL Mappings
+^^^^^^^^^^^^
+
+Unless you are using `UrlMappings` class in default package, you have to specify the URL mappings class used for matching
+the URIs. You can use just name of the class as string if your URL mappings resides in default package.
 
 .URL Mappings
-[source, groovy]
+[source,groovy]
 ----
-@Rule Gru<MoonControllerSpec> gru = Gru.steal(this).configure {
-    include 'OtherUrlMappings'                                                          // <1>
-}
-
-void 'get the moon (satellite mapping)'() {
-    expect:
-        gru.test controller.&moon, {
-            include AnotherUrlMappings                                                  // <2>
-            get '/satellite/earth/moon'                                                 // <3>
-        }
-}
+include::../examples/heist/src/test/groovy/heist/IncludeUrlMappingsSpec.groovy[]
 ----
-<1> Include url mappings by class name for every test in the current specification
-<2> Include url mappings for single test using class reference
-<3> Mapping from different url mappings is recognized
+<1> Include `ApiUrlMappings` URL mappings
+<2> The URI will be matched using `ApiUrlMappings` URL mappings
 
-Interceptors Support
---------------------
+Interceptors
+^^^^^^^^^^^^
 If you're controller heavily depends on interceptor it is sometimes better to test the interceptors and controllers as
 a single unit. You can include interceptors into test in similar way as url mappings using the `include` method.
 Once the interceptor is included it must match the given URL otherwise exception is thrown in the verification phase.
 
-
 .Interceptors
-[source, groovy]
+[source,groovy]
 ----
-@Rule Gru<MoonControllerSpec> gru = Gru.steal(this).configure {
-    include VectorInterceptor                                                           // <1>
-}
-
-void 'steal the moon (satellite mapping)'() {
-    expect:
-        gru.test controller.&steal, {
-            delete '/moons/earth/moon'                                                  // <2>
-            expect {
-                status NOT_FOUND                                                        // <3>
-            }
-        }
-}
-
+include::../examples/heist/src/test/groovy/heist/IncludeInterceptorSpec.groovy[]
 ----
-<1> Include interceptor for every test in the current specification
-<2> Make the same call as in one of the previous examples
-<3> But get different results as the execution flow was modified by the interceptor
+<1> Include `VectorInterceptor` interceptor
+<2> The expectations reflects the interceptor changes
 
+Request
+~~~~~~~
+
+Controller Action
+^^^^^^^^^^^^^^^^^
+You can verify that given URI is mapped to particular action. Use method reference with `.&` to obtain
+particular `MethodClosure` instance.
+
+.Controller Action
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyAction,indent=0]
+----
+
+The test only passes if `/moons/earth/moon` URI is mapped to action `moon` in `MoonController`.
+
+Response
+~~~~~~~~
+
+Forwarding
+^^^^^^^^^^
+You can specify the expected forward URI.
+
+.Model
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=forward,indent=0]
+----
+
+Model
+^^^^^
+You can specify the expected model object returned from the controller.
+
+.Model
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=model,indent=0]
+----
+
+
+Integration Tests
+~~~~~~~~~~~~~~~~~
+You use `Http` client to verify controller within `@Integration` test.
+
+.Integration Setup
+[source,groovy]
+----
+include::../examples/heist/src/integration-test/groovy/heist/MoonControllerIntegrationSpec.groovy[tag=integrationSetup,indent=0]
+----
+<1> Let Grails inject the server port
+<2> Use `Http` client instad of `Grails`
+<3> Store server URL in variable, otherwise it won't get properly evaluated
+<4> Set the base URI for the executed test
 
 Extending Gru
 -------------
 
-Gru DSL can be easily extend. Gru uses minions whenever it is possible. `Minion` interface defines
-following 4 methods:
+Extending DSL
+~~~~~~~~~~~~~
+
+Gru DSL can be easily extend. Gru uses minions whenever it is possible. `Minion` interface
+requires several methods to be implemented to intercept the test flow.
 
 .Minion
 [source,java]
 ----
-public interface Minion<U extends ControllerUnitTest<?>> {                              // <1>
-    int getIndex();                                                                     // <2>
-    GruContext beforeRun(U unitTest, TestDefinition definition, GruContext ctx);        // <3>
-    GruContext afterRun(U unitTest, TestDefinition definition, GruContext ctx);         // <4>
-    void verify(U unitTest, TestDefinition definition, GruContext ctx)                  // <5>
-        throws AssertionError;
-}
+include::../gru/src/main/groovy/com/agorapulse/gru/minions/Minion.java[tag=methods,indent=0]
 ----
-<1> `U` refers to the class of unit test where Gru is used
-<2> `getIndex()` method return the integer number which is used to put minions to correct execution order, as usual,
-`beforeRun` and `verify` methods are executed in ascending order and `afterRun` in descending order.
-<3> `beforeRun` is run before the controller's action execution
-<4> `afterRun` is run after controller's action execution
 
-`TestDefinition` represents the object built from the DSL. `GruContext` is immutable object
-which holds any error been thrown during the execution phase and also the result of the execution.
+`Client` represents the current client such as `Http` or `Grails`.
 
-Here is an example of `Minion` which add ability to specify security role:
+`Squad` is group of minions used in current test.
 
-.Role Minion
+`GruContext` is immutable object which holds any error been thrown during the execution phase and also the result of the execution.
+
+Grails implementation provides various example of extending the DSL. `ModelMinion` is responsible for checking the model
+returned from the controller.
+
+.ModelMinion.groovy
 [source,groovy]
 ----
-@CompileStatic
-class RolesMinion<U extends ControllerUnitTest<?>>
-    extends AbstractMinion<U>  {                                                        // <1>
-
-    final int index = PARAMETERS_MINION_INDEX + 100                                     // <2>
-
-    String role                                                                         // <3>
-    SecurityException exception
-
-    @Override
-    GruContext beforeRun(U unitTest, TestDefinition definition, GruContext context) {
-        if (role) {
-            SecurityUtils.setRole(unitTest.controller.request,role)                     // <4>
-        }
-        return context
-    }
-
-    @Override
-    GruContext afterRun(U unitTest, TestDefintion definition, GruContext context) {
-        if (context.hasError(SecurityException)) {                                      // <5>
-            exception = context.error
-            return context.clearError(SecurityException)                                // <6>
-        }
-        return context
-    }
-
-    @Override
-    void verify(U unitTest, TestDefinition testDefinition, GruContext context)
-        throws AssertionError {
-        if (exception) {
-            throw new AssertionError("Security constraints weren't met!", exception)    // <7>
-        }
-    }
-
-}
+include::../gru-grails/src/main/groovy/com/agorapulse/gru/grails/minions/ModelMinion.groovy[]
 ----
-<1> `AbstractMinion<U>` provides stub implementation of every method except `getOrder()` so you only have to implement ones which are important for you
-<2> There are constants for indicies for base types are defined directly in `Minion` interface which you can use to put your minion in desired order
-<3> Each minion holds its own state, new minions are created for each test (feature method)
-<4> Some code to set the role for the current request
-<5> You can check for specific exception being thrown from the controller's action method
-<6> You can clear the specific exception from the context
-<7> It is common to just throw `AssertionError` from the verification phase, or just use Groovy's power `assert`
+<1> `AbstractMinion` guarantees type safety and allows to implements just some of the methods of the interface
+<2> `beforeRun` and `verify` methods are executed sorted by ascending order by the `index`, `afterRun` in descending order
+<3> Internal state of the minion, at most one instance of the minion exists per test
+<4> Type token to ensure type safety
+<5> Type-safe method to verify the result of the execution
 
-
-.Role Minion Usage
+.Engaging Minion
 [source,groovy]
 ----
-void 'get the moon'() {
-    given:
-        gru.engage(new RoleMinion<MyRoleSpec>(role: 'villain'))                         <1>
-    expect:
-        gru.test controller.&moon, {
-            get '/moons/earth/moon'
-        }
-}
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=modelEngage,indent=0]
 ----
-<1> You can add new minion to the squad with `engage` method
-
 
 Although it is possible to use use `engage` method to add new minion, it is more convenient to enhance the DSL with new
 method. As our minion is enhancing the request definition, we simply add new extension method to `RequestDefinitionBuilder` object:
@@ -442,50 +392,37 @@ method. As our minion is enhancing the request definition, we simply add new ext
 .Extension Class
 [source,groovy]
 ----
-class SecurityGruExtensions {
+include::../gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=header]
 
-    static RequestDefinitionBuilder role(RequestDefinitionBuilder self,               // <1>
-        String aRole) {
-        self.command(RoleMinion) {                                                      // <2>
-            role = aRole
-        }
-    }
+    // ...
 
-}
+include::../gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=model]
 
+    // ...
+
+include::../gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=footer]
 ----
-<1> New extension method `role` will be added to `RequestDefinitionBuilder` class
-<2> `command` method will add new minion to the squad if not already present and it allows to do additional configuration such as storing the role's value, there is its counterpart `ask` if you want to get information from another minion from the squad
+<1> New extension method `model` will be added to `ResponseDefinitionBuilder` class
+<2> `command` method will add new minion to the squad if not already present and it allows to do additional configuration such as storing the model's value, there is its counterpart `ask` if you want to get information from another minion from the squad
 
 You have to create extensions class descriptor in order to make the extension methods available in the code:
 
 .src/main/resources/META-INF/services/org.codehaus.groovy.runtime.ExtensionModule
 ----
-moduleName = my-custom-gru-support                                                      # <1>
-moduleVersion = 1.0                                                                     # <2>
-extensionClasses = org.example.SecurityGruExtensions                                    # <3>
+include::../gru-grails/src/main/resources/META-INF/services/org.codehaus.groovy.runtime.ExtensionModule[]
 ----
-<1> Name your module whatever you want
-<2> Set the version of the module, later version always overrides the previous one if more than one gets by any reason the classpath
-<3> Add fully classified name of your extension class into `extensionClasses`
-
-See
 
 After that the new extension method can be used in any test
 
-.Using New Extension Method
-[source,groovy)
+.Using Method from Extension
+[source,groovy]
 ----
-void 'get the moon'() {
-    expect:
-        gru.test controller.&moon, {
-            get '/moons/earth/moon', {
-                role 'villain'                                                          // <1>
-            }
-        }
-}
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=model,indent=0]
 ----
-<1> You can use new extension method directly in the DSL definition
 
-NOTE: As of IntelliJ IDEA 2017.2 you get false warning about the wrong method's argument being used. There's nothing to
-do to improve it so you only have to ignore it at the moment.
+
+Creating New Client
+~~~~~~~~~~~~~~~~~~~
+
+Creating new client is bit more work but you can check `Http` client which is rather small implementation.
+The core idea is to provide methods to update request and to check the response returned.

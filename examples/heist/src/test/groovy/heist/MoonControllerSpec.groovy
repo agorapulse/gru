@@ -2,6 +2,8 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
+import com.agorapulse.gru.grails.minions.ModelMinion
+import com.agorapulse.gru.jsonunit.MatchesPattern
 import grails.testing.web.controllers.ControllerUnitTest
 import org.junit.Rule
 import spock.lang.Specification
@@ -13,6 +15,10 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
 
     @Rule Gru<Grails<MoonControllerSpec>> gru = Gru.equip(Grails.steal(this)).prepare {
         include UrlMappings
+    }
+
+    void setup() {
+        controller.moonService = new MoonService()
     }
 
     void 'render json'() {
@@ -74,4 +80,167 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                 }
             }
     }
+
+    // tag::stealWithShrinkRay[]
+    void 'steal the moon with shrink ray'() {
+        expect:
+            gru.test {
+                delete '/moons/earth/moon', {
+                    params with: 'shrink-ray'
+                }
+                expect {
+                    status NO_CONTENT
+                }
+            }
+    }
+    // end::stealWithShrinkRay[]
+
+    // tag::secretMoon[]
+    void 'visit secret moon Noom'() {
+        expect:
+            gru.test {
+                get '/moons/earth/noom', {
+                    headers Authorization: 'Felonius'
+                }
+            }
+    }
+    // end::secretMoon[]
+
+    // tag::newMoon[]
+    void 'create moon for Margot'() {
+        expect:
+            gru.test {
+                post '/moons/earth', {
+                    json 'newMoonRequest.json'
+                }
+            }
+    }
+    // end::newMoon[]
+
+    // tag::jsonHeaders[]
+    void 'json is rendered'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    headers 'Content-Type': 'application/json;charset=UTF-8'
+                }
+            }
+    }
+    // end::jsonHeaders[]
+
+    // tag::verifyJson[]
+    void 'verify json'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    json 'moonResponse.json'
+                }
+            }
+    }
+    // end::verifyJson[]
+
+
+    // tag::verifyJson2[]
+    void 'verify json 2'() {
+        expect:
+            gru.test {
+                get '/moons/earth'
+                expect {
+                    json 'moonsResponse.json', IGNORING_EXTRA_ARRAY_ITEMS
+                }
+            }
+    }
+    // end::verifyJson2[]
+
+    // tag::customiseJsonUnit[]
+    void 'customise json unit'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    json 'moonResponse.json'
+                    json {
+                        withTolerance(0.1).withMatcher(
+                            'negativeIntegerString',
+                            MatchesPattern.matchesPattern(/-\d+/)
+                        )
+                    }
+                }
+            }
+    }
+    // end::customiseJsonUnit[]
+
+    // tag::redirect[]
+    void 'no planet needed'() {
+        expect:
+            gru.test {
+                get '/moons/-/moon'
+                expect {
+                    redirect '/moons/earth/moon'
+                }
+            }
+    }
+    // end::redirect[]
+
+    // tag::verifyAction[]
+    void 'verify action'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon', {
+                    executes controller.&moon
+                }
+            }
+    }
+    // end::verifyAction[]
+
+    // tag::model[]
+    void 'verify model'() {
+        given:
+            def moon = [name: 'Moon', planet: 'Earth']
+            MoonService moonService = Mock(MoonService)
+            controller.moonService = moonService
+        when:
+            gru.test {
+                get '/moons/earth/moon/info'
+                expect {
+                    model moon: moon
+                }
+            }
+        then:
+            gru.verify()
+            1 * moonService.findByPlanetAndName('earth', 'moon') >> moon
+    }
+    // end::model[]
+
+    // tag::modelEngage[]
+    void 'verify model with engage'() {
+        given:
+            def moon = [name: 'Moon', planet: 'Earth']
+            MoonService moonService = Mock(MoonService)
+            controller.moonService = moonService
+        when:
+            gru.engage(new ModelMinion(model: [moon: moon])).test {
+                get '/moons/earth/moon/info'
+            }
+        then:
+            gru.verify()
+            1 * moonService.findByPlanetAndName('earth', 'moon') >> moon
+    }
+    // end::modelEngage[]
+
+    // tag::forward[]
+    void 'verify forward'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon', {
+                    params info: 'true'
+                }
+                expect {
+                    forward '/moons/earth/moon/info'
+                }
+            }
+    }
+    // end::forward[]
 }

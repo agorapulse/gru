@@ -10,10 +10,12 @@ import com.agorapulse.gru.grails.minions.UrlMappingsMinion
 import grails.testing.web.controllers.ControllerUnitTest
 import org.codehaus.groovy.runtime.MethodClosure
 
+// tag::header[]
 /**
  * Add convenient methods for Grails to test definition DSL.
  */
 class GrailsGruExtensions {
+// end::header[]
 
     /**
      * Include artifact by class reference.
@@ -50,17 +52,19 @@ class GrailsGruExtensions {
         }
     }
 
+    // tag::model[]
     /**
      * Sets the expected model returned from the controller action.
      *
      * @param aModel expected model
      * @return self
      */
-    static ResponseDefinitionBuilder model(ResponseDefinitionBuilder self, Object aModel) {
-        self.command(ModelMinion) {
+    static ResponseDefinitionBuilder model(ResponseDefinitionBuilder self, Object aModel) { // <1>
+        self.command(ModelMinion) {                                                         // <2>
             model = aModel
         }
     }
+    // end::model[]
 
     /**
      * Sets the expected forward URI.
@@ -71,5 +75,9 @@ class GrailsGruExtensions {
         self.command(ForwardMinion) {
             forwardedUri = url
         }
+
     }
+
+// tag::footer[]
 }
+// end::footer[]

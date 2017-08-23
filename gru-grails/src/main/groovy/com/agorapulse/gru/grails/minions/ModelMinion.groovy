@@ -8,19 +8,24 @@ import com.agorapulse.gru.minions.AbstractMinion
 /**
  * Minion responsible for verifying model returned from the controller action.
  */
-class ModelMinion extends AbstractMinion<Grails> {
+class ModelMinion extends AbstractMinion<Grails> {                                      // <1>
 
-    final int index = MODEL_MINION_INDEX
+    final int index = MODEL_MINION_INDEX                                                // <2>
 
-    Object model
+    Object model                                                                        // <3>
 
     ModelMinion() {
-        super(Grails)
+        super(Grails)                                                                   // <4>
     }
 
     @Override
-    void doVerify(Grails grails, Squad squad, GruContext context) throws Throwable {
-        if (model != null) {
+    @SuppressWarnings('Instanceof')
+    void doVerify(Grails grails, Squad squad, GruContext context) throws Throwable {    // <5>
+        if (model instanceof Map && context.result instanceof Map) {
+            model.each { key, value ->
+                assert context.result[key] == value
+            }
+        } else if (model != null) {
             assert context.result == model
         }
     }

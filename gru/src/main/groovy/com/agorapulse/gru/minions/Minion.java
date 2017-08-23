@@ -11,12 +11,15 @@ import java.util.Comparator;
  */
 public interface Minion {
 
+    // tag::constants[]
+    int INITIALIZATION_MINION_INDEX = -10000;
     int HTTP_MINION_INDEX = 0;
     int URL_MAPPINGS_MINION_INDEX = 10000;
     int PARAMETERS_MINION_INDEX = 20000;
     int JSON_MINION_INDEX = 30000;
     int INTERCEPTORS_MINION_INDEX = 50000;
     int MODEL_MINION_INDEX = 60000;
+    // end::constants[]
 
     /**
      * Comparator to compare minions by their index.
@@ -28,6 +31,7 @@ public interface Minion {
         }
     };
 
+    // tag::methods[]
     /**
      * @return index of the minion to so they they handle the test in given order
      */
@@ -63,6 +67,6 @@ public interface Minion {
      * @throws Throwable if any of the conditions are not met
      */
     void verify(Client client, Squad squad, GruContext context) throws Throwable;
-
+    // end::methods[]
 
 }

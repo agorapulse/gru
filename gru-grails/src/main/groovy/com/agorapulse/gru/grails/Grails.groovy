@@ -4,6 +4,7 @@ import com.agorapulse.gru.AbstractClient
 import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
+import com.agorapulse.gru.grails.minions.ControllerInitializationMinion
 import com.agorapulse.gru.grails.minions.UrlMappingsMinion
 import com.agorapulse.gru.minions.Minion
 import grails.core.GrailsControllerClass
@@ -56,6 +57,6 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
 
     @Override
     List<Minion> getInitialSquad() {
-        return [new UrlMappingsMinion()]
+        return [new ControllerInitializationMinion(), new UrlMappingsMinion()]
     }
 }
