@@ -175,7 +175,7 @@ asciidoctor {
             icons: 'font',
             'toc': 'left',
             version: project.version,
-            'projectUrl': 'https://github.com/MetadataRegistry/spreadsheet-builder'
+            'projectUrl': 'https://github.com/agorapulse/gru'
 }
 
 githubPages {
