@@ -59,6 +59,6 @@ bootRun {
 
 
 assets {
-    minifyJs = true
-    minifyCss = true
+    minifyJs = false
+    minifyCss = false
 }
