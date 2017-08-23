@@ -17,6 +17,7 @@ public interface Minion {
     int URL_MAPPINGS_MINION_INDEX = 10000;
     int PARAMETERS_MINION_INDEX = 20000;
     int JSON_MINION_INDEX = 30000;
+    int HTML_MINION_INDEX = 30001;
     int INTERCEPTORS_MINION_INDEX = 50000;
     int MODEL_MINION_INDEX = 60000;
     // end::constants[]

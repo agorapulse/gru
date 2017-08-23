@@ -9,6 +9,7 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import org.codehaus.groovy.runtime.DefaultGroovyMethods;
 
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -20,7 +21,7 @@ import java.util.TreeSet;
 public class Squad {
 
     private ClassToInstanceMap<Minion> minions = MutableClassToInstanceMap.create();
-    private Set<Minion> sorted = new TreeSet<Minion>(Minion.COMPARATOR);
+    private Set<Minion> sorted = new TreeSet<>(Minion.COMPARATOR);
 
     /**
      * Adds a minion to the squad.
@@ -28,6 +29,14 @@ public class Squad {
      */
     public <M extends Minion> void add(M minion) {
         minions.put(minion.getClass(), minion);
+
+        Class sc = minion.getClass().getSuperclass();
+        while (sc != null && !Modifier.isAbstract(sc.getModifiers()) && !sc.equals(Minion.class)
+        ) {
+            minions.putInstance(sc, minion);
+            sc = sc.getSuperclass();
+        }
+
         sorted.add(minion);
     }
 

@@ -69,4 +69,14 @@ class MoonControllerIntegrationSpec extends Specification {
                 }
             }
     }
+
+    void 'verify html'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon/info'
+                expect {
+                    html 'htmlResponse.html'
+                }
+            }
+    }
 }

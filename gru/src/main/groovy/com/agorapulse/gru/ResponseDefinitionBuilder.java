@@ -46,6 +46,17 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
     ResponseDefinitionBuilder json(String relativePath);
 
     /**
+     * Sets an expected HTML response from given file.
+     * The file must reside in same package as the test in the directory with the same name as the test
+     * e.g. src/test/resources/org/example/foo/MySpec.
+     * The file is created automatically during first run if it does not exist yet with the returned HTML.
+     *
+     * @param relativePath an expected HTML response file
+     * @return self
+     */
+    ResponseDefinitionBuilder html(String relativePath);
+
+    /**
      * Sets additional assertions and configuration for JsonFluentAssert instance which is testing the response.
      *
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance

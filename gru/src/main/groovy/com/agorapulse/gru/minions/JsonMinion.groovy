@@ -17,17 +17,14 @@ import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson
  * Minion responsible for JSON requests and responses.
  */
 @Log @CompileStatic
-class JsonMinion extends AbstractMinion<Client> {
+class JsonMinion extends AbstractContentMinion<Client> {
 
     final int index = JSON_MINION_INDEX
 
     String requestJsonFile
-    String responseJsonFile
 
     @SuppressWarnings('unchecked')
     Closure<JsonFluentAssert> jsonUnitConfiguration = (Closure<JsonFluentAssert>) Closure.IDENTITY.clone()
-
-    private final List<String> createdResources = []
 
     JsonMinion() {
         super(Client)
@@ -48,25 +45,13 @@ class JsonMinion extends AbstractMinion<Client> {
     }
 
     @Override
-    void doVerify(Client client, Squad squad, GruContext resultAndError) throws Throwable {
-        if (responseJsonFile) {
-            String responseText = load(client, responseJsonFile)
-            if (!responseText) {
-                responseText = client.response.text
-                saveResource(client.getFixtureLocation(responseJsonFile), JsonOutput.prettyPrint(responseText))
-                log.warning("JSON fixture file is missing at ${client.getFixtureLocation(responseJsonFile)}. New file was created with content:\n$responseText")
-            }
-            assert !responseText || similar(client.response.text, responseText)
-        }
-
-        if (createdResources) {
-            throw new AssertionError("New fixture files were created: ${createdResources.join(', ')}. Please, run the test again to verify it is repeatable.")
-        }
+    protected String normalize(String input) {
+        return JsonOutput.prettyPrint(input)
     }
 
-    private boolean similar(String actual, String expected) {
+    protected void similar(String actual, String expected) throws AssertionError {
         JsonFluentAssert fluentAssert = assertThatJson(actual)
-                .as("Response must match ${responseJsonFile} content")
+                .as("Response must match ${responseFile} content")
                 .withMatcher('isoDate', MatchesPattern.ISO_DATE)
                 .withMatcher('isoDateNow', MatchesIsoDateNow.INSTANCE)
                 .withMatcher('positiveIntegerString', MatchesPattern.POSITIVE_NUMBER_STRING)
@@ -75,7 +60,7 @@ class JsonMinion extends AbstractMinion<Client> {
         fluentAssert = fluentAssert.with jsonUnitConfiguration
 
         try {
-            return fluentAssert.isEqualTo(expected)
+            fluentAssert.isEqualTo(expected)
         } catch (AssertionError error) {
             log.info 'ACTUAL:'
             log.info JsonOutput.prettyPrint(actual)
@@ -83,26 +68,5 @@ class JsonMinion extends AbstractMinion<Client> {
             log.info JsonOutput.prettyPrint(expected)
             throw error
         }
-    }
-
-    private static String load(Client client, String fileName) {
-        InputStream stream = client.loadFixture(fileName)
-        if (stream == null) {
-            return null
-        }
-        stream.text
-    }
-
-    private void saveResource(String path, String content) {
-        if (!content) {
-            return
-        }
-        createdResources << path
-        File file = new File(System.getProperty('TEST_RESOURCES_FOLDER') ?: 'src/test/resources', path)
-        if (file.exists()) {
-            throw new IllegalArgumentException("File $path already exists!")
-        }
-        file.parentFile.mkdirs()
-        file.text = content
     }
 }

@@ -178,7 +178,7 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=r
 
 JSON Response
 ^^^^^^^^^^^^^
-You can specify expected JSON body. The responded JSON is verified using https://github.com/lukas-krecan/JsonUnit[JsonUnit].
+You can specify expected JSON response. The responded JSON is verified using https://github.com/lukas-krecan/JsonUnit[JsonUnit].
 
 .JSON Response
 [source,groovy]
@@ -248,6 +248,27 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=c
 `JsonFluentAssert` is immutable, so only last statement actually matters. That is why `.withMatcher` is called
 as method chain.
 
+
+HTML Response
+^^^^^^^^^^^^^
+You can specify expected HTML response. The responded HTML is cleaned using https://jsoup.org/[jsoup] and
+the difference is performed using http://www.xmlunit.org/[XMLUnit]. You can replace any text node with `${xml-unit.ignore}`
+to ignore the value fo the node.
+
+.HTML Response
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyHtml,indent=0]
+----
+
+.htmlResponse.html
+[source,html]
+----
+include::../examples/heist/src/test/resources/heist/MoonControllerSpec/htmlResponse.html[]
+----
+
+[WARNING]
+HTML support for Grails is currently experimental as it does not apply the layouts.
 
 Grails Unit Test Interactions
 -----------------------------

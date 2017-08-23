@@ -2,6 +2,7 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
+import com.agorapulse.gru.grails.minions.GrailsHtmlMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.jsonunit.MatchesPattern
 import grails.testing.web.controllers.ControllerUnitTest
@@ -243,4 +244,16 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
     // end::forward[]
+
+    // tag::verifyHtml[]
+    void 'verify html'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon/info'
+                expect {
+                    html 'htmlResponse.html'
+                }
+            }
+    }
+    // end::verifyHtml[]
 }
