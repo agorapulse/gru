@@ -40,8 +40,8 @@ Gru can be used to test any HTTP endpoint, including Grails application running 
 include::../examples/heist/src/test/groovy/heist/HttpSpec.groovy[]
 ----
 <1> `Gru` must be used as JUnit `@Rule` and initialized with the specification object
-<2> Set the base URL for HTTP calls
-<3> Execute HTTP GET request on `/` URI and verify it is accessible and returns `OK(200)` status code.
+<2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
+<3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
 Grails
 ~~~~~~
