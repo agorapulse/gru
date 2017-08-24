@@ -26,6 +26,15 @@ dependencies {
 <1> Grails module to emulate HTTP interaction within Grails Unit tests
 <2> HTTP module for any HTTP backend
 
+[NOTE]
+====
+If you are testing JSON responses, underlying library link:https://github.com/lukas-krecan/JsonUnit#maven-dependency[JsonUnit]
+requires one of following libraries on the classpath: Jackson 1.x, Jackson 2.x, Gson, JSONObject or Moshi. If you don't have
+any of these on classpath, also add for example Jackson 2 dependency:
+```
+testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+```
+====
 
 Setup
 -----
