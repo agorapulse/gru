@@ -15,8 +15,12 @@ public abstract class AbstractClient implements Client {
 
     @Override
     public final String getFixtureLocation(String fileName) {
-        return unitTest.getClass().getPackage().getName().replaceAll("\\.", File.separator)
-        + File.separator + unitTest.getClass().getSimpleName() + "/" + fileName;
+        String suffix = unitTest.getClass().getSimpleName() + "/" + fileName;
+        Package pkg = unitTest.getClass().getPackage();
+        if (pkg == null) {
+            return suffix;
+        }
+        return pkg.getName().replaceAll("\\.", File.separator) + File.separator + suffix;
     }
 
     public final InputStream loadFixture(String fileName) {
