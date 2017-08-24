@@ -2,3 +2,9 @@ dependencies {
     compile project(':gru')
     compile "org.grails:grails-web-testing-support:${grailsTestingSupportVersion}"
 }
+
+processResources {
+    filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version])
+    }
+}
