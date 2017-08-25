@@ -1,0 +1,9 @@
+dependencies {
+    compile project(':gru')
+    compile group: 'org.springframework', name: 'spring-webmvc', version: springVersion
+    compile group: 'org.springframework', name: 'spring-test', version: springVersion
+
+    compile group: 'org.spockframework', name: 'spock-spring', version: spockVersion
+
+    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+}

@@ -1,7 +1,9 @@
 dependencies {
     compile "com.google.guava:guava:${guavaVersion}"
     compile "joda-time:joda-time:${jodaTimeVersion}"
-    compile "org.spockframework:spock-core:$spockVersion"
+    compile "org.spockframework:spock-core:$spockVersion", {
+        force = true
+    }
     compile "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
     compile group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
     compile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
