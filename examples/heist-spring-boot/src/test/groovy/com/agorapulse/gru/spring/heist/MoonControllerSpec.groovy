@@ -23,6 +23,7 @@ class MoonControllerSpec extends Specification {
                 get '/moons/earth/moon'
                 expect {
                     headers 'Content-Type': 'application/json;charset=UTF-8'
+                    json 'moonResponse.json'
                 }
             }
     }
