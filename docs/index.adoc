@@ -81,7 +81,7 @@ include::../examples/heist/src/test/groovy/heist/SplitSpec.groovy[tag=whenThen,i
 ----
 <1> Mock the `moonService`
 <2> Call the `test` method within the `when` block
-<3> Call `verify` method manaually
+<3> Call `verify` method manually
 <4> Verify Spock interactions on `moonService` in `then` block
 
 
