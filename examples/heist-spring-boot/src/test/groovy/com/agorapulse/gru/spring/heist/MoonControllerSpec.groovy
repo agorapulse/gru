@@ -19,7 +19,6 @@ class MoonControllerSpec extends Specification {
     @Rule Gru<Spring> gru = Gru.equip(Spring.steal(this))
 
     void 'json is rendered'() {
-        assert mvc
         expect:
             gru.test {
                 get '/moons/earth/moon', {
@@ -35,6 +34,28 @@ class MoonControllerSpec extends Specification {
                     json 'moonResponse.json'
                     that content().encoding('UTF-8')
                     and content().contentType(MediaType.APPLICATION_JSON_UTF8)
+                }
+            }
+    }
+
+    void 'the only true moon'() {
+        expect:
+            gru.test {
+                get '/moons/the-only-true-moon'
+                expect {
+                    redirect '/moons/earth/moon'
+                }
+            }
+    }
+
+    void 'params echo'() {
+        expect:
+            gru.test {
+                get('/moons/params-echo') {
+                    params foo: 'bar', zoo: 'fun'
+                }
+                expect {
+                    json 'paramsEchoResponse.json'
                 }
             }
     }
