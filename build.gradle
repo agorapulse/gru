@@ -59,6 +59,12 @@ subprojects {
     // don't forget to update version in CaseReportFormSerializer
     version = currentVersion
 
+    processResources {
+        filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+            filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version])
+        }
+    }
+
     jar {
         manifest.attributes provider: 'gradle'
     }

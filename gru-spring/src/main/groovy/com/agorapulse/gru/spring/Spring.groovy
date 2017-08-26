@@ -1,11 +1,11 @@
 package com.agorapulse.gru.spring
 
 import com.agorapulse.gru.AbstractClient
-import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request
 
@@ -27,12 +27,12 @@ class Spring extends AbstractClient {
     }
 
     @Override
-    Client.Request getRequest() {
+    GruSpringRequest getRequest() {
         return request
     }
 
     @Override
-    Client.Response getResponse() {
+    GruSpringResponse getResponse() {
         return response
     }
 
@@ -60,7 +60,11 @@ class Spring extends AbstractClient {
                 'Please provide \'@Autowired MockMvc mockMvc\' field in your specification')
         }
 
-        MvcResult result = mockMvc.perform(request(request.method, requestURI)).andReturn()
+        MockHttpServletRequestBuilder builder = request(request.method, requestURI)
+        for (Closure step in request.steps) {
+            builder.with step
+        }
+        MvcResult result = mockMvc.perform(builder).andReturn()
         response = new GruSpringResponse(result.response)
         return context.withResult(result)
     }

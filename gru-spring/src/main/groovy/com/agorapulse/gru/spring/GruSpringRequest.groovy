@@ -35,7 +35,7 @@ class GruSpringRequest implements Client.Request {
         addBuildStep { param(name, value?.toString()) }
     }
 
-    private addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
+    void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
         steps << step
     }
 }
