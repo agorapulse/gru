@@ -19,12 +19,15 @@ repositories {
 }
 
 dependencies {
-    testCompile "com.agorapulse:gru-http:{version}"                                     // <2>
-    testCompile "com.agorapulse:gru-grails:{version}"                                   // <1>
+    // pick any of these as you need
+    testCompile "com.agorapulse:gru-http:{version}"                                     // <1>
+    testCompile "com.agorapulse:gru-grails:{version}"                                   // <2>
+    testCompile "com.agorapulse:gru-spring:{version}"                                   // <3>
 }
 ----
-<1> Grails module to emulate HTTP interaction within Grails Unit tests
-<2> HTTP module for any HTTP backend
+<1> HTTP module for any HTTP backend
+<2> Grails module to emulate HTTP interaction within Grails Unit tests
+<3> Spring module to emulate HTTP interaction using `MockMvc`
 
 [NOTE]
 ====
@@ -84,6 +87,33 @@ include::../examples/heist/src/test/groovy/heist/SplitSpec.groovy[tag=whenThen,i
 <3> Call `verify` method manaually
 <4> Verify Spock interactions on `moonService` in `then` block
 
+Spring
+~~~~~~
+Gru for link:https://spring.io/[Spring] allows you to test your application with mocked HTTP requests. Under the hood
+link:https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html[MockMvc] is used.
+
+.Minimal Spring Usage
+[source,groovy]
+----
+include::../examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/BasicSpec.groovy[]
+----
+<1> Use `@WebMvcTest` to properly setup Spring MVC test, see the warning bellow
+<2> Field with type `MockMvc` must exist and must not be `null` during the test execution
+<3> Initiate `Gru` with `Spring` client
+<4> Issue mock `GET` request to `/moon/earth/moon` and expect it returns `OK(200)` response
+
+[WARNING]
+====
+Spock version at least `1.1` must be used when executing Spring tests. For example link:https://projects.spring.io/spring-boot/[Spring Boot]
+overrides the default transitive dependency back to `1.0` so you need to explicity declare Spock version in your build file:
+
+[source,groovy]
+----
+String spockVersion = '1.1-groovy-2.4'
+testCompile("org.spockframework:spock-spring:$spockVersion")
+testCompile("org.spockframework:spock-core:$spockVersion")
+----
+====
 
 Common Interactions
 -------------------
@@ -375,6 +405,45 @@ include::../examples/heist/src/integration-test/groovy/heist/MoonControllerInteg
 <3> Store server URL in variable, otherwise it won't get properly evaluated
 <4> Set the base URI for the executed test
 
+
+Spring Unit Test Integration
+----------------------------
+On top of standard HTTP interaction, Gru provides additional methods specific for Spring only. These methods allows you
+to fully leverage the power of link:https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html[MockMvc].
+
+NOTE: As of IntelliJ IDEA 2017.2 you get false warnings about the wrong method's argument being used. You have to
+ignore them at the moment. Please, vote for link:https://youtrack.jetbrains.com/issue/IDEA-177530[IDEA-177530] bug to get
+this fixed soon.
+
+MockMVC Builders
+~~~~~~~~~~~~~~~~
+
+You can configure additional request steps within `request` method closure definition and you can use `that`
+within `expect` block to add additional `ResultMatcher`. Both methods are aliased to `and` method within their
+blocks so you can write the assertions in more fluent way.
+
+.MockMVC Builders
+[source, groovy]
+----
+include::../examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerSpec.groovy[tag=mockmvc,ident=0]
+----
+<1> Use `request` method to fine-tune link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/request/MockHttpServletRequestBuilder.html[MockHttpServletRequestBuilder]
+<2> Declare `Accept` header
+<3> Same as `request`, declares desired locale
+<4> Use `that` method to add additional result matchers, the `content()` method is statically imported from
+link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
+<5> Same as `that`, asserts the content type returned
+
+Integration Tests
+~~~~~~~~~~~~~~~~~
+You use `Http` client to verify controller within `@Integration` test.
+
+.Integration Setup
+[source,groovy]
+----
+include::../examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerIntegrationTest.groovy[]
+----
+
 Extending Gru
 -------------
 
@@ -449,7 +518,12 @@ After that the new extension method can be used in any test
 ----
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=model,indent=0]
 ----
-
+<1> Use `@SpringBootTest` annotation to run the application on random port
+<2> Inject the value of the random port
+<3> Initialize `Gru` using `Http` client
+<4> Construct the server URL
+<5> Set the server URL as the base URI for testing
+<6> Run test against the running application
 
 Creating New Client
 ~~~~~~~~~~~~~~~~~~~

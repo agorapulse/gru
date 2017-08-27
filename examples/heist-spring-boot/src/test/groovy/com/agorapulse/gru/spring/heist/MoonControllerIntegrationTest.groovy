@@ -7,22 +7,21 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.Specification
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)             // <1>
 class MoonControllerIntegrationTest extends Specification {
 
-    @Value('${local.server.port}')
-    private int serverPort
+    @Value('${local.server.port}') private int serverPort                               // <2>
 
-    @Rule Gru<Http> gru = Gru.equip(Http.steal(this))
+    @Rule Gru<Http> gru = Gru.equip(Http.steal(this))                                   // <3>
 
     void setup() {
-        final String serverUrl = "http://localhost:${serverPort}"
+        final String serverUrl = "http://localhost:${serverPort}"                       // <4>
         gru.prepare {
-            baseUri serverUrl
+            baseUri serverUrl                                                           // <5>
         }
     }
 
-    void 'render json'() {
+    void 'render json'() {                                                              // <6>
         expect:
             gru.test {
                 get('/moons/earth/moon')
