@@ -29,7 +29,15 @@ public abstract class AbstractClient implements Client {
 
     @Override
     public String getCurrentDescription() {
-        return getRequest().getMethod() + " on " + getRequest().getBaseUri() + getRequest().getUri();
+        StringBuilder builder = new StringBuilder(getRequest().getMethod());
+        builder.append(" on ");
+        if (getRequest().getBaseUri() != null) {
+            builder.append(getRequest().getBaseUri());
+        }
+        if (getRequest().getUri() != null) {
+            builder.append(getRequest().getUri());
+        }
+        return builder.toString();
     }
 
     @Override
