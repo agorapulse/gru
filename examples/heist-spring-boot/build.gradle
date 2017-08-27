@@ -27,6 +27,7 @@ dependencies {
 	compile('org.codehaus.groovy:groovy')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
     testCompile(project(':gru-spring'))
+    testCompile(project(':gru-http'))
     testCompile("org.spockframework:spock-spring:$spockVersion")
     testCompile("org.spockframework:spock-core:$spockVersion")
 }

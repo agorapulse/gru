@@ -52,7 +52,7 @@ class Spring extends AbstractClient {
         } else if (unitTest.hasProperty('mvc')) {
             mockMvc = unitTest.mvc as MockMvc
         } else {
-            mockMvc = unitTest.properties.find { it instanceof MockMvc } as MockMvc
+            mockMvc = unitTest.properties.find { name, value -> value instanceof MockMvc }?.value as MockMvc
         }
 
         if (!mockMvc) {
