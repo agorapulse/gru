@@ -73,8 +73,8 @@ class MoonController {
         if (item) {
             if (request.getHeader('Accept') == 'text/plain') {
                 render text: "$item.name goes around $item.planet"
+                return
             }
-
 
             return [moon: item]
         }

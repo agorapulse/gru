@@ -1,10 +1,15 @@
 package heist
 
 import com.agorapulse.gru.Gru
+import com.agorapulse.gru.grails.minions.InterceptorsMinion
+import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.http.Http
+import com.agorapulse.gru.jsonunit.MatchesPattern
 import grails.testing.mixin.integration.Integration
 import org.junit.Rule
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpStatus
+import org.springframework.web.servlet.ModelAndView
 import spock.lang.Specification
 
 /**
@@ -76,6 +81,113 @@ class MoonControllerIntegrationSpec extends Specification {
                 get '/moons/earth/moon/info'
                 expect {
                     html 'htmlResponse.html'
+                }
+            }
+    }
+
+    void 'good interceptor'() {
+        expect:
+            gru.test {
+                get '/moons/good/interceptor'
+                expect {
+                    status NOT_FOUND
+                    headers 'X-Good-Message': 'You are so good!'
+                }
+            }
+    }
+
+    void 'bad interceptor'() {
+        expect:
+            gru.test {
+                get '/moons/bad/interceptor'
+            }
+    }
+
+    void 'ugly interceptor'() {
+        expect:
+            gru.test {
+                get '/moons/ugly/interceptor'
+            }
+    }
+
+    void 'steal the moon with shrink ray'() {
+        expect:
+            gru.test {
+                delete '/moons/earth/moon', {
+                    params with: 'shrink-ray'
+                }
+                expect {
+                    status NO_CONTENT
+                }
+            }
+    }
+
+    void 'visit secret moon Noom'() {
+        expect:
+            gru.test {
+                get '/moons/earth/noom', {
+                    headers Authorization: 'Felonius'
+                }
+            }
+    }
+
+    void 'create moon for Margot'() {
+        expect:
+            gru.test {
+                post '/moons/earth', {
+                    json 'newMoonRequest.json'
+                }
+            }
+    }
+
+    void 'json is rendered'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    headers 'Content-Type': 'application/json;charset=UTF-8'
+                }
+            }
+    }
+
+    void 'verify json'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    json 'moonResponse.json'
+                }
+            }
+    }
+
+    void 'verify json 2'() {
+        expect:
+            gru.test {
+                get '/moons/earth'
+                expect {
+                    json 'moonsResponse.json', IGNORING_EXTRA_ARRAY_ITEMS
+                }
+            }
+    }
+
+    void 'no planet needed'() {
+        expect:
+            gru.test {
+                get '/moons/-/moon'
+                expect {
+                    redirect '/moons/earth/moon'
+                }
+            }
+    }
+
+    void 'verify text'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon/info', {
+                    headers 'Accept': 'text/plain'
+                }
+                expect {
+                    text 'textResponse.txt'
                 }
             }
     }
