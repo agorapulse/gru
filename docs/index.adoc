@@ -270,7 +270,7 @@ There are built in and custom placeholders which can be used when evaluating the
 [options="header"]
 |=======================================================================================================================
 | Placeholder                       | Description
-| `"${json-unit.ignore}"`           | Ignore content of the propery
+| `"${json-unit.ignore}"`           | Ignore content of the property
 | `"${json-unit.regex}[A-Z]+"`      | Content must match regular expression
 | `"${json-unit.any-string}"`       | Any string
 | `"${json-unit.any-boolean}"`      | Any boolean
