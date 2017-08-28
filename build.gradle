@@ -135,7 +135,7 @@ subprojects {
         pkg {
             websiteUrl = 'http://agorapulse.github.io/gru/'
             issueTrackerUrl = 'https://github.com/agorapulse/gru/issues'
-            vcsUrl = 'https://github.com/agorapulse/agorapulse.git'
+            vcsUrl = 'https://github.com/agorapulse/agorapulse/gru.git'
 
             repo = 'libs' // or your repo name
             userOrg = 'agorapulse'
