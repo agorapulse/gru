@@ -10,6 +10,9 @@ import spock.lang.Specification
 
 import static com.agorapulse.gru.minions.AbstractContentMinion.TEST_RESOURCES_FOLDER_PROPERTY_NAME
 
+/**
+ * Tests for TextMinion.
+ */
 class TextMinionSpec extends Specification {
 
     private static final String TEXT = 'Hello World'
@@ -57,7 +60,7 @@ class TextMinionSpec extends Specification {
         }
 
         @Override
-        void reset() {}
+        void reset() { }
 
         @Override
         GruContext run(Squad squad, GruContext context) {

@@ -2,10 +2,13 @@ package com.agorapulse.gru
 
 import spock.lang.Specification
 
+/**
+ * Tests for GruContext.
+ */
 class GruContextSpec extends Specification {
 
-    private static final String RESULT = "foo"
-    private static final Exception EXCEPTION = new RuntimeException("bar")
+    private static final String RESULT = 'foo'
+    private static final Exception EXCEPTION = new RuntimeException('bar')
 
     void 'new context from callable - result'() {
         when:
@@ -33,7 +36,7 @@ class GruContextSpec extends Specification {
             context.error == EXCEPTION
     }
 
-    void 'create with error'() {
+    void 'test create with error'() {
         when:
             GruContext context = GruContext.error(EXCEPTION)
         then:
@@ -41,7 +44,7 @@ class GruContextSpec extends Specification {
             context.error == EXCEPTION
     }
 
-    void 'create with result'() {
+    void 'test create with result'() {
         when:
             GruContext context = GruContext.result(RESULT)
         then:
@@ -49,7 +52,7 @@ class GruContextSpec extends Specification {
             context.error == null
     }
 
-    void 'create with result and error'() {
+    void 'test create with result and error'() {
         when:
             GruContext context = GruContext.resultAndError(RESULT, EXCEPTION)
         then:
@@ -57,7 +60,7 @@ class GruContextSpec extends Specification {
             context.error == EXCEPTION
     }
 
-    void 'create with just result'() {
+    void 'test create with just result'() {
         when:
             GruContext context = GruContext.resultAndError(RESULT, EXCEPTION).justResult()
         then:
@@ -65,7 +68,7 @@ class GruContextSpec extends Specification {
             context.error == null
     }
 
-    void 'create with just error'() {
+    void 'test create with just error'() {
         when:
             GruContext context = GruContext.resultAndError(RESULT, EXCEPTION).justError()
         then:
@@ -80,8 +83,4 @@ class GruContextSpec extends Specification {
             GruContext.result(RESULT).toString() == 'GruContext with result \'foo\''
             GruContext.resultAndError(RESULT, EXCEPTION).toString() == 'GruContext with result \'foo\' and error \'java.lang.RuntimeException: bar\''
     }
-
-
-
-
 }
