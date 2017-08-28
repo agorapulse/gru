@@ -8,5 +8,4 @@ dependencies {
     compile group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
     compile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
-
 }

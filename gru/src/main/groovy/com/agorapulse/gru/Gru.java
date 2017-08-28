@@ -130,7 +130,7 @@ public class Gru<C extends Client> implements TestRule {
     public final boolean verify() throws Throwable {
         checkExpectationsPresent();
         if (verified) {
-            return true;
+            return verificationResult;
         }
 
         verified = true;
@@ -139,7 +139,7 @@ public class Gru<C extends Client> implements TestRule {
 
         squad.verify(client, context);
 
-        return true;
+        return verificationResult = true;
     }
 
     private void checkExpectationsPresent() {
@@ -153,6 +153,7 @@ public class Gru<C extends Client> implements TestRule {
      */
     public Gru reset() {
         verified = false;
+        verificationResult = false;
         definition = false;
         context = GruContext.EMPTY;
         configurations.clear();
@@ -178,6 +179,12 @@ public class Gru<C extends Client> implements TestRule {
      * If the expectations has been already verified.
      */
     private boolean verified;
+
+    /**
+     * Verification result.
+     */
+    private boolean verificationResult;
+
     /**
      * IF test method has been called
      */

@@ -1,6 +1,7 @@
 package heist
 
 import com.agorapulse.gru.Gru
+import com.agorapulse.gru.exception.GroovyAssertAwareMultipleFailureException
 import com.agorapulse.gru.grails.Grails
 import com.agorapulse.gru.grails.minions.GrailsHtmlMinion
 import com.agorapulse.gru.grails.minions.InterceptorsMinion
@@ -132,6 +133,29 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
 
+    void 'test multiple exceptions'() {
+        when:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    status I_AM_A_TEAPOT
+                    text 'textResponse.txt'
+                    json 'echoRequest.json'
+                    html 'htmlResponse.html'
+                }
+            }
+        and:
+            gru.verify()
+        then:
+            GroovyAssertAwareMultipleFailureException ex = thrown(GroovyAssertAwareMultipleFailureException)
+            ex.message.contains('assert client.response.status == status')
+            ex.message.contains('assert actual == expected')
+        when:
+            assert !gru.verify()
+        then:
+            noExceptionThrown()
+    }
+
     void 'give me anything'() {
         expect:
             gru.test {
@@ -142,6 +166,14 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                     model(['foo', 'bar'])
                 }
             }
+    }
+
+    void 'verify without test'() {
+        when:
+            gru.verify()
+        then:
+            AssertionError e = thrown(AssertionError)
+            e.message == 'There are no expectations!'
     }
 
     // tag::stealWithShrinkRay[]
