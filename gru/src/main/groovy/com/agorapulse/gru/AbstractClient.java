@@ -46,6 +46,11 @@ public abstract class AbstractClient implements Client {
     }
 
     @Override
+    public Object getUnitTest() {
+        return unitTest;
+    }
+
+    @Override
     public String toString() {
         return getCurrentDescription();
     }

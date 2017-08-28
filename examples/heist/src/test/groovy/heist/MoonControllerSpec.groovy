@@ -318,4 +318,18 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
     // end::verifyHtml[]
+
+    // tag::verifyText[]
+    void 'verify text'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon/info', {
+                    headers 'Accept': 'text/plain'
+                }
+                expect {
+                    text 'textResponse.txt'
+                }
+            }
+    }
+    // end::verifyText[]
 }

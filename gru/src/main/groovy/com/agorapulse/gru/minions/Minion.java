@@ -18,12 +18,13 @@ public interface Minion {
     int PARAMETERS_MINION_INDEX = 20000;
     int JSON_MINION_INDEX = 30000;
     int HTML_MINION_INDEX = 30001;
+    int TEXT_MINION_INDEX = 30002;
     int INTERCEPTORS_MINION_INDEX = 50000;
     int MODEL_MINION_INDEX = 60000;
     // end::constants[]
 
     /**
-     * Comparator to compare minions by their index.
+     * Comparator to compare miniorns by their index.
      */
     Comparator<Minion> COMPARATOR = new Comparator<Minion>() {
         @Override

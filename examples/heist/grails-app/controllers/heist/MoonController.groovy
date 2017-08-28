@@ -71,6 +71,11 @@ class MoonController {
     def info(String planet, String moon) {
         def item = moonService.findByPlanetAndName(planet, moon)
         if (item) {
+            if (request.getHeader('Accept') == 'text/plain') {
+                render text: "$item.name goes around $item.planet"
+            }
+
+
             return [moon: item]
         }
         render status: HttpStatus.NOT_FOUND

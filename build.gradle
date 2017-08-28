@@ -199,7 +199,7 @@ githubPages {
 
 publishGhPages.dependsOn asciidoctor
 
-tasks.jacocoFullReport.dependsOn subprojects.collect { it.tasks.test }
+tasks.jacocoFullReport.dependsOn subprojects.collect { it.tasks.check }
 
 gradle.taskGraph.whenReady {
     coveralls {

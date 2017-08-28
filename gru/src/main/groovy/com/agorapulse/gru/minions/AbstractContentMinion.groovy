@@ -12,6 +12,8 @@ import groovy.util.logging.Log
 @Log @CompileStatic
 abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C> {
 
+    public static final String TEST_RESOURCES_FOLDER_PROPERTY_NAME = 'TEST_RESOURCES_FOLDER'
+
     String responseFile
 
     protected final List<String> createdResources = []
@@ -62,10 +64,7 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
             return
         }
         createdResources << path
-        File file = new File(System.getProperty('TEST_RESOURCES_FOLDER') ?: 'src/test/resources', path)
-        if (file.exists()) {
-            throw new IllegalArgumentException("File $path already exists!")
-        }
+        File file = new File(System.getProperty(TEST_RESOURCES_FOLDER_PROPERTY_NAME) ?: 'src/test/resources', path)
         file.parentFile.mkdirs()
         file.text = content
     }

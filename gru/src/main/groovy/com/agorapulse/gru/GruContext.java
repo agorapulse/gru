@@ -82,7 +82,7 @@ public class GruContext {
      * @return new context holding just the result of execution, ignoring the error
      */
     public GruContext justResult() {
-        return new GruContext(result, error);
+        return new GruContext(result, null);
     }
 
     /**

@@ -214,6 +214,20 @@ You can specify expected redirection URI. For redirection, default status code i
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=redirect,indent=0]
 ----
 
+Plain Text Response
+^^^^^^^^^^^^^^^^^^^
+You can specify expected plain text response. The responded JSON is verified just by `equals` method.
+
+.Plain Text Response
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyText,indent=0]
+----
+
+.textResponse.txt
+----
+include::../examples/heist/src/test/resources/heist/MoonControllerSpec/textResponse.txt[]
+----
 
 JSON Response
 ^^^^^^^^^^^^^

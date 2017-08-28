@@ -87,6 +87,16 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
         });
     }
 
+    @Override
+    public ResponseDefinitionBuilder text(final String relativePath) {
+        return command(TextMinion.class, new Command<TextMinion>() {
+            @Override
+            public void execute(TextMinion minion) {
+                minion.setResponseFile(relativePath);
+            }
+        });
+    }
+
     /**
      * Sets additional assertions and configuration for JsonFluentAssert instance which is testing the response.
      *
