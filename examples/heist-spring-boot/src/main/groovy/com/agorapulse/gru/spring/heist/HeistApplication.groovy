@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class HeistApplication {
 
 	static void main(String[] args) {
-		SpringApplication.run HeistApplication, args
+		SpringApplication.run HeistApplication, args // $COVERAGE-IGNORE$
 	}
 }

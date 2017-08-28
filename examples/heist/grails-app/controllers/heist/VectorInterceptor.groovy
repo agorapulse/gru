@@ -15,7 +15,7 @@ class VectorInterceptor {
         return false
     }
 
-    boolean after() { true }
+    boolean after() { true } // $COVERAGE-IGNORE$
 
     void afterView() {
         // no-op
