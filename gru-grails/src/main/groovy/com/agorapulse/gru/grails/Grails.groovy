@@ -49,7 +49,8 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
         GrailsControllerClass controllerClass = squad.ask(UrlMappingsMinion) { getControllerClass(unitTest) }
         String actionName = squad.ask(UrlMappingsMinion) { getActionName(unitTest) }
 
-        context.withResult(controllerClass.invoke(unitTest.controller, actionName))
+        Object result = controllerClass.invoke(unitTest.controller, actionName)
+        context.withResult(result)
     }
 
     U getUnitTest() {

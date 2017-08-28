@@ -3,6 +3,7 @@ package heist
 import grails.converters.JSON
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.web.servlet.ModelAndView
 
 class MoonController {
 
@@ -26,6 +27,14 @@ class MoonController {
 
     def echo() {
         render(request.JSON as JSON)
+    }
+
+    def modelAndView() {
+        new ModelAndView('info', [foo: 'bar'], HttpStatus.ACCEPTED)
+    }
+
+    def anything() {
+        ['foo', 'bar']
     }
 
     def moon(String planet, String moon) {

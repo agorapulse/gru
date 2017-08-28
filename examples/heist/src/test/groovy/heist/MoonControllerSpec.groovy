@@ -3,10 +3,13 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import com.agorapulse.gru.grails.minions.GrailsHtmlMinion
+import com.agorapulse.gru.grails.minions.InterceptorsMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.jsonunit.MatchesPattern
 import grails.testing.web.controllers.ControllerUnitTest
 import org.junit.Rule
+import org.springframework.http.HttpStatus
+import org.springframework.web.servlet.ModelAndView
 import spock.lang.Specification
 
 /**
@@ -78,6 +81,65 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                 }
                 expect {
                     json 'echoResponse.json'
+                }
+            }
+    }
+
+    void 'good interceptor'() {
+        expect:
+            gru.test {
+                include GoodInterceptor
+                get '/moons/good/interceptor'
+                expect {
+                    status NOT_FOUND
+                    headers 'X-Good-Message': 'You are so good!'
+                }
+            }
+    }
+
+    void 'bad interceptor'() {
+        expect:
+            gru.test {
+                include BadInterceptor
+                get '/moons/bad/interceptor'
+            }
+    }
+
+    void 'ugly interceptor'() {
+        expect:
+            gru.test {
+                include UglyInterceptor
+                get '/moons/ugly/interceptor'
+            }
+    }
+
+    void 'with interceptor minion'() {
+        expect:
+            gru.engage(new InterceptorsMinion()).test {
+                get '/moons/earth/moon'
+            }
+    }
+
+    void 'give me some model'() {
+        expect:
+            gru.test {
+                get '/moons/give-me-some-model', {
+                    executes controller.&modelAndView
+                }
+                expect {
+                    model new ModelAndView('info', [foo: 'bar'], HttpStatus.ACCEPTED)
+                }
+            }
+    }
+
+    void 'give me anything'() {
+        expect:
+            gru.test {
+                get '/moons/give-me-anything', {
+                    executes controller.&anything
+                }
+                expect {
+                    model(['foo', 'bar'])
                 }
             }
     }

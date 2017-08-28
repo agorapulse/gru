@@ -5,6 +5,8 @@ import org.springframework.http.HttpMethod
 class UrlMappings {
 
     static mappings = {
+        "/moons/give-me-some-model"(controller: "moon", action: "modelAndView", method: HttpMethod.GET)
+        "/moons/give-me-anything"(controller: "moon", action: "anything", method: HttpMethod.GET)
 
         "/moons/$planet"(controller: "moon", action: "all", method: HttpMethod.GET)
         "/moons/$planet"(controller: "moon", action: "create", method: HttpMethod.POST)

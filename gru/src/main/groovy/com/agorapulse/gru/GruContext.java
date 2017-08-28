@@ -151,4 +151,25 @@ public class GruContext {
         return this;
     }
 
+    @Override
+    public String toString() {
+        if (result == null && error == null) {
+            return "Empty GruContext";
+        }
+
+        StringBuilder builder = new StringBuilder("GruContext with ");
+
+        if (result != null) {
+            builder.append("result '").append(result).append("'");
+            if (error != null) {
+                builder.append(" and ");
+            }
+        }
+
+        if (error != null) {
+            builder.append("error '").append(error).append("'");
+        }
+
+        return builder.toString();
+    }
 }

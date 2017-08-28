@@ -63,6 +63,10 @@ class HtmlMinion extends AbstractContentMinion<Client> {
         .build()
 
         if (diff.hasDifferences()) {
+            log.info 'ACTUAL:'
+            log.info actual
+            log.info 'EXPECTED:'
+            log.info expected
             throw new AssertionError("HTML files are different:\n\n ${diff.toString()}")
         }
     }

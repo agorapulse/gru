@@ -4,6 +4,7 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.grails.Grails
 import com.agorapulse.gru.minions.AbstractMinion
+import org.springframework.web.servlet.ModelAndView
 
 /**
  * Minion responsible for verifying model returned from the controller action.
@@ -25,6 +26,14 @@ class ModelMinion extends AbstractMinion<Grails> {                              
             model.each { key, value ->
                 assert context.result[key] == value
             }
+        } else if (model instanceof ModelAndView) {
+            assert context.result
+
+            ModelAndView result = context.result as ModelAndView
+
+            assert result.model == model.model
+            assert result.view == model.view
+            assert result.status == model.status
         } else if (model != null) {
             assert context.result == model
         }
