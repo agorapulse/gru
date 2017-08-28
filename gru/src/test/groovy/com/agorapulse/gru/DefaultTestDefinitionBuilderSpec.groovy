@@ -44,7 +44,7 @@ class DefaultTestDefinitionBuilderSpec extends Specification {
             1 * request.addParameter(PARAMETER_KEY, PARAMETER_VALUE)
         where:
             method << HttpVerbsShortcuts.fields.findAll {
-                Modifier.isStatic(it.modifiers) && Modifier.isFinal(it.modifiers)
+                Modifier.isStatic(it.modifiers) && Modifier.isFinal(it.modifiers) && it.type == String
             } *.name
     }
 

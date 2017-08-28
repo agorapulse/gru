@@ -55,13 +55,11 @@ class GruHttpRequest implements Client.Request {
     Request buildOkHttpRequest() {
         HttpUrl.Builder url = baseUri ? HttpUrl.parse(baseUri).newBuilder().addPathSegments(uri) : HttpUrl.parse(uri).newBuilder()
         if (parameters) {
-            if (method == TestDefinitionBuilder.GET || body) {
+            if (method in TestDefinitionBuilder.HAS_URI_PARAMETERS || body) {
                 parameters.each { key, value ->
                     url.addQueryParameter(key, value)
                 }
-                if (!body) {
-                    builder.get()
-                }
+                builder.method(method, body)
             } else {
                 FormBody.Builder form = new FormBody.Builder()
                 parameters.each { key, value ->

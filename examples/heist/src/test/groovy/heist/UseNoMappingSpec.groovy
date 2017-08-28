@@ -2,6 +2,7 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
+import com.agorapulse.gru.minions.HttpMinion
 import grails.testing.web.controllers.ControllerUnitTest
 import org.junit.Rule
 import spock.lang.Specification
@@ -13,7 +14,10 @@ class UseNoMappingSpec extends Specification implements ControllerUnitTest<MoonC
     void 'look at the moon'() {
         when:
             gru.test {
-                get '/moons/earth/moon'
+                command(HttpMinion) {
+                    baseUri '/moons'
+                }
+                get '/earth/moon'
             }.verify()
         then:
             AssertionError ex = thrown(AssertionError)

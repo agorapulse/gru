@@ -86,7 +86,11 @@ class MoonController {
     }
 
     def steal(String planet, String moon) {
-        render status: HttpStatus.NO_CONTENT
+        if (params.with == 'shrink-ray') {
+            render status: HttpStatus.NO_CONTENT
+            return
+        }
+        render status: HttpStatus.BAD_REQUEST
     }
 
     def all(String planet) {

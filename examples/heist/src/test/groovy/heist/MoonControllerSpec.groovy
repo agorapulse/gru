@@ -201,6 +201,28 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     }
     // end::secretMoon[]
 
+    void 'failed to visit secret moon Noom'() {
+        expect:
+            gru.test {
+                get '/moons/earth/noom', {
+                    headers Authorization: 'Vector'
+                }
+                expect {
+                    status FORBIDDEN
+                }
+            }
+    }
+
+    void 'failed to visit secret non-exiting moon'() {
+        expect:
+            gru.test {
+                get '/moons/earth/mesicek'
+                expect {
+                    status NOT_FOUND
+                }
+            }
+    }
+
     // tag::newMoon[]
     void 'create moon for Margot'() {
         expect:
@@ -364,4 +386,25 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
     // end::verifyText[]
+
+    void 'add wrong artifact'() {
+        when:
+            Gru.equip(Grails.steal(this)).test {
+                include MoonControllerSpec
+                get '/moons/earth/moon'
+            }.verify()
+        then:
+            thrown(IllegalArgumentException)
+    }
+
+    void 'pass wrong closure'() {
+        when:
+            Gru.equip(Grails.steal(this)).test {
+                get '/moons/earth/moon', {
+                    executes {}
+                }
+            }.verify()
+        then:
+            thrown(IllegalArgumentException)
+    }
 }
