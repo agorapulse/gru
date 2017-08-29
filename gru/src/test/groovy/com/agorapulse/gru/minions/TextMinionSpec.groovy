@@ -1,9 +1,9 @@
 package com.agorapulse.gru.minions
 
-import com.agorapulse.gru.AbstractClient
 import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
+import com.agorapulse.gru.TestClient
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -30,7 +30,7 @@ class TextMinionSpec extends Specification {
             Client.Response response = Mock(Client.Response) {
                 getText() >> TEXT
             }
-            Client client = new TestClient(this, response)
+            Client client = new TestClient(this, null, response)
             Squad squad = new Squad()
         when:
             textMinion.verify(client, squad, GruContext.EMPTY)
@@ -44,28 +44,6 @@ class TextMinionSpec extends Specification {
             fixtureFile.exists()
             fixtureFile.text == TEXT
 
-    }
-
-    static class TestClient extends AbstractClient {
-        final Client.Response response
-
-        TestClient(Object unitTest, Client.Response response) {
-            super(unitTest)
-            this.response = response
-        }
-
-        @Override
-        Client.Request getRequest() {
-            throw new UnsupportedOperationException()
-        }
-
-        @Override
-        void reset() { }
-
-        @Override
-        GruContext run(Squad squad, GruContext context) {
-            throw new UnsupportedOperationException()
-        }
     }
 
 }

@@ -14,11 +14,11 @@ class UrlMappings {
         "/moons/$planet/$moon"(controller: "moon", action: "steal", method: HttpMethod.DELETE)
         "/moons/$planet/$moon/info"(controller: "moon", action: "info", method: HttpMethod.GET)
 
-        "/$controller/$action?/$id?(.$format)?"{
-            constraints {
-                // apply constraints here
-            }
-        }
+//        "/$controller/$action?/$id?(.$format)?"{
+//            constraints {
+//                // apply constraints here
+//            }
+//        }
 
         "/"(view:"/index")
         "500"(view:'/error')

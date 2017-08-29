@@ -58,16 +58,8 @@ class HttpMinion extends AbstractMinion<Client> {
         return requestHeaders
     }
 
-    void setRequestHeaders(Multimap<String, String> requestHeaders) {
-        this.requestHeaders = requestHeaders
-    }
-
     Multimap<String, String> getResponseHeaders() {
         return responseHeaders
-    }
-
-    void setResponseHeaders(Multimap<String, String> responseHeaders) {
-        this.responseHeaders = responseHeaders
     }
 
     String getRedirectUri() {
@@ -81,7 +73,7 @@ class HttpMinion extends AbstractMinion<Client> {
     public static final int DEFAULT_STATUS = 200
 
     private int status = DEFAULT_STATUS
-    private Multimap<String, String> requestHeaders = LinkedListMultimap.create()
-    private Multimap<String, String> responseHeaders = LinkedListMultimap.create()
+    private final Multimap<String, String> requestHeaders = LinkedListMultimap.create()
+    private final Multimap<String, String> responseHeaders = LinkedListMultimap.create()
     private String redirectUri
 }

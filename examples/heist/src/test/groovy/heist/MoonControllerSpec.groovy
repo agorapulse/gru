@@ -7,6 +7,8 @@ import com.agorapulse.gru.grails.minions.GrailsHtmlMinion
 import com.agorapulse.gru.grails.minions.InterceptorsMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.jsonunit.MatchesPattern
+import com.agorapulse.gru.minions.Command
+import com.agorapulse.gru.minions.HttpMinion
 import grails.testing.web.controllers.ControllerUnitTest
 import org.junit.Rule
 import org.springframework.http.HttpStatus
@@ -26,9 +28,20 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
         controller.moonService = new MoonService()
     }
 
+    void 'you shall not steal earth (not mapped)'() {
+        when:
+            gru.test {
+                delete '/moons/earth'
+            }.verify()
+        then:
+            AssertionError error = thrown(AssertionError)
+            error.message == 'URL \'/moons/earth\' is not mapped with method DELETE!'
+    }
+
     void 'render json'() {
         expect:
             gru.test {
+                include DefaultUrlMappings
                 get('/moon') {
                     executes controller.&index
                 }
@@ -41,6 +54,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     void 'teapot'() {
         expect:
             gru.test {
+                include DefaultUrlMappings
                 get('/moon/teapot') {
                     executes controller.&teapot
                 }
@@ -53,6 +67,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     void 'redirect to teapot'() {
         expect:
             gru.test {
+                include DefaultUrlMappings
                 get('/moon/redirectToTeapot') {
                     executes controller.&redirectToTeapot
                 }
@@ -65,11 +80,12 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     void 'forward to teapot'() {
         expect:
             gru.test {
+                include DefaultUrlMappings
                 get('/moon/forwardToTeapot') {
                     executes controller.&forwardToTeapot
                 }
                 expect {
-                    forward '/moon/teapot'
+                    forward '/moon/teapot?format='
                 }
             }
     }
@@ -77,6 +93,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     void 'echo'() {
         expect:
             gru.test {
+                include DefaultUrlMappings
                 post '/moon/echo', {
                     json 'echoRequest.json'
                 }
@@ -406,5 +423,66 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }.verify()
         then:
             thrown(IllegalArgumentException)
+    }
+
+    void 'there is no charon around earth'() {
+        expect:
+            gru.test {
+                get '/moons/earth/charon'
+                expect {
+                    status NOT_FOUND
+                    text 'emptyResponse.txt'
+                }
+            }
+    }
+
+    void 'there is no charon around earth (using command)'() {
+        expect:
+            gru.test {
+                command (HttpMinion, new Command<HttpMinion>() {
+                    @Override
+                    void execute(HttpMinion minion) {
+                        minion.setStatus(404)
+                    }
+                })
+                get '/moons/earth/charon'
+                expect {
+                    text 'emptyResponse.txt'
+                }
+            }
+    }
+
+    void 'controller not mocked'() {
+        when:
+            gru.test {
+                include DefaultUrlMappings
+                get '/foo/bar'
+            }.verify()
+        then:
+            AssertionError error = thrown(AssertionError)
+            error.message == 'The URL is not mapped or the controller \'foo\' is not mocked!'
+    }
+
+    void 'you shall not steal earth'() {
+        when:
+            gru.test {
+                include DefaultUrlMappings
+                delete '/moon/earth'
+            }.verify()
+        then:
+            AssertionError error = thrown(AssertionError)
+            error.message == 'Action \'earth\' does not exist in controller \'moon\''
+    }
+
+    void 'url mapping to wrong action'() {
+        when:
+            gru.test {
+                get '/moons/earth/moon', {
+                    executes controller.&steal
+                }
+            }.verify()
+        then:
+            AssertionError error = thrown(AssertionError)
+            error.message == 'GET: \'/moons/earth/moon\' is not mapped to heist.MoonController.steal!'
     }
 }

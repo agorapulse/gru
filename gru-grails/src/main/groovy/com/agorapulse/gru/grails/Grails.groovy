@@ -47,7 +47,18 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
     @Override
     GruContext run(Squad squad, GruContext context) {
         GrailsControllerClass controllerClass = squad.ask(UrlMappingsMinion) { getControllerClass(unitTest) }
+
+        if (!controllerClass) {
+            String controllerName = squad.ask(UrlMappingsMinion) { getControllerName(unitTest) }
+            return context.withError(new AssertionError("The URL is not mapped or the controller '$controllerName' is not mocked!"))
+        }
+
         String actionName = squad.ask(UrlMappingsMinion) { getActionName(unitTest) }
+
+        if (!controllerClass.actions.contains(actionName)) {
+            String controllerName = squad.ask(UrlMappingsMinion) { getControllerName(unitTest) }
+            return context.withError(new AssertionError("Action '$actionName' does not exist in controller '$controllerName'"))
+        }
 
         Object result = controllerClass.invoke(unitTest.controller, actionName)
         context.withResult(result)
