@@ -75,6 +75,6 @@ class Spring extends AbstractClient {
 
     @Override
     Object getUnitTest() {
-        return this.@unitTest
+        super.unitTest
     }
 }

@@ -65,7 +65,7 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
     }
 
     U getUnitTest() {
-        this.@unitTest as U
+        super.unitTest as U
     }
 
     @Override

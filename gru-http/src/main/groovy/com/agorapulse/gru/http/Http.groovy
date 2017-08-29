@@ -48,7 +48,7 @@ class Http extends AbstractClient {
 
     @Override
     Object getUnitTest() {
-        return this.@unitTest
+        super.unitTest
     }
 
     @Override
