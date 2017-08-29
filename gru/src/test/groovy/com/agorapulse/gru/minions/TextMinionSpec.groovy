@@ -32,6 +32,8 @@ class TextMinionSpec extends Specification {
             }
             Client client = new TestClient(this, null, response)
             Squad squad = new Squad()
+        expect:
+            client.unitTest == this
         when:
             textMinion.verify(client, squad, GruContext.EMPTY)
         then:

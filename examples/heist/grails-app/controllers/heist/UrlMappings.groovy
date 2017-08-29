@@ -7,6 +7,8 @@ class UrlMappings {
     static mappings = {
         "/moons/give-me-some-model"(controller: "moon", action: "modelAndView", method: HttpMethod.GET)
         "/moons/give-me-anything"(controller: "moon", action: "anything", method: HttpMethod.GET)
+        "/moons/params-to-json"(controller: "moon", action: "paramsToJson", method: HttpMethod.POST)
+        "/moons/error"(controller: "moon", action: "exceptional")
 
         "/moons/$planet"(controller: "moon", action: "all", method: HttpMethod.GET)
         "/moons/$planet"(controller: "moon", action: "create", method: HttpMethod.POST)

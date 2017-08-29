@@ -4,6 +4,7 @@ class GoodInterceptor {
 
     GoodInterceptor() {
         match(uri: '/moons/good/interceptor')
+        match(uri: '/moons/error')
     }
 
     boolean before() {

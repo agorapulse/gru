@@ -10,6 +10,7 @@ import com.agorapulse.gru.jsonunit.MatchesPattern
 import com.agorapulse.gru.minions.Command
 import com.agorapulse.gru.minions.HttpMinion
 import grails.testing.web.controllers.ControllerUnitTest
+import groovy.transform.NotYetImplemented
 import org.junit.Rule
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.ModelAndView
@@ -110,6 +111,19 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                 get '/moons/good/interceptor'
                 expect {
                     status NOT_FOUND
+                    headers 'X-Good-Message': 'You are so good!'
+                }
+            }
+    }
+
+    @NotYetImplemented
+    void 'good interceptor with exception'() {
+        expect:
+            gru.test {
+                include GoodInterceptor
+                get '/moons/error'
+                expect {
+                    status INTERNAL_SERVER_ERROR
                     headers 'X-Good-Message': 'You are so good!'
                 }
             }
@@ -445,7 +459,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                         minion.setStatus(404)
                     }
                 })
-                get '/moons/earth/charon'
+                get '/moons/earth/charon/info'
                 expect {
                     text 'emptyResponse.txt'
                 }

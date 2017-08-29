@@ -191,4 +191,16 @@ class MoonControllerIntegrationSpec extends Specification {
                 }
             }
     }
+
+    void 'params to json'() {
+        expect:
+            gru.test {
+                post '/moons/params-to-json', {
+                    params foo: 'bar', one: 'un'
+                }
+                expect {
+                    json 'paramsToJson.json'
+                }
+            }
+    }
 }

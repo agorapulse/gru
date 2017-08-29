@@ -33,6 +33,14 @@ class MoonController {
         new ModelAndView('info', [foo: 'bar'], HttpStatus.ACCEPTED)
     }
 
+    def paramsToJson() {
+        render(params as JSON)
+    }
+
+    def exceptional() {
+        throw new Exception("Something Happened")
+    }
+
     def anything() {
         ['foo', 'bar']
     }

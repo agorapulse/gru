@@ -67,10 +67,6 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     }
 
     GrailsControllerUrlMappings getUrlMappingsHolder(ControllerUnitTest unitTest) {
-        if (urlMappingsHolder) {
-            return urlMappingsHolder
-        }
-
         initUrlMappingsArtifacts(unitTest)
         defineMappingsHolder(unitTest)
         urlMappingsHolder = unitTest.applicationContext.getBean('grailsUrlMappingsHolder', GrailsControllerUrlMappings)

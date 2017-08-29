@@ -118,9 +118,12 @@ public class GruContext {
     /**
      * @throws Throwable if error is present
      */
-    public void throwErrorIfPresent() throws Throwable {
+    public void throwErrorIfPresent() throws AssertionError {
+        if (hasError(AssertionError.class)) {
+            throw (AssertionError) error;
+        }
         if (hasError()) {
-            throw error;
+            throw new AssertionError(error);
         }
     }
 

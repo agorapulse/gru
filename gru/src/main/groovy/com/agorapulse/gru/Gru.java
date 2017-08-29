@@ -100,9 +100,8 @@ public class Gru<C extends Client> implements TestRule {
             try {
                 context = client.run(squad, context);
             } catch (Exception e) {
-                context = context.withError(new AssertionError("Exception executing " + client.getCurrentDescription(), e));
+                context = context.withError(e);
             }
-
         }
 
         context = squad.afterRun(client, context);
