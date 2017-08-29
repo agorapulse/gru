@@ -11,7 +11,7 @@ class SquadSpec extends Specification {
 
     void 'asking minion which is not in squad returns null'() {
         expect:
-            new Squad().ask(HttpMinion) { status } == null
+            new Squad().ask(HttpMinion) { responseHeaders } == null
     }
 
     void 'minion must be instantiable'() {

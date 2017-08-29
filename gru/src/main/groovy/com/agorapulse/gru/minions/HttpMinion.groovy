@@ -46,10 +46,6 @@ class HttpMinion extends AbstractMinion<Client> {
         return HTTP_MINION_INDEX
     }
 
-    int getStatus() {
-        return status
-    }
-
     void setStatus(int status) {
         this.status = status
     }
@@ -60,10 +56,6 @@ class HttpMinion extends AbstractMinion<Client> {
 
     Multimap<String, String> getResponseHeaders() {
         return responseHeaders
-    }
-
-    String getRedirectUri() {
-        return redirectUri
     }
 
     void setRedirectUri(String redirectUri) {
