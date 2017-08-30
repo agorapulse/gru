@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/gru.css?v=0.1.3" />
+<link rel="stylesheet" href="css/gru.css?v=0.2.0" />
 <style>
 .hidden {
 	display: none;
@@ -504,6 +504,7 @@ $(addBlockSwitches);
 <ul class="sectlevel2">
 <li><a href="#_http">HTTP</a></li>
 <li><a href="#_grails">Grails</a></li>
+<li><a href="#_spring">Spring</a></li>
 </ul>
 </li>
 <li><a href="#_common_interactions">Common Interactions</a>
@@ -518,6 +519,12 @@ $(addBlockSwitches);
 <li><a href="#_request_2">Request</a></li>
 <li><a href="#_response_2">Response</a></li>
 <li><a href="#_integration_tests">Integration Tests</a></li>
+</ul>
+</li>
+<li><a href="#_spring_unit_test_integration">Spring Unit Test Integration</a>
+<ul class="sectlevel2">
+<li><a href="#_mockmvc_builders">MockMVC Builders</a></li>
+<li><a href="#_integration_tests_2">Integration Tests</a></li>
 </ul>
 </li>
 <li><a href="#_extending_gru">Extending Gru</a>
@@ -556,8 +563,10 @@ $(addBlockSwitches);
 }
 
 dependencies {
-    testCompile "com.agorapulse:gru-http:0.1.3"                                     <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-grails:0.1.3"                                   <i class="conum" data-value="1"></i><b>(1)</b>
+    // pick any of these as you need
+    testCompile "com.agorapulse:gru-http:0.2.0"                                     <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.2.0"                                   <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.2.0"                                   <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -565,11 +574,15 @@ dependencies {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Grails module to emulate HTTP interaction within Grails Unit tests</td>
+<td>HTTP module for any HTTP backend</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>HTTP module for any HTTP backend</td>
+<td>Grails module to emulate HTTP interaction within Grails Unit tests</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Spring module to emulate HTTP interaction using <code>MockMvc</code></td>
 </tr>
 </table>
 </div>
@@ -736,11 +749,89 @@ You can also call <code>gru.verify()</code> manually to fully leverage Spock&#82
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Call <code>verify</code> method manaually</td>
+<td>Call <code>verify</code> method manually</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>Verify Spock interactions on <code>moonService</code> in <code>then</code> block</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_spring">Spring</h3>
+<div class="paragraph">
+<p>Gru for <a href="https://spring.io/">Spring</a> allows you to test your application with mocked HTTP requests. Under the hood
+<a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html">MockMvc</a> is used.</p>
+</div>
+<div class="listingblock">
+<div class="title">Minimal Spring Usage</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">package com.agorapulse.gru.spring.heist
+
+import com.agorapulse.gru.Gru
+import com.agorapulse.gru.spring.Spring
+import org.junit.Rule
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
+import org.springframework.test.web.servlet.MockMvc
+import spock.lang.Specification
+
+@WebMvcTest                                                                             <i class="conum" data-value="1"></i><b>(1)</b>
+class BasicSpec extends Specification {
+
+    @Autowired MockMvc mvc                                                              <i class="conum" data-value="2"></i><b>(2)</b>
+
+    @Rule Gru&lt;Spring&gt; gru = Gru.equip(Spring.steal(this))                               <i class="conum" data-value="3"></i><b>(3)</b>
+
+    void 'look at the moon'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'                                                 <i class="conum" data-value="4"></i><b>(4)</b>
+            }
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use <code>@WebMvcTest</code> to properly setup Spring MVC test, see the warning bellow</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Field with type <code>MockMvc</code> must exist and must not be <code>null</code> during the test execution</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Initiate <code>Gru</code> with <code>Spring</code> client</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Issue mock <code>GET</code> request to <code>/moon/earth/moon</code> and expect it returns <code>OK(200)</code> response</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>Spock version at least <code>1.1</code> must be used when executing Spring tests. For example <a href="https://projects.spring.io/spring-boot/">Spring Boot</a>
+overrides the default transitive dependency back to <code>1.0</code> so you need to explicity declare Spock version in your build file:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">String spockVersion = '1.1-groovy-2.4'
+testCompile("org.spockframework:spock-spring:$spockVersion")
+testCompile("org.spockframework:spock-core:$spockVersion")</code></pre>
+</div>
+</div>
+</td>
 </tr>
 </table>
 </div>
@@ -930,6 +1021,34 @@ Default status is <code>OK(200)</code> which is asserted within every test. See 
 </div>
 </div>
 <div class="sect3">
+<h4 id="_plain_text_response">Plain Text Response</h4>
+<div class="paragraph">
+<p>You can specify expected plain text response. The responded JSON is verified just by <code>equals</code> method.</p>
+</div>
+<div class="listingblock">
+<div class="title">Plain Text Response</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">void 'verify text'() {
+    expect:
+        gru.test {
+            get '/moons/earth/moon/info', {
+                headers 'Accept': 'text/plain'
+            }
+            expect {
+                text 'textResponse.txt'
+            }
+        }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="title">textResponse.txt</div>
+<div class="content">
+<pre>Moon goes around Earth</pre>
+</div>
+</div>
+</div>
+<div class="sect3">
 <h4 id="_json_response">JSON Response</h4>
 <div class="paragraph">
 <p>You can specify expected JSON response. The responded JSON is verified using <a href="https://github.com/lukas-krecan/JsonUnit">JsonUnit</a>.</p>
@@ -1010,7 +1129,7 @@ Default status is <code>OK(200)</code> which is asserted within every test. See 
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"${json-unit.ignore}"</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Ignore content of the propery</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Ignore content of the property</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>"${json-unit.regex}[A-Z]+"</code></p></td>
@@ -1399,6 +1518,132 @@ void setup() {
 </div>
 </div>
 <div class="sect1">
+<h2 id="_spring_unit_test_integration">Spring Unit Test Integration</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>On top of standard HTTP interaction, Gru provides additional methods specific for Spring only. These methods allows you
+to fully leverage the power of <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html">MockMvc</a>.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As of IntelliJ IDEA 2017.2 you get false warnings about the wrong method&#8217;s argument being used. You have to
+ignore them at the moment. Please, vote for <a href="https://youtrack.jetbrains.com/issue/IDEA-177530">IDEA-177530</a> bug to get
+this fixed soon.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_mockmvc_builders">MockMVC Builders</h3>
+<div class="paragraph">
+<p>You can configure additional request steps within <code>request</code> method closure definition and you can use <code>that</code>
+within <code>expect</code> block to add additional <code>ResultMatcher</code>. Both methods are aliased to <code>and</code> method within their
+blocks so you can write the assertions in more fluent way.</p>
+</div>
+<div class="listingblock">
+<div class="title">MockMVC Builders</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">    void 'json is rendered'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon', {
+                    request {                                                               <i class="conum" data-value="1"></i><b>(1)</b>
+                        accept(MediaType.APPLICATION_JSON_UTF8)                             <i class="conum" data-value="2"></i><b>(2)</b>
+                    }
+                    and {                                                                   <i class="conum" data-value="3"></i><b>(3)</b>
+                        locale(Locale.CANADA)
+                    }
+                }
+                expect {
+                    headers 'Content-Type': 'application/json;charset=UTF-8'
+                    json 'moonResponse.json'
+                    that content().encoding('UTF-8')                        <i class="conum" data-value="4"></i><b>(4)</b>
+                    and content().contentType(MediaType.APPLICATION_JSON_UTF8)              <i class="conum" data-value="5"></i><b>(5)</b>
+                }
+            }
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use <code>request</code> method to fine-tune <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/request/MockHttpServletRequestBuilder.html">MockHttpServletRequestBuilder</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Declare <code>Accept</code> header</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Same as <code>request</code>, declares desired locale</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Use <code>that</code> method to add additional result matchers, the <code>content()</code> method is statically imported from
+<a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html">MockMvcResultMatchers</a> class, asserts the content encoding</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Same as <code>that</code>, asserts the content type returned</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_integration_tests_2">Integration Tests</h3>
+<div class="paragraph">
+<p>You use <code>Http</code> client to verify controller within <code>@Integration</code> test.</p>
+</div>
+<div class="listingblock">
+<div class="title">Integration Setup</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">package com.agorapulse.gru.spring.heist
+
+import com.agorapulse.gru.Gru
+import com.agorapulse.gru.http.Http
+import org.junit.Rule
+import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.test.context.SpringBootTest
+import spock.lang.Specification
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)             <i class="conum" data-value="1"></i><b>(1)</b>
+class MoonControllerIntegrationTest extends Specification {
+
+    @Value('${local.server.port}') private int serverPort                               <i class="conum" data-value="2"></i><b>(2)</b>
+
+    @Rule Gru&lt;Http&gt; gru = Gru.equip(Http.steal(this))                                   <i class="conum" data-value="3"></i><b>(3)</b>
+
+    void setup() {
+        final String serverUrl = "http://localhost:${serverPort}"                       <i class="conum" data-value="4"></i><b>(4)</b>
+        gru.prepare {
+            baseUri serverUrl                                                           <i class="conum" data-value="5"></i><b>(5)</b>
+        }
+    }
+
+    void 'render json'() {                                                              <i class="conum" data-value="6"></i><b>(6)</b>
+        expect:
+            gru.test {
+                get('/moons/earth/moon')
+                expect {
+                    json 'renderJsonResponse.json'
+                }
+            }
+    }
+
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
 <h2 id="_extending_gru">Extending Gru</h2>
 <div class="sectionbody">
 <div class="sect2">
@@ -1469,6 +1714,7 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.grails.Grails
 import com.agorapulse.gru.minions.AbstractMinion
+import org.springframework.web.servlet.ModelAndView
 
 /**
  * Minion responsible for verifying model returned from the controller action.
@@ -1490,6 +1736,14 @@ class ModelMinion extends AbstractMinion&lt;Grails&gt; {                        
             model.each { key, value -&gt;
                 assert context.result[key] == value
             }
+        } else if (model instanceof ModelAndView) {
+            assert context.result
+
+            ModelAndView result = context.result as ModelAndView
+
+            assert result.model == model.model
+            assert result.view == model.view
+            assert result.status == model.status
         } else if (model != null) {
             assert context.result == model
         }
@@ -1617,6 +1871,34 @@ extensionClasses = com.agorapulse.gru.grails.GrailsGruExtensions</pre>
 }</code></pre>
 </div>
 </div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use <code>@SpringBootTest</code> annotation to run the application on random port</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inject the value of the random port</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Initialize <code>Gru</code> using <code>Http</code> client</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Construct the server URL</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Set the server URL as the base URI for testing</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Run test against the running application</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_creating_new_client">Creating New Client</h3>
@@ -1630,7 +1912,7 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-24 14:08:00 CEST
+Last updated 2017-08-29 05:43:29 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
