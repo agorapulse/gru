@@ -62,4 +62,16 @@ class MoonControllerSpec extends Specification {
             }
     }
 
+    void 'render html'() {
+        expect:
+            gru.test {
+                get('/moons/greeting') {
+                    params name: 'Gru'
+                }
+                expect {
+                    html 'greetingsResponse.html'
+                }
+            }
+    }
+
 }
