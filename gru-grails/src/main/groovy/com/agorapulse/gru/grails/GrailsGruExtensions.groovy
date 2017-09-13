@@ -23,13 +23,20 @@ class GrailsGruExtensions {
      * URL mappings and interceptors are supported at the moment.
      *
      * @param type class of the artifact
+     * @param autowire whether the artifact should be autowired, defaults to <code>false</code>
      * @return self
      */
-    static <U extends ControllerUnitTest<?>> TestDefinitionBuilder include(TestDefinitionBuilder self, Class type) {
+    static <U extends ControllerUnitTest<?>> TestDefinitionBuilder include(TestDefinitionBuilder self, Class type, boolean autowire = false) {
         if (type.name.endsWith('UrlMappings')) {
+            if (autowire) {
+                throw new IllegalArgumentException("UrlMappings cannot be wired automatically")
+            }
             self.command(UrlMappingsMinion) { urlMappings.add(type) }
         } else if (type.name.endsWith('Interceptor')) {
-            self.command(InterceptorsMinion) { interceptors.add(type) }
+            self.command(InterceptorsMinion) {
+                interceptors.add(type)
+                autowired.add(type)
+            }
         } else {
             throw new IllegalArgumentException('Unknown type of artefact: ' + type.name)
         }

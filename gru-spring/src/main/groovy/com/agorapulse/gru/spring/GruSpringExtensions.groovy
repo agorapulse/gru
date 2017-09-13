@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 /**
  * Add convenient methods for Grails to test definition DSL.
  */
-class GrailsSpringExtensions {
+class GruSpringExtensions {
 
     static RequestDefinitionBuilder and(RequestDefinitionBuilder self,
             @DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {

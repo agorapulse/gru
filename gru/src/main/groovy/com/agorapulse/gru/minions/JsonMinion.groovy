@@ -44,11 +44,6 @@ class JsonMinion extends AbstractContentMinion<Client> {
         context
     }
 
-    @Override
-    protected String normalize(String input) {
-        return JsonOutput.prettyPrint(input)
-    }
-
     protected void similar(String actual, String expected) throws AssertionError {
         JsonFluentAssert fluentAssert = assertThatJson(actual)
                 .as("Response must match ${responseFile} content")
@@ -63,9 +58,9 @@ class JsonMinion extends AbstractContentMinion<Client> {
             fluentAssert.isEqualTo(expected)
         } catch (AssertionError error) {
             log.info 'ACTUAL:'
-            log.info JsonOutput.prettyPrint(actual)
+            log.info actual
             log.info 'EXPECTED:'
-            log.info JsonOutput.prettyPrint(expected)
+            log.info expected
             throw error
         }
     }
