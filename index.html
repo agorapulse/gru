@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/gru.css?v=0.2.0" />
+<link rel="stylesheet" href="css/gru.css?v=0.2.1" />
 <style>
 .hidden {
 	display: none;
@@ -533,6 +533,11 @@ $(addBlockSwitches);
 <li><a href="#_creating_new_client">Creating New Client</a></li>
 </ul>
 </li>
+<li><a href="#_release_notes">Release Notes</a>
+<ul class="sectlevel2">
+<li><a href="#_0_2_1">0.2.1</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </div>
@@ -564,9 +569,9 @@ $(addBlockSwitches);
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.2.0"                                     <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.2.0"                                   <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.2.0"                                   <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-http:0.2.1"                                     <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.2.1"                                   <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.2.1"                                   <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -1347,7 +1352,8 @@ class IncludeUrlMappingsSpec extends Specification implements ControllerUnitTest
 <div class="paragraph">
 <p>If you&#8217;re controller heavily depends on interceptor it is sometimes better to test the interceptors and controllers as
 a single unit. You can include interceptors into test in similar way as url mappings using the <code>include</code> method.
-Once the interceptor is included it must match the given URL otherwise exception is thrown in the verification phase.</p>
+Once the interceptor is included it must match the given URL otherwise exception is thrown in the verification phase.
+You can add additional boolean <code>true</code> parameter to the include method to also autowire the interceptor automatically.</p>
 </div>
 <div class="listingblock">
 <div class="title">Interceptors</div>
@@ -1364,16 +1370,20 @@ class IncludeInterceptorSpec extends Specification implements ControllerUnitTest
 
     @Rule Gru&lt;Grails&lt;IncludeInterceptorSpec&gt;&gt; gru = Gru.equip(Grails.steal(this)).prepare {
         include ApiUrlMappings
-        include VectorInterceptor                                                       <i class="conum" data-value="1"></i><b>(1)</b>
+        include VectorInterceptor, true                                                 <i class="conum" data-value="1"></i><b>(1)</b>
     }
 
     void "moon is still there"() {
+        given:
+            defineBeans {
+                vectorMessage(VectorMessage, "Le Vecteur était là!")                    <i class="conum" data-value="2"></i><b>(2)</b>
+            }
         expect:
             gru.test {
                 delete '/api/v1/moons/earth/moon'
-                expect {                                                                <i class="conum" data-value="2"></i><b>(2)</b>
+                expect {
                     status NOT_FOUND
-                    headers 'X-Message': "Vector was here"
+                    headers 'X-Message': "Le Vecteur était là!"                         <i class="conum" data-value="3"></i><b>(3)</b>
                 }
             }
     }
@@ -1385,11 +1395,15 @@ class IncludeInterceptorSpec extends Specification implements ControllerUnitTest
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Include <code>VectorInterceptor</code> interceptor</td>
+<td>Include <code>VectorInterceptor</code> interceptor and let it autowire the beans</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>The expectations reflects the interceptor changes</td>
+<td>Declare bean which is used in the interceptor</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>The expectations reflects the interceptor changes and the defined bean</td>
 </tr>
 </table>
 </div>
@@ -1909,10 +1923,28 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_release_notes">Release Notes</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_0_2_1">0.2.1</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>JSON output is no longer prettified as it can cause out of memory issues</p>
+</li>
+<li>
+<p>ability to autowire Grails interceptors</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2017-08-29 05:43:29 CEST
+Last updated 2017-09-13 11:21:17 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
