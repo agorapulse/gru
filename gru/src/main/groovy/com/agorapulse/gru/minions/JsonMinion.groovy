@@ -6,7 +6,6 @@ import com.agorapulse.gru.Squad
 import com.agorapulse.gru.jsonunit.MatchesIsoDateNow
 import com.agorapulse.gru.jsonunit.MatchesPattern
 import com.agorapulse.gru.jsonunit.MatchesUrl
-import groovy.json.JsonOutput
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert

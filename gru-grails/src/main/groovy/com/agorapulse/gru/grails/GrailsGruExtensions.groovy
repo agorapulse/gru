@@ -29,7 +29,7 @@ class GrailsGruExtensions {
     static <U extends ControllerUnitTest<?>> TestDefinitionBuilder include(TestDefinitionBuilder self, Class type, boolean autowire = false) {
         if (type.name.endsWith('UrlMappings')) {
             if (autowire) {
-                throw new IllegalArgumentException("UrlMappings cannot be wired automatically")
+                throw new IllegalArgumentException('UrlMappings cannot be wired automatically')
             }
             self.command(UrlMappingsMinion) { urlMappings.add(type) }
         } else if (type.name.endsWith('Interceptor')) {

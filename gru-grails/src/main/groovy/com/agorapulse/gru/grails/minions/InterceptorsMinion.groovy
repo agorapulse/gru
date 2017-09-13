@@ -121,7 +121,8 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
         }
         if (interceptorClass in autowired) {
             Object interceptor = grails.unitTest.applicationContext.getBean("${artefact.propertyName}")
-            grails.unitTest.applicationContext.autowireCapableBeanFactory.autowireBeanProperties(interceptor, AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, false)
+            AutowireCapableBeanFactory factory = grails.unitTest.applicationContext.autowireCapableBeanFactory
+            factory.autowireBeanProperties(interceptor, AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, false)
         }
     }
 
