@@ -11,6 +11,7 @@ import groovy.transform.CompileStatic
 import org.grails.plugins.web.interceptors.GrailsInterceptorHandlerInterceptorAdapter
 import org.grails.plugins.web.interceptors.InterceptorArtefactHandler
 import org.grails.web.util.GrailsApplicationAttributes
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory
 import org.springframework.web.servlet.ModelAndView
 
 /**
@@ -22,6 +23,7 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
     final int index = INTERCEPTORS_MINION_INDEX
 
     List<Class> interceptors = []
+    List<Class> autowired = []
 
     GrailsInterceptorHandlerInterceptorAdapter interceptorAdapter
 
@@ -112,10 +114,15 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
     }
 
     @CompileDynamic
-    private static void mockInterceptor(Grails grails, Class<?> interceptorClass) {
+    private void mockInterceptor(Grails grails, Class<?> interceptorClass) {
         GrailsClass artefact = grails.unitTest.grailsApplication.addArtefact(InterceptorArtefactHandler.TYPE, interceptorClass)
         grails.unitTest.defineBeans {
             "${artefact.propertyName}"(artefact.clazz)
+        }
+        if (interceptorClass in autowired) {
+            Object interceptor = grails.unitTest.applicationContext.getBean("${artefact.propertyName}")
+            AutowireCapableBeanFactory factory = grails.unitTest.applicationContext.autowireCapableBeanFactory
+            factory.autowireBeanProperties(interceptor, AutowireCapableBeanFactory.AUTOWIRE_BY_NAME, false)
         }
     }
 

@@ -2,6 +2,7 @@ package com.agorapulse.gru.spring.heist
 
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
+import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestHeader
@@ -38,6 +39,12 @@ class MoonController {
     @RequestMapping(value = '/json-echo', produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @ResponseBody Map jsonEcho(@RequestBody Map<String, Object> body) {
         return body
+    }
+
+    @RequestMapping("/greeting")
+    String greeting(@RequestParam(value="name", required=false, defaultValue="World") String name, Model model) {
+        model.addAttribute("name", name)
+        return "greeting"
     }
 
 }
