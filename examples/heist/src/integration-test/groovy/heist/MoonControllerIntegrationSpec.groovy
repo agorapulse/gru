@@ -100,6 +100,9 @@ class MoonControllerIntegrationSpec extends Specification {
         expect:
             gru.test {
                 get '/moons/bad/interceptor'
+                expect {
+                    status NOT_FOUND
+                }
             }
     }
 
@@ -107,6 +110,9 @@ class MoonControllerIntegrationSpec extends Specification {
         expect:
             gru.test {
                 get '/moons/ugly/interceptor'
+                expect {
+                    status NOT_FOUND
+                }
             }
     }
 
