@@ -61,7 +61,7 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
         return command(ParametersMinion.class, new Command<ParametersMinion>() {
             @Override
             public void execute(ParametersMinion minion) {
-                minion.setParameters(params);
+                minion.addParameters(params);
             }
         });
     }

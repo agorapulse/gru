@@ -62,6 +62,19 @@ class MoonControllerSpec extends Specification {
             }
     }
 
+    void 'params echo multiple'() {
+        expect:
+            gru.test {
+                get('/moons/params-echo') {
+                    params foo: 'bar'
+                    params zoo: 'fun'
+                }
+                expect {
+                    json 'paramsEchoResponse.json'
+                }
+            }
+    }
+
     void 'render html'() {
         expect:
             gru.test {

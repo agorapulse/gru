@@ -515,6 +515,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }.verify()
         then:
             AssertionError error = thrown(AssertionError)
-            error.message == 'GET: \'/moons/earth/moon\' is not mapped to heist.MoonController.steal!'
+            error.message.startsWith 'GET: \'/moons/earth/moon\' is not mapped to heist.MoonController'
+            error.message.endsWith '.steal!'
     }
 }
