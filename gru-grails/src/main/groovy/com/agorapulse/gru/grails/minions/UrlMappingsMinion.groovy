@@ -131,6 +131,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     /**
      * @return name of the controller
      */
+    @SuppressWarnings('Instanceof')
     final String getControllerName(ControllerUnitTest unitTest) {
         if (action) {
             Class controllerType = action.owner.class
