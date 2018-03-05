@@ -7,9 +7,9 @@ import org.grails.plugins.testing.GrailsMockHttpServletResponse
 /**
  * Wrapper around mock Grails response.
  */
-@PackageScope class GruGrailsResponse implements Client.Response {
+class GruGrailsResponse implements Client.Response {
 
-    private final GrailsMockHttpServletResponse response
+    final GrailsMockHttpServletResponse response
 
     GruGrailsResponse(GrailsMockHttpServletResponse response) {
         this.response = response

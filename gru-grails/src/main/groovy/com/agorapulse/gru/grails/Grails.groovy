@@ -1,12 +1,13 @@
 package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.AbstractClient
-import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.grails.minions.ControllerInitializationMinion
 import com.agorapulse.gru.grails.minions.GrailsHtmlMinion
+import com.agorapulse.gru.grails.minions.jsonview.JsonViewRendererMinion
 import com.agorapulse.gru.grails.minions.UrlMappingsMinion
+import com.agorapulse.gru.grails.minions.jsonview.JsonViewSupport
 import com.agorapulse.gru.minions.Minion
 import grails.core.GrailsControllerClass
 import grails.testing.web.controllers.ControllerUnitTest
@@ -29,12 +30,12 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
     }
 
     @Override
-    Client.Request getRequest() {
+    GruGrailsRequest getRequest() {
         return request = request ?: new GruGrailsRequest(unitTest.request, unitTest)
     }
 
     @Override
-    Client.Response getResponse() {
+    GruGrailsResponse getResponse() {
         return response = response ?: new GruGrailsResponse(unitTest.response)
     }
 
@@ -70,6 +71,12 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
 
     @Override
     List<Minion> getInitialSquad() {
-        return [new ControllerInitializationMinion(), new UrlMappingsMinion(), new GrailsHtmlMinion()]
+        List<Minion> minions = [new ControllerInitializationMinion(), new UrlMappingsMinion(), new GrailsHtmlMinion()]
+
+        if (JsonViewSupport.enabled) {
+            minions << new JsonViewRendererMinion()
+        }
+
+        return minions
     }
 }

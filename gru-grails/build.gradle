@@ -1,4 +1,5 @@
 dependencies {
     compile project(':gru')
     compile "org.grails:grails-web-testing-support:${grailsTestingSupportVersion}"
+    compileOnly "org.grails.plugins:views-json:1.2.7"
 }

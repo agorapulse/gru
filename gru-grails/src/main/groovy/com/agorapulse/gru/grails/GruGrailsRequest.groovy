@@ -8,7 +8,7 @@ import org.grails.plugins.testing.GrailsMockHttpServletRequest
 /**
  * Wrapper around Grails mock request.
  */
-@PackageScope class GruGrailsRequest implements Client.Request {
+class GruGrailsRequest implements Client.Request {
 
     private final GrailsMockHttpServletRequest request
     private final ControllerUnitTest unitTest
