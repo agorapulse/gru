@@ -46,17 +46,30 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
 
     @CompileDynamic
     void setupJsonViewsPlugin(Grails grails) {
-        GrailsApplication grailsApplication = grails.unitTest.grailsApplication
-        def config = grailsApplication.config
+        GrailsApplication ga = grails.unitTest.grailsApplication
+        def config = ga.config
+
+        String[] names = grails.unitTest.applicationContext.getBeanDefinitionNames()
 
         grails.unitTest.defineBeans {
-            grailsLinkGenerator(DefaultLinkGenerator, config?.grails?.serverURL ?: "http://localhost:8080")
-            localeResolver(SessionLocaleResolver)
-            grailsUrlMappingsHolder(UrlMappingsHolderFactoryBean) {
-                grailsApplication = grailsApplication
+            if (!names.contains('grailsLinkGenerator')) {
+                grailsLinkGenerator(DefaultLinkGenerator, config?.grails?.serverURL ?: "http://localhost:8080")
             }
-            grailsDomainClassMappingContext(KeyValueMappingContext, 'test') {
-                canInitializeEntities = true
+
+            if (!names.contains('localeResolver')) {
+                localeResolver(SessionLocaleResolver)
+            }
+
+            if (!names.contains('grailsUrlMappingsHolder')) {
+                grailsUrlMappingsHolder(UrlMappingsHolderFactoryBean) {
+                    grailsApplication = ga
+                }
+            }
+
+            if (!names.contains('grailsDomainClassMappingContext')) {
+                grailsDomainClassMappingContext(KeyValueMappingContext, 'test') {
+                    canInitializeEntities = true
+                }
             }
         }
 
