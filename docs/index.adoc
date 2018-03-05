@@ -356,14 +356,16 @@ Interceptors
 If you're controller heavily depends on interceptor it is sometimes better to test the interceptors and controllers as
 a single unit. You can include interceptors into test in similar way as url mappings using the `include` method.
 Once the interceptor is included it must match the given URL otherwise exception is thrown in the verification phase.
+You can add additional boolean `true` parameter to the include method to also autowire the interceptor automatically.
 
 .Interceptors
 [source,groovy]
 ----
 include::../examples/heist/src/test/groovy/heist/IncludeInterceptorSpec.groovy[]
 ----
-<1> Include `VectorInterceptor` interceptor
-<2> The expectations reflects the interceptor changes
+<1> Include `VectorInterceptor` interceptor and let it autowire the beans
+<2> Declare bean which is used in the interceptor
+<3> The expectations reflects the interceptor changes and the defined bean
 
 Request
 ~~~~~~~
@@ -544,3 +546,16 @@ Creating New Client
 
 Creating new client is bit more work but you can check `Http` client which is rather small implementation.
 The core idea is to provide methods to update request and to check the response returned.
+
+Release Notes
+-------------
+
+0.2.1
+~~~~~
+
+* JSON output is no longer prettified as it can cause out of memory issues
+* ability to autowire Grails interceptors
+
+
+
+

@@ -65,6 +65,18 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
 
+    void 'TEAPOT is not OK'() {
+        when:
+            gru.test {
+                include DefaultUrlMappings
+                get ('/moon/teapot') {
+                    executes controller.&teapot
+                }
+            }.verify()
+        then:
+            thrown(AssertionError)
+    }
+
     void 'redirect to teapot'() {
         expect:
             gru.test {
@@ -134,6 +146,9 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             gru.test {
                 include BadInterceptor
                 get '/moons/bad/interceptor'
+                expect {
+                    status NOT_FOUND
+                }
             }
     }
 
@@ -142,6 +157,9 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             gru.test {
                 include UglyInterceptor
                 get '/moons/ugly/interceptor'
+                expect {
+                    status NOT_FOUND
+                }
             }
     }
 
@@ -497,6 +515,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }.verify()
         then:
             AssertionError error = thrown(AssertionError)
-            error.message == 'GET: \'/moons/earth/moon\' is not mapped to heist.MoonController.steal!'
+            error.message.startsWith 'GET: \'/moons/earth/moon\' is not mapped to heist.MoonController'
+            error.message.endsWith '.steal!'
     }
 }

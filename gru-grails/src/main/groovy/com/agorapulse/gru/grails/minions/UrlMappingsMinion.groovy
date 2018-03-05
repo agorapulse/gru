@@ -13,6 +13,7 @@ import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
+import javassist.util.proxy.ProxyObject
 import org.codehaus.groovy.runtime.MethodClosure
 import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.core.artefact.UrlMappingsArtefactHandler
@@ -130,9 +131,14 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     /**
      * @return name of the controller
      */
+    @SuppressWarnings('Instanceof')
     final String getControllerName(ControllerUnitTest unitTest) {
         if (action) {
-            return GrailsNameUtils.getPropertyName(GrailsNameUtils.getLogicalName(action.owner.class, 'Controller'))
+            Class controllerType = action.owner.class
+            if (action.owner instanceof ProxyObject) {
+                controllerType = action.owner.class.superclass
+            }
+            return GrailsNameUtils.getPropertyName(GrailsNameUtils.getLogicalName(controllerType, 'Controller'))
         }
         UrlMappingInfo info = readMappingInfo(unitTest)
         info.controllerName

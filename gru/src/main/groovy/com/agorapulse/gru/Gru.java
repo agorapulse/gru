@@ -1,5 +1,7 @@
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.minions.Command;
+import com.agorapulse.gru.minions.HttpMinion;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
@@ -85,6 +87,8 @@ public class Gru<C extends Client> implements TestRule {
         for (Minion minion: client.getInitialSquad()) {
             squad.add(minion);
         }
+
+        squad.command(HttpMinion.class, Command.NOOP);
 
         for (Closure<TestDefinitionBuilder> configuration: configurations) {
             DefaultGroovyMethods.with(builder, configuration);

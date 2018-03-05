@@ -10,16 +10,20 @@ class IncludeInterceptorSpec extends Specification implements ControllerUnitTest
 
     @Rule Gru<Grails<IncludeInterceptorSpec>> gru = Gru.equip(Grails.steal(this)).prepare {
         include ApiUrlMappings
-        include VectorInterceptor                                                       // <1>
+        include VectorInterceptor, true                                                 // <1>
     }
 
     void "moon is still there"() {
+        given:
+            defineBeans {
+                vectorMessage(VectorMessage, "Le Vecteur était là!")                    // <2>
+            }
         expect:
             gru.test {
                 delete '/api/v1/moons/earth/moon'
-                expect {                                                                // <2>
+                expect {
                     status NOT_FOUND
-                    headers 'X-Message': "Vector was here"
+                    headers 'X-Message': "Le Vecteur était là!"                         // <3>
                 }
             }
     }

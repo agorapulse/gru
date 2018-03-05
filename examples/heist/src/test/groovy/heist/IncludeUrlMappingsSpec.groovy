@@ -16,6 +16,9 @@ class IncludeUrlMappingsSpec extends Specification implements ControllerUnitTest
         expect:
             gru.test {
                 delete '/api/v1/moons/earth/moon'                                       // <2>
+                expect {
+                    status BAD_REQUEST
+                }
             }
     }
 }

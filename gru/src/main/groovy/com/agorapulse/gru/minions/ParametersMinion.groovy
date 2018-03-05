@@ -29,4 +29,7 @@ class ParametersMinion extends AbstractMinion<Client>  {
         context
     }
 
+    void addParameters(Map<String, Object> params) {
+        parameters.putAll(params)
+    }
 }
