@@ -46,10 +46,6 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
 
     @CompileDynamic
     void setupJsonViewsPlugin(Grails grails) {
-        if (templateEngine && mappingContext) {
-            return
-        }
-
         GrailsApplication grailsApplication = grails.unitTest.grailsApplication
         def config = grailsApplication.config
 
@@ -88,7 +84,12 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
                 getActionName(grails.unitTest)
             }
 
-            JsonRenderResult result = render("/$controllerName/$actionName", context.result as Map)
+            JsonRenderResult result
+            try {
+                result = render("/$controllerName/$actionName", context.result as Map)
+            } catch(Exception e) {
+                return context.withError(e);
+            }
 
             if (result.status != HttpStatus.OK) {
                 boolean committed = grails.response.response.committed

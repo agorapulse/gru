@@ -3,6 +3,8 @@ package heist.json.views
 class UrlMappings {
 
     static mappings = {
+        get "/json/missing"(controller: 'json', action: 'missing')
+
         delete "/$controller/$id(.$format)?"(action:"delete")
         get "/$controller(.$format)?"(action:"index")
         get "/$controller/$id(.$format)?"(action:"show")

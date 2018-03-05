@@ -1,8 +1,9 @@
 model {
-	Map<String, Object> moon
+	List<Map<String, Object>> moons
 }
 
-response.status NON_AUTHORITATIVE_INFORMATION
+response.status 203
 response.header('foo', 'bar')
+response.contentType 'x-application/moons'
 
-json moon
+json moons

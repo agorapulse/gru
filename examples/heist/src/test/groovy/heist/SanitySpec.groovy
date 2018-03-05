@@ -1,5 +1,6 @@
 package heist
 
+import com.agorapulse.gru.grails.minions.jsonview.JsonViewSupport
 import grails.boot.GrailsApp
 import spock.lang.Specification
 import spock.util.mop.ConfineMetaClassChanges
@@ -30,5 +31,10 @@ class SanitySpec extends Specification {
             !new BootStrap().init(context)
             new VectorInterceptor().after()
             !new BootStrap().destroy()
+    }
+
+    void 'json tests are disabled if not present on the classpath'() {
+        expect:
+            !JsonViewSupport.enabled
     }
 }

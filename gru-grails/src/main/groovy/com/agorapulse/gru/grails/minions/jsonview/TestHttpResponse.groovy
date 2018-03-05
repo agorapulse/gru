@@ -17,12 +17,12 @@ class TestHttpResponse implements Response {
 
     @Override
     void header(String name, String value) {
-        result.headers[name] = value
+        header((name): value)
     }
 
     @Override
     void header(Map<String, String> nameAndValue) {
-        result.headers.putAll(nameAndValue)
+        headers(nameAndValue)
     }
 
     @Override
@@ -42,19 +42,17 @@ class TestHttpResponse implements Response {
 
     @Override
     void status(int status) {
-        result.status = HttpStatus.valueOf(status)
+        this.status(HttpStatus.valueOf(status))
     }
 
     @Override
     void status(int status, String message) {
-        result.status = HttpStatus.valueOf(status)
-        result.message = message
+        this.status(HttpStatus.valueOf(status), message)
     }
 
     @Override
     void status(HttpStatus status) {
-        result.status = status
-        result.message = status.getReasonPhrase()
+        this.status(status, status.reasonPhrase)
     }
 
     @Override

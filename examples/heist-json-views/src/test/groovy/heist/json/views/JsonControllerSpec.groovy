@@ -13,16 +13,52 @@ class JsonControllerSpec extends Specification implements ControllerUnitTest<Jso
         include UrlMappings
     }
 
-    void 'render moon'() {
+    void 'render moons'() {
         expect:
             gru.test {
                 get '/json'
                 expect {
                     status NON_AUTHORITATIVE_INFORMATION
-                    headers foo: 'bar'
-                    json 'jsonViewResponse.json'
+                    headers foo: 'bar', 'Content-Type': 'x-application/moons'
+                    json 'moons.json'
                 }
             }
+    }
+
+    void 'render moon'() {
+        expect:
+            gru.test {
+                get '/json/moon'
+                expect {
+                    json 'moon.json'
+                }
+            }
+    }
+
+    void 'render moon (using converter)'() {
+        expect:
+            gru.test {
+                get '/json/moon', {
+                    executes controller.&show
+                    params manual: true
+                }
+                expect {
+                    json 'moon.json'
+                }
+            }
+    }
+
+    void 'render with missing template'() {
+        when:
+            gru.test {
+                get '/json/missing'
+                expect {
+                    json 'moon.json'
+                }
+            }.verify()
+        then:
+            AssertionError error = thrown(AssertionError)
+            error.toString().contains('No view or template found for URI /json/missing')
     }
 
 }
