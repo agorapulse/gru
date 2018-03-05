@@ -1,0 +1,8 @@
+model {
+	Map<String, Object> moon
+}
+
+response.status NON_AUTHORITATIVE_INFORMATION
+response.header('foo', 'bar')
+
+json moon

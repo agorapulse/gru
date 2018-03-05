@@ -42,7 +42,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     GruContext doBeforeRun(Grails grails, Squad squad, GruContext context) {
         if (urlMappings.isEmpty() && grails.request.uri != null) {
             try {
-                urlMappings = [getClass().classLoader.loadClass(DefaultTestDefinitionBuilder.UrlMappings)]
+                urlMappings = [getClass().classLoader.loadClass(DefaultTestDefinitionBuilder.UrlMappings)] as List<Class>
             } catch (ClassNotFoundException ignored) {
                 return context.withError(new AssertionError(
                     (Object) 'URI for action is specified but UrlMappings is not defined nor default UrlMappings class exists!'
