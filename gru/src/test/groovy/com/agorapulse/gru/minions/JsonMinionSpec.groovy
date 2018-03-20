@@ -4,6 +4,7 @@ import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.TestClient
+import com.agorapulse.gru.content.FileContent
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -25,7 +26,7 @@ class JsonMinionSpec extends Specification {
         given:
             File testResourcesFolder = tmp.newFolder()
             System.setProperty(TEST_RESOURCES_FOLDER_PROPERTY_NAME, testResourcesFolder.canonicalPath)
-            JsonMinion jsonMinion = new JsonMinion(requestJsonFile: FILE_NAME)
+            JsonMinion jsonMinion = new JsonMinion(requestJsonContent: FileContent.create(FILE_NAME))
             Client client = new TestClient(this, Mock(Client.Request), Mock(Client.Response))
             Squad squad = new Squad()
         when:

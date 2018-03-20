@@ -1,6 +1,7 @@
 package com.agorapulse.gru.minions
 
 import com.agorapulse.gru.Client
+import com.agorapulse.gru.Content
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.jsonunit.MatchesIsoDateNow
@@ -20,7 +21,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
 
     final int index = JSON_MINION_INDEX
 
-    String requestJsonFile
+    Content requestJsonContent
 
     @SuppressWarnings('unchecked')
     Closure<JsonFluentAssert> jsonUnitConfiguration = (Closure<JsonFluentAssert>) Closure.IDENTITY.clone()
@@ -31,11 +32,11 @@ class JsonMinion extends AbstractContentMinion<Client> {
 
     @Override
     GruContext doBeforeRun(Client client, Squad squad, GruContext context) {
-        if (requestJsonFile) {
-            String requestText = load(client, requestJsonFile)
-            if (!requestText) {
-                saveResource(client.getFixtureLocation(requestJsonFile), '{\n\n}')
-                log.warning("JSON fixture file is missing at ${client.getFixtureLocation(requestJsonFile)}. New file was created.")
+        if (requestJsonContent) {
+            String requestText = requestJsonContent?.load(client)?.text
+            if (!requestText && requestJsonContent.saveSupported) {
+                requestJsonContent.save(client, new ByteArrayInputStream('{\n\n}'.bytes))
+                log.warning("Content missing for $requestJsonContent. Content was saved.")
                 requestText = '{}'
             }
             client.request.json = requestText
@@ -45,7 +46,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
 
     protected void similar(String actual, String expected) throws AssertionError {
         JsonFluentAssert fluentAssert = assertThatJson(actual)
-                .as("Response must match ${responseFile} content")
+                .as("Response must match ${responseContent} content")
                 .withMatcher('isoDate', MatchesPattern.ISO_DATE)
                 .withMatcher('isoDateNow', MatchesIsoDateNow.INSTANCE)
                 .withMatcher('positiveIntegerString', MatchesPattern.POSITIVE_NUMBER_STRING)

@@ -4,6 +4,7 @@ import com.agorapulse.gru.Client
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.TestClient
+import com.agorapulse.gru.content.FileContent
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
@@ -26,7 +27,7 @@ class TextMinionSpec extends Specification {
         given:
             File testResourcesFolder = tmp.newFolder()
             System.setProperty(TEST_RESOURCES_FOLDER_PROPERTY_NAME, testResourcesFolder.canonicalPath)
-            TextMinion textMinion = new TextMinion(responseFile: FILE_NAME)
+            TextMinion textMinion = new TextMinion(responseContent: FileContent.create(FILE_NAME))
             Client.Response response = Mock(Client.Response) {
                 getText() >> TEXT
             }

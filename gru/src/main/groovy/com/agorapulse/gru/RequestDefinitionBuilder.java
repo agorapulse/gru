@@ -36,6 +36,14 @@ public interface RequestDefinitionBuilder {
     RequestDefinitionBuilder json(String relativePath);
 
     /**
+     * Sets a JSON request from given content.
+     *
+     * @param content a JSON request file
+     * @return self
+     */
+    RequestDefinitionBuilder json(Content content);
+
+    /**
      * Adds URL parameters for the action execution.
      *
      * @param params additional URL parameters for the action execution
