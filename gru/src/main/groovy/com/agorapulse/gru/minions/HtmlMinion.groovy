@@ -42,8 +42,9 @@ class HtmlMinion extends AbstractContentMinion<Client> {
 
     @SuppressWarnings('GStringExpressionWithinString')
     protected void similar(String actual, String expected) throws AssertionError {
-        Source actualSource = Input.fromString(actual).build()
-        Source expectedSource = Input.fromString(expected).build()
+        String entitiesDeclaration = HtmlMinion.getResourceAsStream('entities.dtd').text
+        Source actualSource = Input.fromString(entitiesDeclaration + actual).build()
+        Source expectedSource = Input.fromString(entitiesDeclaration + expected).build()
         Diff diff = DiffBuilder.compare(actualSource)
         .ignoreComments()
         .ignoreWhitespace()
