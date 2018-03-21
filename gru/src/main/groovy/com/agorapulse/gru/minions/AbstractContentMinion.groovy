@@ -54,22 +54,4 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
 
     @SuppressWarnings('UnusedMethodParameter')
     protected String readResponseText(Client client, Squad squad, GruContext context) { client.response.text }
-
-    protected static String load(Client client, String fileName) {
-        InputStream stream = client.loadFixture(fileName)
-        if (stream == null) {
-            return null
-        }
-        stream.text
-    }
-
-    protected void saveResource(String path, String content) {
-        if (!content) {
-            return
-        }
-        createdResources << path
-        File file = new File(System.getProperty(TEST_RESOURCES_FOLDER_PROPERTY_NAME) ?: 'src/test/resources', path)
-        file.parentFile.mkdirs()
-        file.text = content
-    }
 }
