@@ -7,6 +7,6 @@
 <body>
   <h1>${moon.name}</h1>
   <h2>${moon.planet}</h2>
-  <p>Created at ${moon.created}</p>
+  <p>Created at&nbsp;${moon.created}</p>
 </body>
 </html>
