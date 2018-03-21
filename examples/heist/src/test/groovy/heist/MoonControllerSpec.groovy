@@ -436,6 +436,20 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     }
     // end::verifyText[]
 
+    // tag::verifyTextInline[]
+    void 'verify text inline'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon/info', {
+                    headers 'Accept': 'text/plain'
+                }
+                expect {
+                    text inline('Moon goes around Earth')
+                }
+            }
+    }
+    // end::verifyTextInline[]
+
     void 'add wrong artifact'() {
         when:
             Gru.equip(Grails.steal(this)).test {
