@@ -1,6 +1,7 @@
 package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
+import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
 import groovy.lang.Closure;
@@ -76,6 +77,11 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
                 minion.getRequestHeaders().putAll(ImmutableMultimap.copyOf(headers.entrySet()));
             }
         });
+    }
+
+    @Override
+    public Content inline(String string) {
+        return StringContent.create(string);
     }
 
     private Squad squad;

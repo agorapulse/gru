@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Prepares the request for controller action.
  */
-public interface RequestDefinitionBuilder {
+public interface RequestDefinitionBuilder extends WithContentSupport {
 
     /**
      * @see Squad#command(Class, Closure)

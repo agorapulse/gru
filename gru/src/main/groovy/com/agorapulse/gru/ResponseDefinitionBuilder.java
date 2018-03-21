@@ -13,7 +13,7 @@ import java.util.Map;
  * Sets expectations for the response after the controller action has been executed.
  *
  */
-public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnitOptionsShortcuts {
+public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnitOptionsShortcuts, WithContentSupport {
 
     /**
      * @see Squad#command(Class, Closure)

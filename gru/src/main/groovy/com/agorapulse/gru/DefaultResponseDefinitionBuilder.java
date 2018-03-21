@@ -1,6 +1,7 @@
 package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
+import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
 import groovy.lang.Closure;
@@ -158,6 +159,11 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
                 return ((JsonFluentAssert)it).when(option, options);
             }
         });
+    }
+
+    @Override
+    public Content inline(String string) {
+        return StringContent.create(string);
     }
 
     private Squad squad;
