@@ -1,5 +1,7 @@
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.content.FileContent;
+import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
 import groovy.lang.Closure;
@@ -33,22 +35,18 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
         return this;
     }
 
-    /**
-     * Sets a JSON request from given file.
-     * The file must reside in same package as the test in the directory with the same name as the test
-     * e.g. src/test/resources/org/example/foo/MySpec.
-     * The file is created automatically during first run if it does not exist yet with empty object definition.
-     *
-     * @param relativePath a JSON request file
-     * @return self
-     */
-    public DefaultRequestDefinitionBuilder json(final String relativePath) {
+    public DefaultRequestDefinitionBuilder json(final Content content) {
         return command(JsonMinion.class, new Command<JsonMinion>() {
             @Override
             public void execute(JsonMinion minion) {
-                minion.setRequestJsonFile(relativePath);
+                minion.setRequestJsonContent(content);
             }
         });
+    }
+
+    @Override
+    public DefaultRequestDefinitionBuilder json(String relativePath) {
+        return json(FileContent.create(relativePath));
     }
 
     /**
@@ -79,6 +77,11 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
                 minion.getRequestHeaders().putAll(ImmutableMultimap.copyOf(headers.entrySet()));
             }
         });
+    }
+
+    @Override
+    public Content inline(String string) {
+        return StringContent.create(string);
     }
 
     private Squad squad;

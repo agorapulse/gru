@@ -12,6 +12,8 @@ import spock.lang.Specification
 @WebMvcTest
 class MoonController3Spec extends Specification {
 
+    private static final String WHATEVER_JSON = '{ "foo" : "bar" }'
+
     @Autowired MockMvc whatever
 
     @Rule Gru<Spring> gru = Gru.equip(Spring.steal(this))
@@ -20,10 +22,10 @@ class MoonController3Spec extends Specification {
         expect:
             gru.test {
                 get '/moons/json-echo', {
-                    json 'whatever.json'
+                    json inline(WHATEVER_JSON)
                 }
                 expect {
-                    json 'whatever.json'
+                    json inline(WHATEVER_JSON)
                 }
             }
     }

@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Prepares the request for controller action.
  */
-public interface RequestDefinitionBuilder {
+public interface RequestDefinitionBuilder extends WithContentSupport {
 
     /**
      * @see Squad#command(Class, Closure)
@@ -34,6 +34,14 @@ public interface RequestDefinitionBuilder {
      * @return self
      */
     RequestDefinitionBuilder json(String relativePath);
+
+    /**
+     * Sets a JSON request from given content.
+     *
+     * @param content a JSON request file
+     * @return self
+     */
+    RequestDefinitionBuilder json(Content content);
 
     /**
      * Adds URL parameters for the action execution.

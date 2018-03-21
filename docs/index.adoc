@@ -229,6 +229,14 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=v
 include::../examples/heist/src/test/resources/heist/MoonControllerSpec/textResponse.txt[]
 ----
 
+You can also specify the text inline. Inline method is also available for JSON and HTML.
+
+.Plain Text Inline Response
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyTextInline,indent=0]
+----
+
 JSON Response
 ^^^^^^^^^^^^^
 You can specify expected JSON response. The responded JSON is verified using https://github.com/lukas-krecan/JsonUnit[JsonUnit].

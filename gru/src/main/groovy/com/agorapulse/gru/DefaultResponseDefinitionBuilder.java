@@ -1,5 +1,7 @@
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.content.FileContent;
+import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
 import groovy.lang.Closure;
@@ -51,48 +53,45 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
         });
     }
 
-    /**
-     * Sets an expected JSON response from given file.
-     * The file must reside in same package as the test in the directory with the same name as the test
-     * e.g. src/test/resources/org/example/foo/MySpec.
-     * The file is created automatically during first run if it does not exist yet with the returned JSON.
-     *
-     * @param relativePath an expected JSON response file
-     * @return self
-     */
-    public DefaultResponseDefinitionBuilder json(final String relativePath) {
+    public DefaultResponseDefinitionBuilder json(final Content content) {
         return command(JsonMinion.class, new Command<JsonMinion>() {
             @Override
             public void execute(JsonMinion minion) {
-                minion.setResponseFile(relativePath);
+                minion.setResponseContent(content);
             }
         });
     }
 
-    /**
-     * Sets an expected JSON response from given file.
-     * The file must reside in same package as the test in the directory with the same name as the test
-     * e.g. src/test/resources/org/example/foo/MySpec.
-     * The file is created automatically during first run if it does not exist yet with the returned JSON.
-     *
-     * @param relativePath an expected JSON response file
-     * @return self
-     */
-    public DefaultResponseDefinitionBuilder html(final String relativePath) {
+    public DefaultResponseDefinitionBuilder html(final Content content) {
         return command(HtmlMinion.class, new Command<HtmlMinion>() {
             @Override
             public void execute(HtmlMinion minion) {
-                minion.setResponseFile(relativePath);
+                minion.setResponseContent(content);
             }
         });
     }
 
     @Override
-    public ResponseDefinitionBuilder text(final String relativePath) {
+    public DefaultResponseDefinitionBuilder json(String content) {
+        return json(FileContent.create(content));
+    }
+
+    @Override
+    public DefaultResponseDefinitionBuilder html(String content) {
+        return html(FileContent.create(content));
+    }
+
+    @Override
+    public DefaultResponseDefinitionBuilder text(String content) {
+        return text(FileContent.create(content));
+    }
+
+    @Override
+    public DefaultResponseDefinitionBuilder text(final Content content) {
         return command(TextMinion.class, new Command<TextMinion>() {
             @Override
             public void execute(TextMinion minion) {
-                minion.setResponseFile(relativePath);
+                minion.setResponseContent(content);
             }
         });
     }
@@ -160,6 +159,11 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
                 return ((JsonFluentAssert)it).when(option, options);
             }
         });
+    }
+
+    @Override
+    public Content inline(String string) {
+        return StringContent.create(string);
     }
 
     private Squad squad;
