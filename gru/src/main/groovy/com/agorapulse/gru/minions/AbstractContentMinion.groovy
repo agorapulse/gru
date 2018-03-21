@@ -29,11 +29,12 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
             String expectedResponseText = responseContent?.load(client)?.text
             String responseText = readResponseText(client, squad, context)
 
-            if (!expectedResponseText) {
+            if (!expectedResponseText && responseText) {
                 expectedResponseText = responseText
                 if (responseContent.saveSupported) {
                     responseContent.save(client, new ByteArrayInputStream(normalize(expectedResponseText).bytes))
                     log.warning("Content is missing for $responseContent. New file was created with content:\n$expectedResponseText")
+                    createdResources << responseContent.toString()
                 }
             }
 
