@@ -53,7 +53,14 @@ class GruHttpRequest implements Client.Request {
     }
 
     Request buildOkHttpRequest() {
-        HttpUrl.Builder url = baseUri ? HttpUrl.parse(baseUri).newBuilder().addPathSegments(uri) : HttpUrl.parse(uri).newBuilder()
+        HttpUrl.Builder url
+        if (baseUri) {
+            String pathSegment = uri?.startsWith('/') ? uri[1..-1] : uri
+            url = HttpUrl.parse(baseUri).newBuilder().addPathSegments(pathSegment)
+        } else {
+            url = HttpUrl.parse(uri).newBuilder()
+        }
+
         if (parameters) {
             if (method in TestDefinitionBuilder.HAS_URI_PARAMETERS || body) {
                 parameters.each { key, value ->
