@@ -135,7 +135,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     final String getControllerName(ControllerUnitTest unitTest) {
         if (action) {
             Class controllerType = action.owner.class
-            if (action.owner instanceof ProxyObject) {
+            if (action.owner instanceof ProxyObject || action.owner.class.simpleName.contains('$')) {
                 controllerType = action.owner.class.superclass
             }
             return GrailsNameUtils.getPropertyName(GrailsNameUtils.getLogicalName(controllerType, 'Controller'))
