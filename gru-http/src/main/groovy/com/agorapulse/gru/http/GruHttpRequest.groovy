@@ -56,7 +56,7 @@ class GruHttpRequest implements Client.Request {
         HttpUrl.Builder url
         if (baseUri) {
             String pathSegment = baseUri?.startsWith('/') ? baseUri[1..-1] : baseUri
-            url = HttpUrl.parse(baseUri).newBuilder().addPathSegments(uri)
+            url = HttpUrl.parse(baseUri).newBuilder().addPathSegments(pathSegment)
         } else {
             url = HttpUrl.parse(uri).newBuilder()
         }
