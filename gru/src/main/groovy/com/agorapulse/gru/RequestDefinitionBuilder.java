@@ -30,6 +30,8 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * e.g. src/test/resources/org/example/foo/MySpec.
      * The file is created automatically during first run if it does not exist yet with empty object definition.
      *
+     * It automatically applies Content-Type: application/json header.
+     *
      * @param relativePath a JSON request file
      * @return self
      */
@@ -37,6 +39,8 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
 
     /**
      * Sets a JSON request from given content.
+     *
+     * It automatically applies Content-Type: application/json header.
      *
      * @param content a JSON request file
      * @return self

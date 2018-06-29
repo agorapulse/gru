@@ -7,6 +7,7 @@ import com.google.common.collect.ImmutableMultimap;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 
+import java.util.Collections;
 import java.util.Map;
 
 /**
@@ -36,6 +37,7 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
     }
 
     public DefaultRequestDefinitionBuilder json(final Content content) {
+        headers(Collections.singletonMap("Content-Type", "application/json"));
         return command(JsonMinion.class, new Command<JsonMinion>() {
             @Override
             public void execute(JsonMinion minion) {
