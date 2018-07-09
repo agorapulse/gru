@@ -1,0 +1,8 @@
+{
+    "input": {
+        "action": "hello",
+        "id": "world",
+        "foo": "oof",
+        "bar": "rab"
+    }
+}

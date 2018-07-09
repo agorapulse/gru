@@ -1,13 +1,11 @@
-Gru - Groovy HTTP Testing Framework
-===================================
+= Gru - Groovy HTTP Testing Framework
 
 [.ribbon]
 image::ribbon.png[link={projectUrl}]
 
 Gru is HTTP interaction testing framework with out-of-box support for Grails and REST interfaces.
 
-Installation
-------------
+== Installation
 
 Gru is available in JCenter. You can use Grails module or HTTP module or both in your project.
 
@@ -39,11 +37,9 @@ testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
 ```
 ====
 
-Setup
------
+== Setup
 
-HTTP
-~~~~
+=== HTTP
 Gru can be used to test any HTTP endpoint, including Grails application running within integration tests.
 
 .Minimal HTTP Usage
@@ -55,8 +51,7 @@ include::../examples/heist/src/test/groovy/heist/HttpSpec.groovy[]
 <2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
 <3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
-Grails
-~~~~~~
+=== Grails
 
 Gru for Grails tests controllers in context of other Grails artifacts such as url mappings or interceptors.
 Gru steals a lot from link:https://testing.grails.org/latest/guide/index.html[Grails Testing Support].
@@ -87,8 +82,7 @@ include::../examples/heist/src/test/groovy/heist/SplitSpec.groovy[tag=whenThen,i
 <3> Call `verify` method manually
 <4> Verify Spock interactions on `moonService` in `then` block
 
-Spring
-~~~~~~
+=== Spring
 Gru for link:https://spring.io/[Spring] allows you to test your application with mocked HTTP requests. Under the hood
 link:https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html[MockMvc] is used.
 
@@ -115,11 +109,9 @@ testCompile("org.spockframework:spock-core:$spockVersion")
 ----
 ====
 
-Common Interactions
--------------------
+== Common Interactions
 
-Request
-~~~~~~~
+=== Request
 
 Each Gru tests begins with HTTP request. There are methods for each of following HTTP methods:
  `head`, `post`, `put`, `patch`,
@@ -129,8 +121,7 @@ configuration closure.
 NOTE: Grails client requires that `UrlMappings` for given URI is specified unless the mappings are defined in `UrlMappings` class
 declared in default package. See <<minimal-grails-usage>> for reference.
 
-URL Parameters
-^^^^^^^^^^^^^^
+==== URL Parameters
 
 You can specify additional URL parameters
 
@@ -141,8 +132,7 @@ You can specify additional URL parameters
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=stealWithShrinkRay,indent=0]
 ----
 
-Request Headers
-^^^^^^^^^^^^^^^
+==== Request Headers
 
 You can specify additional HTTP headers sent with the request.
 
@@ -153,8 +143,7 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=s
 ----
 
 [[json-payload,JSON Payload]]
-JSON Payload
-^^^^^^^^^^^^
+==== JSON Payload
 
 You can use JSON payload from file.
 
@@ -176,13 +165,11 @@ so you have to run the test again and verify it is repeatable. Fixture files are
 in `src/test/resources` relatively to the working directory. See the following example how to easily set the property in Gradle.
 
 
-Response
-~~~~~~~~
+=== Response
 
 Response expectation are defined using `expect` method within `test` definition.
 
-Status Code
-^^^^^^^^^^^
+==== Status Code
 
 You can specify expected response status code. Constants for HTTP status codes are available within the `expect` closure call.
 Default status is `OK(200)` which is asserted within every test. See <<redirect>> for exception.
@@ -193,8 +180,7 @@ Default status is `OK(200)` which is asserted within every test. See <<redirect>
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=stealWithShrinkRay,indent=0]
 ----
 
-Response Headers
-^^^^^^^^^^^^^^^^
+==== Response Headers
 You can specify expected response headers.
 
 .Response Headers
@@ -204,8 +190,7 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=j
 ----
 
 [[redirect, Redirection]]
-Redirection
-^^^^^^^^^^^
+==== Redirection
 You can specify expected redirection URI. For redirection, default status code is `FOUND(302)`.
 
 .Redirection
@@ -214,8 +199,7 @@ You can specify expected redirection URI. For redirection, default status code i
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=redirect,indent=0]
 ----
 
-Plain Text Response
-^^^^^^^^^^^^^^^^^^^
+==== Plain Text Response
 You can specify expected plain text response. The responded JSON is verified just by `equals` method.
 
 .Plain Text Response
@@ -237,8 +221,7 @@ You can also specify the text inline. Inline method is also available for JSON a
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyTextInline,indent=0]
 ----
 
-JSON Response
-^^^^^^^^^^^^^
+==== JSON Response
 You can specify expected JSON response. The responded JSON is verified using https://github.com/lukas-krecan/JsonUnit[JsonUnit].
 
 .JSON Response
@@ -269,8 +252,7 @@ include::../examples/heist/src/test/resources/heist/MoonControllerSpec/moonsResp
 
 See <<json-payload>> for information about the expected response file location.
 
-JsonUnit Primer
-+++++++++++++++
+===== JsonUnit Primer
 
 There are built in and custom placeholders which can be used when evaluating the JSON response:
 
@@ -310,8 +292,7 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=c
 as method chain.
 
 
-HTML Response
-^^^^^^^^^^^^^
+==== HTML Response
 You can specify expected HTML response. The responded HTML is cleaned using https://jsoup.org/[jsoup] and
 the difference is performed using http://www.xmlunit.org/[XMLUnit]. You can replace any text node with `${xml-unit.ignore}`
 to ignore the value fo the node.
@@ -331,22 +312,19 @@ include::../examples/heist/src/test/resources/heist/MoonControllerSpec/htmlRespo
 [WARNING]
 HTML support for Grails is currently experimental as it does not apply the layouts.
 
-Grails Unit Test Interactions
------------------------------
+== Grails Unit Test Interactions
 On top of standard HTTP interaction, Gru provides additional methods specific for Grails only.
 
 NOTE: As of IntelliJ IDEA 2017.2 you get false warnings about the wrong method's argument being used. You have to
 ignore them at the moment. Please, vote for link:https://youtrack.jetbrains.com/issue/IDEA-177530[IDEA-177530] bug to get
 this fixed soon.
 
-Artifacts
-~~~~~~~~~
+=== Artifacts
 
 You can add additional Grails artifacts using `include` method. Only interceptors and URL mappings are supported
 at the moment.
 
-URL Mappings
-^^^^^^^^^^^^
+==== URL Mappings
 
 Unless you are using `UrlMappings` class in default package, you have to specify the URL mappings class used for matching
 the URIs. You can use just name of the class as string if your URL mappings resides in default package.
@@ -359,8 +337,7 @@ include::../examples/heist/src/test/groovy/heist/IncludeUrlMappingsSpec.groovy[]
 <1> Include `ApiUrlMappings` URL mappings
 <2> The URI will be matched using `ApiUrlMappings` URL mappings
 
-Interceptors
-^^^^^^^^^^^^
+==== Interceptors
 If you're controller heavily depends on interceptor it is sometimes better to test the interceptors and controllers as
 a single unit. You can include interceptors into test in similar way as url mappings using the `include` method.
 Once the interceptor is included it must match the given URL otherwise exception is thrown in the verification phase.
@@ -375,11 +352,9 @@ include::../examples/heist/src/test/groovy/heist/IncludeInterceptorSpec.groovy[]
 <2> Declare bean which is used in the interceptor
 <3> The expectations reflects the interceptor changes and the defined bean
 
-Request
-~~~~~~~
+=== Request
 
-Controller Action
-^^^^^^^^^^^^^^^^^
+==== Controller Action
 You can verify that given URI is mapped to particular action. Use method reference with `.&` to obtain
 particular `MethodClosure` instance.
 
@@ -391,11 +366,9 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=v
 
 The test only passes if `/moons/earth/moon` URI is mapped to action `moon` in `MoonController`.
 
-Response
-~~~~~~~~
+=== Response
 
-Forwarding
-^^^^^^^^^^
+==== Forwarding
 You can specify the expected forward URI.
 
 .Model
@@ -404,8 +377,7 @@ You can specify the expected forward URI.
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=forward,indent=0]
 ----
 
-Model
-^^^^^
+==== Model
 You can specify the expected model object returned from the controller.
 
 .Model
@@ -415,8 +387,7 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=m
 ----
 
 
-Integration Tests
-~~~~~~~~~~~~~~~~~
+=== Integration Tests
 You use `Http` client to verify controller within `@Integration` test.
 
 .Integration Setup
@@ -430,8 +401,7 @@ include::../examples/heist/src/integration-test/groovy/heist/MoonControllerInteg
 <4> Set the base URI for the executed test
 
 
-Spring Unit Test Integration
-----------------------------
+== Spring Unit Test Integration
 On top of standard HTTP interaction, Gru provides additional methods specific for Spring only. These methods allows you
 to fully leverage the power of link:https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html[MockMvc].
 
@@ -439,8 +409,7 @@ NOTE: As of IntelliJ IDEA 2017.2 you get false warnings about the wrong method's
 ignore them at the moment. Please, vote for link:https://youtrack.jetbrains.com/issue/IDEA-177530[IDEA-177530] bug to get
 this fixed soon.
 
-MockMVC Builders
-~~~~~~~~~~~~~~~~
+=== MockMVC Builders
 
 You can configure additional request steps within `request` method closure definition and you can use `that`
 within `expect` block to add additional `ResultMatcher`. Both methods are aliased to `and` method within their
@@ -458,8 +427,7 @@ include::../examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring
 link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
 <5> Same as `that`, asserts the content type returned
 
-Integration Tests
-~~~~~~~~~~~~~~~~~
+=== Integration Tests
 You use `Http` client to verify controller within `@Integration` test.
 
 .Integration Setup
@@ -468,11 +436,39 @@ You use `Http` client to verify controller within `@Integration` test.
 include::../examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerIntegrationTest.groovy[]
 ----
 
-Extending Gru
--------------
+== AWS API Gateway
 
-Extending DSL
-~~~~~~~~~~~~~
+NOTE: AWS API Gateway itegration is currently incubating. All the basic HTTP features are implemented but custom API Proxy related
+features are currently missing (e.g. customizing the API Gateway or Lambda context).
+
+You can easily test your https://docs.aws.amazon.com/apigateway/latest/developerguide/getting-started-with-lambda-integration.html[AWS API Gateway Lambda Integration]
+with Gru. First of all you need to tell Gru which handlers are responsible for particular URLs.
+
+.API Gateway Lambda Proxy Configuration
+[source,groovy]
+----
+include::../gru-api-gateway-proxy/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=simple]
+----
+<1> You can specify the name of the handler by class name with optional method name after double colon `::`
+<2> You can specify the handler by class reference
+<3> You can specify which HTTP methods are be handled for given URL
+
+You can also test handlers which do not uses the proxy integration
+
+.API Gateway Lambda Configuration (without Proxy)
+[source,groovy]
+----
+include::../gru-api-gateway-proxy/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=noproxy]
+----
+<1> The main difference is that you specify the request and response mapping
+<2> You can specify which path parameters are being extracted into the function input object
+<3> You can specify which query parameters are being extracted into the function input object
+<4> You can specify the response mapping with given status
+<5> You can specify the headers mapping for the response
+
+== Extending Gru
+
+=== Extending DSL
 
 Gru DSL can be easily extend. Gru uses minions whenever it is possible. `Minion` interface
 requires several methods to be implemented to intercept the test flow.
@@ -549,21 +545,10 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=m
 <5> Set the server URL as the base URI for testing
 <6> Run test against the running application
 
-Creating New Client
-~~~~~~~~~~~~~~~~~~~
+=== Creating New Client
 
 Creating new client is bit more work but you can check `Http` client which is rather small implementation.
 The core idea is to provide methods to update request and to check the response returned.
-
-Release Notes
--------------
-
-0.2.1
-~~~~~
-
-* JSON output is no longer prettified as it can cause out of memory issues
-* ability to autowire Grails interceptors
-
 
 
 
