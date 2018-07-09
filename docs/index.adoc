@@ -447,7 +447,7 @@ with Gru. First of all you need to tell Gru which handlers are responsible for p
 .API Gateway Lambda Proxy Configuration
 [source,groovy]
 ----
-include::../gru-api-gateway-proxy/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=simple]
+include::../gru-api-gateway/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=simple]
 ----
 <1> You can specify the name of the handler by class name with optional method name after double colon `::`
 <2> You can specify the handler by class reference
@@ -458,7 +458,7 @@ You can also test handlers which do not uses the proxy integration
 .API Gateway Lambda Configuration (without Proxy)
 [source,groovy]
 ----
-include::../gru-api-gateway-proxy/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=noproxy]
+include::../gru-api-gateway/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=noproxy]
 ----
 <1> The main difference is that you specify the request and response mapping
 <2> You can specify which path parameters are being extracted into the function input object
