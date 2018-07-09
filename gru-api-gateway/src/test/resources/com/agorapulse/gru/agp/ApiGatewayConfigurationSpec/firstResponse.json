@@ -1,0 +1,7 @@
+{
+    "input": {
+        "path": "/one",
+        "httpMethod": "GET",
+        "pathParameters": {}
+    }
+}
