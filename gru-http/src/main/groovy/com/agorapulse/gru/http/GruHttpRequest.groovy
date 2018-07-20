@@ -74,9 +74,7 @@ class GruHttpRequest implements Client.Request {
                 }
                 builder.method(method, form.build())
             }
-        }
-
-        if (body) {
+        } else {
             builder.method(method, body)
         }
 
