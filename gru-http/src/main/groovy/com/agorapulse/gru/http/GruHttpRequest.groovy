@@ -9,6 +9,7 @@ import okhttp3.HttpUrl
 import okhttp3.MediaType
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.internal.http.HttpMethod
 
 /**
  * Wrapper around OkHttp request.
@@ -74,8 +75,10 @@ class GruHttpRequest implements Client.Request {
                 }
                 builder.method(method, form.build())
             }
-        } else {
+        } else if (HttpMethod.requiresRequestBody(method)) {
             builder.method(method, body ?: RequestBody.create(null, ""))
+        } else {
+            builder.method(method, body)
         }
 
         builder.url(url.toString()).build()
