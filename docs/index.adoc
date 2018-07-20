@@ -538,12 +538,6 @@ After that the new extension method can be used in any test
 ----
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=model,indent=0]
 ----
-<1> Use `@SpringBootTest` annotation to run the application on random port
-<2> Inject the value of the random port
-<3> Initialize `Gru` using `Http` client
-<4> Construct the server URL
-<5> Set the server URL as the base URI for testing
-<6> Run test against the running application
 
 === Creating New Client
 
