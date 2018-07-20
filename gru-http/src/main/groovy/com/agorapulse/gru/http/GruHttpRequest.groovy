@@ -75,7 +75,7 @@ class GruHttpRequest implements Client.Request {
                 builder.method(method, form.build())
             }
         } else {
-            builder.method(method, body)
+            builder.method(method, body ?: RequestBody.create(null, ""))
         }
 
         builder.url(url.toString()).build()
