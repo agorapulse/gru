@@ -3,7 +3,6 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.exception.GroovyAssertAwareMultipleFailureException
 import com.agorapulse.gru.grails.Grails
-import com.agorapulse.gru.grails.minions.GrailsHtmlMinion
 import com.agorapulse.gru.grails.minions.InterceptorsMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.jsonunit.MatchesPattern
@@ -14,7 +13,6 @@ import groovy.transform.NotYetImplemented
 import org.junit.Rule
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.ModelAndView
-import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 /**
@@ -423,7 +421,6 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     }
     // end::verifyHtml[]
 
-    @IgnoreRest
     // tag::verifyHtmlWithBuilder[]
     void 'verify html with builder'() {
         expect:
