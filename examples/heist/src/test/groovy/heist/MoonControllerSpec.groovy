@@ -14,6 +14,7 @@ import groovy.transform.NotYetImplemented
 import org.junit.Rule
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.ModelAndView
+import spock.lang.IgnoreRest
 import spock.lang.Specification
 
 /**
@@ -421,6 +422,30 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
     // end::verifyHtml[]
+
+    @IgnoreRest
+    // tag::verifyHtmlWithBuilder[]
+    void 'verify html with builder'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon/info'
+                expect {
+                    html build {
+                        head {
+                            title 'Moon\'s Info'
+                            meta name: 'layout', content: 'main'
+
+                        }
+                        body {
+                            h1 'Moon'
+                            h2 'Earth'
+                            p '${xml-unit.ignore}'
+                        }
+                    }
+                }
+            }
+    }
+    // end::verifyHtmlWithBuilder[]
 
     // tag::verifyText[]
     void 'verify text'() {

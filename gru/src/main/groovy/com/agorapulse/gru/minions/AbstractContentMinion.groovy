@@ -26,7 +26,7 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
     @Override
     final void doVerify(Client client, Squad squad, GruContext context) throws Throwable {
         if (responseContent) {
-            String expectedResponseText = responseContent?.load(client)?.text
+            String expectedResponseText = responseContent?.load(this, client)?.text
             String responseText = readResponseText(client, squad, context)
 
             if (!expectedResponseText && responseText) {

@@ -1,5 +1,6 @@
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.content.BuilderContent;
 import com.agorapulse.gru.content.FileContent;
 import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
@@ -84,6 +85,11 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
     @Override
     public Content inline(String string) {
         return StringContent.create(string);
+    }
+
+    @Override
+    public Content build(Closure closure) {
+        return BuilderContent.create(closure);
     }
 
     private Squad squad;

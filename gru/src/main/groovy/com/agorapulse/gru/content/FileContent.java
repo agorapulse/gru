@@ -3,6 +3,7 @@ package com.agorapulse.gru.content;
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Content;
 import com.agorapulse.gru.minions.AbstractContentMinion;
+import com.agorapulse.gru.minions.Minion;
 import org.codehaus.groovy.runtime.IOGroovyMethods;
 
 import java.io.File;
@@ -23,7 +24,7 @@ public class FileContent implements Content {
     }
 
     @Override
-    public InputStream load(Client client) {
+    public InputStream load(Minion minion, Client client) {
         return client.loadFixture(fileName);
     }
 

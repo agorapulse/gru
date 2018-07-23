@@ -33,7 +33,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
     @Override
     GruContext doBeforeRun(Client client, Squad squad, GruContext context) {
         if (requestJsonContent) {
-            String requestText = requestJsonContent?.load(client)?.text
+            String requestText = requestJsonContent?.load(this, client)?.text
             if (!requestText && requestJsonContent.saveSupported) {
                 requestJsonContent.save(client, new ByteArrayInputStream('{\n\n}'.bytes))
                 log.warning("Content missing for $requestJsonContent. Content was saved.")

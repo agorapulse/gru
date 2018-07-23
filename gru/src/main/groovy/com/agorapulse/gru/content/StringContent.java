@@ -2,6 +2,7 @@ package com.agorapulse.gru.content;
 
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Content;
+import com.agorapulse.gru.minions.Minion;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -19,7 +20,7 @@ public class StringContent implements Content {
     }
 
     @Override
-    public InputStream load(Client client) {
+    public InputStream load(Minion minion, Client client) {
         return new ByteArrayInputStream(content.getBytes());
     }
 

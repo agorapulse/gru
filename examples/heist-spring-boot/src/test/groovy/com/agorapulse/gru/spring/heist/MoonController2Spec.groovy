@@ -26,7 +26,9 @@ class MoonController2Spec extends Specification {
                     headers 'X-Simon-Says': 'Use Gru for testing!'
                 }
                 expect {
-                    json inline('{ "X-Simon-Says": "Use Gru for testing!" }')
+                    json build {
+                        "X-Simon-Says" "Use Gru for testing!"
+                    }
                 }
             }
     }
