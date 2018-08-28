@@ -155,13 +155,25 @@ public class Gru<C extends Client> implements TestRule {
      * Reset the internal state. This is done by the rule automatically.
      */
     public Gru reset() {
+       return reset(true);
+    }
+
+    /**
+     * Reset the internal state. This is done by the rule automatically.
+     * @param resetConfigurations also clear the configurations created using {@link #prepare(Closure)} method
+     */
+    public Gru reset(boolean resetConfigurations) {
         verified = false;
         verificationResult = false;
         definition = false;
         context = GruContext.EMPTY;
-        configurations.clear();
         squad = new Squad();
         client.reset();
+
+        if (resetConfigurations) {
+            configurations.clear();
+        }
+
         return this;
     }
 

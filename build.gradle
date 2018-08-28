@@ -22,12 +22,14 @@ apply plugin: 'com.github.kt3k.coveralls'
 allprojects {
     repositories {
         jcenter()
-        mavenCentral()
         maven {
-            url "https://repo.grails.org/grails/core"
+            url 'http://repo1.maven.org/maven2/'
         }
         maven {
-            url 'https://repo.spring.io/release/'
+            url "http://repo.grails.org/grails/core"
+        }
+        maven {
+            url 'http://repo.spring.io/release/'
         }
     }
 }
@@ -39,7 +41,7 @@ dependencies {
 
 }
 
-String currentVersion = '0.6.3'
+String currentVersion = '0.6.4'
 
 version = currentVersion
 
