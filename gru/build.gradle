@@ -8,4 +8,5 @@ dependencies {
     compile group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
     compile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
+    testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
 }

@@ -33,7 +33,7 @@ If you are testing JSON responses, underlying library link:https://github.com/lu
 requires one of following libraries on the classpath: Jackson 1.x, Jackson 2.x, Gson, JSONObject or Moshi. If you don't have
 any of these on classpath, also add for example Jackson 2 dependency:
 ```
-testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'
+testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
 ```
 ====
 
@@ -291,6 +291,17 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=c
 `JsonFluentAssert` is immutable, so only last statement actually matters. That is why `.withMatcher` is called
 as method chain.
 
+[TIP]
+====
+When you need to rewrite your JSON fixture files then you can temporarily set the value of environment
+variable `COM_AGORAPULSE_GRU_REWRITE` to `true` to let Gru rewrite all your fixtures files which are triggering assertion
+errors.
+
+  export COM_AGORAPULSE_GRU_REWRITE=true
+  ./gradlew test
+  unset COM_AGORAPULSE_GRU_REWRITE
+
+====
 
 ==== HTML Response
 You can specify expected HTML response. The responded HTML is cleaned using https://jsoup.org/[jsoup] and
