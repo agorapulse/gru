@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/gru.css?v=0.6.4" />
+<link rel="stylesheet" href="css/gru.css?v=0.6.5" />
 <style>
 .hidden {
 	display: none;
@@ -565,9 +565,9 @@ $(addBlockSwitches);
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.6.4"                                     <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.6.4"                                   <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.6.4"                                   <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-http:0.6.5"                                     <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.6.5"                                   <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.6.5"                                   <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -601,7 +601,7 @@ any of these on classpath, also add for example Jackson 2 dependency:</p>
 </div>
 <div class="listingblock">
 <div class="content">
-<pre class="highlightjs highlight"><code>testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.0'</code></pre>
+<pre class="highlightjs highlight"><code>testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'</code></pre>
 </div>
 </div>
 </td>
@@ -1232,6 +1232,29 @@ Default status is <code>OK(200)</code> which is asserted within every test. See 
 <td class="content">
 <code>JsonFluentAssert</code> is immutable, so only last statement actually matters. That is why <code>.withMatcher</code> is called
 as method chain.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>When you need to rewrite your JSON fixture files then you can temporarily set the value of environment
+variable <code>COM_AGORAPULSE_GRU_REWRITE</code> to <code>true</code> to let Gru rewrite all your fixtures files which are triggering assertion
+errors.</p>
+</div>
+<div class="literalblock">
+<div class="content">
+<pre>export COM_AGORAPULSE_GRU_REWRITE=true
+./gradlew test
+unset COM_AGORAPULSE_GRU_REWRITE</pre>
+</div>
+</div>
 </td>
 </tr>
 </table>
@@ -2007,7 +2030,7 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-07-20 10:44:33 CEST
+Last updated 2018-09-04 12:01:53 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
