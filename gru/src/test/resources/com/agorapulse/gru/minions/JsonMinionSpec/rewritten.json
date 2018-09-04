@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "name": "Moon",
+    "planet": "Earth",
+    "created": "${json-unit.matches:isoDate}",
+    "visited_by": [
+      {
+        "name": "Neil Armstrong",
+        "nickname": null
+      }
+    ],
+    "colonised": false,
+    "missed_by": {
+      "name": "Appolo 13"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Moon's Brother",
+    "planet": "Earth",
+    "created": "2013-12-04T16:04:48+0000",
+    "colonised": true,
+    "visited_by": [
+      {
+        "name": "Elon Musk"
+      }
+    ]
+  }
+]

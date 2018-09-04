@@ -8,17 +8,23 @@ import com.agorapulse.gru.content.FileContent
 import org.junit.Rule
 import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
+import spock.util.environment.RestoreSystemProperties
 
+import static com.agorapulse.gru.minions.AbstractContentMinion.SYSTEM_PROPERTY_REWRITE_RESOURCES
 import static com.agorapulse.gru.minions.AbstractContentMinion.TEST_RESOURCES_FOLDER_PROPERTY_NAME
 
 /**
  * Tests for TextMinion.
  */
+@RestoreSystemProperties
 class JsonMinionSpec extends Specification {
 
     private static final String JSON = '{\n\n}'
     private static final String FILE_NAME = 'empty.json'
-    private static final String EXPECTED_FILE_LOCATION = 'com/agorapulse/gru/minions/JsonMinionSpec/' + FILE_NAME
+    private static final String FILE_NAME_EXPECTED = 'expected.json'
+    private static final String FILE_NAME_ACTUAL= 'actual.json'
+    private static final String FILE_NAME_AFTER_REWRITE = 'rewritten.json'
+    private static final String FIXTURES_ROOT = 'com/agorapulse/gru/minions/JsonMinionSpec/'
 
     @Rule TemporaryFolder tmp = new TemporaryFolder()
 
@@ -31,11 +37,50 @@ class JsonMinionSpec extends Specification {
             Squad squad = new Squad()
         when:
             jsonMinion.beforeRun(client, squad, GruContext.EMPTY)
-            File fixtureFile = new File(testResourcesFolder, EXPECTED_FILE_LOCATION)
+            File fixtureFile = new File(testResourcesFolder, FIXTURES_ROOT + FILE_NAME)
         then:
             fixtureFile.exists()
             fixtureFile.text == JSON
 
+    }
+
+    void 'response file is rewritten'() {
+        given:
+            File testResourcesFolder = tmp.newFolder()
+
+            System.setProperty(TEST_RESOURCES_FOLDER_PROPERTY_NAME, testResourcesFolder.canonicalPath)
+            System.setProperty(SYSTEM_PROPERTY_REWRITE_RESOURCES, true.toString())
+
+            new File(testResourcesFolder, FILE_NAME_EXPECTED) << load(FILE_NAME_EXPECTED)
+            JsonMinion jsonMinion = new JsonMinion(responseContent: FileContent.create(FILE_NAME_EXPECTED))
+
+            Client.Request req = Mock(Client.Request)
+            Client.Response resp = Mock(Client.Response)
+            Client client = new TestClient(this, req, resp)
+            Squad squad = new Squad()
+        when:
+            jsonMinion.verify(client, squad, GruContext.EMPTY)
+        then:
+            thrown(AssertionError)
+
+            1 * resp.text >> load(FILE_NAME_ACTUAL)
+        when:
+            File fixtureFile = new File(testResourcesFolder, FIXTURES_ROOT + FILE_NAME_EXPECTED)
+        then:
+            fixtureFile.exists()
+
+            jsonMinion.similar(
+                escapeJsonUnitIgnore(fixtureFile.text),
+                escapeJsonUnitIgnore(load(FILE_NAME_AFTER_REWRITE))
+            )
+    }
+
+    private static String load(String name) {
+        JsonMinionSpec.getResourceAsStream(JsonMinionSpec.simpleName + '/' + name).text
+    }
+
+    private static String escapeJsonUnitIgnore(String original) {
+        original.replaceAll(/\$\{json-unit/, '_json_unit')
     }
 
 }

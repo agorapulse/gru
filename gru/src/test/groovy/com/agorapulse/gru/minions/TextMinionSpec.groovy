@@ -40,7 +40,7 @@ class TextMinionSpec extends Specification {
         then:
             AssertionError error = thrown(AssertionError)
             error.message
-            error.message.startsWith('New fixture files were created')
+            error.message.startsWith('Fixture files were created or updated:')
         when:
             File fixtureFile = new File(testResourcesFolder, EXPECTED_FILE_LOCATION)
         then:
