@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/gru.css?v=0.6.5" />
+<link rel="stylesheet" href="css/gru.css?v=0.6.6" />
 <style>
 .hidden {
 	display: none;
@@ -565,9 +565,9 @@ $(addBlockSwitches);
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.6.5"                                     <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.6.5"                                   <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.6.5"                                   <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-http:0.6.6"                                     <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.6.6"                                   <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.6.6"                                   <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -630,9 +630,8 @@ import spock.lang.Specification
 
 class HttpSpec extends Specification{
 
-    @Rule Gru&lt;Http&gt; gru = Gru.equip(Http.steal(this)).prepare {                         <i class="conum" data-value="1"></i><b>(1)</b>
-        baseUri 'http://despicableme.wikia.com'                                         <i class="conum" data-value="2"></i><b>(2)</b>
-    }
+    @Rule Gru&lt;Http&gt; gru = Gru.equip(Http.steal(this))                                   <i class="conum" data-value="1"></i><b>(1)</b>
+                             .prepare('http://despicableme.wikia.com')                  <i class="conum" data-value="2"></i><b>(2)</b>
 
     void 'despicable me'() {
         expect:
@@ -2030,7 +2029,7 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-09-04 12:01:53 CEST
+Last updated 2018-10-13 07:36:41 CEST
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
