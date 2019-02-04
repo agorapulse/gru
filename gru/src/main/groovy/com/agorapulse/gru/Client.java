@@ -15,8 +15,6 @@ public interface Client {
 
     GruContext run(Squad squad, GruContext context);
 
-    String getFixtureLocation(String relativeFilePath);
-
     InputStream loadFixture(String fileName);
 
     String getCurrentDescription();

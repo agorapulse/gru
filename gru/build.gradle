@@ -9,6 +9,7 @@ dependencies {
     compile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
     compile 'space.jasan:groovy-closure-support:0.5.0'
+    compile 'com.agorapulse.testing:fixt:0.1'
 
     testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
 }

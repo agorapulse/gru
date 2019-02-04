@@ -16,13 +16,4 @@ class InDefaultPackageTest extends Specification {
             }
     }
 
-    void 'get fixture location'() {
-        given:
-            Http client = Http.steal(this)
-        expect:
-            client.getFixtureLocation('file.json') == 'InDefaultPackageTest/file.json'
-            client.unitTest == this
-
-    }
-
 }
