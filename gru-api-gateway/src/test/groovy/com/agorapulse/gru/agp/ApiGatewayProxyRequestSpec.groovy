@@ -2,14 +2,17 @@ package com.agorapulse.gru.agp
 
 import spock.lang.Specification
 
+/**
+ * Tests for API Gateway Proxy Request.
+ */
 class ApiGatewayProxyRequestSpec extends Specification {
-
 
     public static final String BASE_URI = '/context/'
     public static final String PATH = '/path'
     public static final String METHOD = 'POST'
     public static final String JSON = '{ "foo" : "bar" }'
 
+    @SuppressWarnings('LineLength')
     void 'sanity check'() {
         when:
             ApiGatewayProxyRequest request =  new ApiGatewayProxyRequest(
@@ -27,13 +30,15 @@ class ApiGatewayProxyRequestSpec extends Specification {
             request.addParameter('offset', 5)
 
         then:
-            request.baseUri == BASE_URI
-            request.uri == PATH
-            request.method == METHOD
+            with (request) {
+                baseUri == BASE_URI
+                uri == PATH
+                method == METHOD
 
-            request.context
+                context
 
-            request.toJson() == '{"path":"/context/path","body":"{ \\"foo\\" : \\"bar\\" }","headers":{"Auth":"Bearer TeddyTheBear","Content-Type":"application/json"},"httpMethod":"POST","queryStringParameters":{"max":"8","offset":"5"},"pathParameters":{"id":"1"}}'
+                toJson() == '{"path":"/context/path","body":"{ \\"foo\\" : \\"bar\\" }","headers":{"Auth":"Bearer TeddyTheBear","Content-Type":"application/json"},"httpMethod":"POST","queryStringParameters":{"max":"8","offset":"5"},"pathParameters":{"id":"1"}}'
+            }
 
         when:
             ApiGatewayConfiguration.MappingConfiguration mappingConfiguration = new ApiGatewayConfiguration.MappingConfiguration()

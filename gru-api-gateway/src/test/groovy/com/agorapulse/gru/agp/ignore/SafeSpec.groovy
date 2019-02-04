@@ -2,11 +2,14 @@ package com.agorapulse.gru.agp.ignore
 
 import spock.lang.Specification
 
+/**
+ * Tests safe calls wrapper.
+ */
 class SafeSpec extends Specification {
 
     void 'safe calls'() {
         expect:
-            Safe.call { "bar" } == "bar"
+            Safe.call { 'bar' } == 'bar'
 
         when:
             Safe.call { throw new IllegalArgumentException() }

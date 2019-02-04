@@ -24,7 +24,8 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
 
     protected AbstractContentMinion(Class<C> clientType) {
         super(clientType)
-        rewrite = System.getenv(ENVIRONMENT_VARIABLE_REWRITE_RESOURCES) == true.toString() || System.getProperty(SYSTEM_PROPERTY_REWRITE_RESOURCES) == true.toString()
+        rewrite = System.getenv(ENVIRONMENT_VARIABLE_REWRITE_RESOURCES) == true.toString() ||
+            System.getProperty(SYSTEM_PROPERTY_REWRITE_RESOURCES) == true.toString()
     }
 
     @Override
@@ -56,7 +57,8 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
         }
 
         if (createdResources) {
-            throw new AssertionError("Fixture files were created or updated: ${createdResources.join(', ')}. Please, run the test again to verify it is repeatable.")
+            throw new AssertionError("Fixture files were created or updated: ${createdResources.join(', ')}. " +
+                'Please, run the test again to verify it is repeatable.')
         }
     }
 
@@ -65,8 +67,10 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
     protected String normalize(String input) { input }
 
     protected boolean isRewriteSupported() { false }
+
+    @SuppressWarnings(['ConfusingMethodName', 'UnusedMethodParameter'])
     protected String rewrite(Client client, String actualText, String expectedText) {
-        throw new UnsupportedOperationException("Rewrite is not supported")
+        throw new UnsupportedOperationException('Rewrite is not supported')
     }
 
     @SuppressWarnings('UnusedMethodParameter')

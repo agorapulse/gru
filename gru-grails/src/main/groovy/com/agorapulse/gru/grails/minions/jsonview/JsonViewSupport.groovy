@@ -1,5 +1,9 @@
 package com.agorapulse.gru.grails.minions.jsonview
 
+/**
+ * JsonViewGrailsPlugin class holder.
+ */
+@SuppressWarnings(['ClassForName', 'PublicMethodsBeforeNonPublicMethods'])
 class JsonViewSupport {
 
     public static final Class JSON_VIEWS_PLUGIN_TYPE

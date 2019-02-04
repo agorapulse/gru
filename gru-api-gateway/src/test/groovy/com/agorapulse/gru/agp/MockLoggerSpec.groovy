@@ -2,6 +2,9 @@ package com.agorapulse.gru.agp
 
 import spock.lang.Specification
 
+/**
+ * Tests for mock logger.
+ */
 class MockLoggerSpec extends Specification {
 
     void 'mock logger logs to System.err'() {

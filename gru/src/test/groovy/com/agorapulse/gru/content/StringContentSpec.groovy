@@ -3,6 +3,9 @@ package com.agorapulse.gru.content
 import com.agorapulse.gru.Content
 import spock.lang.Specification
 
+/**
+ * Tests for StringContent.
+ */
 class StringContentSpec extends Specification {
 
     void 'save is not supported'() {
@@ -15,6 +18,5 @@ class StringContentSpec extends Specification {
             content.save(null, null)
         then:
             thrown(UnsupportedOperationException)
-
     }
 }

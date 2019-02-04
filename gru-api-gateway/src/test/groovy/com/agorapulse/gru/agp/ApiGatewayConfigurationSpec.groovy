@@ -5,13 +5,14 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import groovy.json.JsonOutput
 import spock.lang.Specification
-import sun.security.util.Debug
 
-import java.security.Security
-
+/**
+ * Tests for API Gateway configuration.
+ */
 class ApiGatewayConfigurationSpec extends Specification {
 
-    private static final NonProxyHandler nonProxyHandler = new NonProxyHandler()
+    @SuppressWarnings('UnusedPrivateField')
+    private final NonProxyHandler nonProxyHandler = new NonProxyHandler()
 
     void 'sample handler'() {
         given:
@@ -52,7 +53,6 @@ class ApiGatewayConfigurationSpec extends Specification {
             }
         then:
             gru.verify()
-
 
         when:
             gru.reset().test {
@@ -115,7 +115,6 @@ class ApiGatewayConfigurationSpec extends Specification {
                     response(200) {                                                     // <4>
                         headers 'Content-Type': 'application/json'                              // <5>
                     }
-
                 }
             })
             // end::noproxy[]
@@ -145,6 +144,7 @@ class ApiGatewayConfigurationSpec extends Specification {
             AssertionError error = thrown(AssertionError)
             error.cause instanceof ClassNotFoundException
     }
+
 }
 
 class SampleHandler implements RequestHandler<Map, Map> {

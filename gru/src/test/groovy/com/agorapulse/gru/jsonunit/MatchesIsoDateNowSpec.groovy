@@ -25,7 +25,6 @@ class MatchesIsoDateNowSpec extends Specification {
             false   | null
 
             matchesDesc = matches ? 'matches' : 'does not match'
-
     }
 
     void 'test description'() {

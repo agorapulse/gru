@@ -1,7 +1,6 @@
 package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.Client
-import groovy.transform.PackageScope
 import org.grails.plugins.testing.GrailsMockHttpServletResponse
 
 /**

@@ -40,6 +40,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     }
 
     @Override
+    @SuppressWarnings('UnnecessaryCast')
     GruContext doBeforeRun(Grails grails, Squad squad, GruContext context) {
         if (urlMappings.isEmpty() && grails.request.uri != null) {
             try {
@@ -61,16 +62,47 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
         }
     }
 
-    private void initUrlMappingsArtifacts(ControllerUnitTest unitTest) {
-        for (Class urlMappingClass in urlMappings) {
-            unitTest.grailsApplication.addArtefact(UrlMappingsArtefactHandler.TYPE, urlMappingClass)
-        }
-    }
-
     GrailsControllerUrlMappings getUrlMappingsHolder(ControllerUnitTest unitTest) {
         initUrlMappingsArtifacts(unitTest)
         defineMappingsHolder(unitTest)
         urlMappingsHolder = unitTest.applicationContext.getBean('grailsUrlMappingsHolder', GrailsControllerUrlMappings)
+    }
+
+    final GrailsControllerClass getControllerClass(ControllerUnitTest unitTest) {
+        return (GrailsControllerClass) unitTest.grailsApplication.getArtefactByLogicalPropertyName(ControllerArtefactHandler.TYPE, getControllerName(unitTest))
+    }
+
+    /**
+     * @return name of the action
+     */
+    final String getActionName(ControllerUnitTest unitTest) {
+        if (action) {
+            return action.method
+        }
+        UrlMappingInfo info = readMappingInfo(unitTest)
+        info.actionName ?: getControllerClass(unitTest).defaultAction
+    }
+
+    /**
+     * @return name of the controller
+     */
+    @SuppressWarnings('Instanceof')
+    final String getControllerName(ControllerUnitTest unitTest) {
+        if (action) {
+            Class controllerType = action.owner.class
+            if (action.owner instanceof ProxyObject || action.owner.class.simpleName.contains('$')) {
+                controllerType = action.owner.class.superclass
+            }
+            return GrailsNameUtils.getPropertyName(GrailsNameUtils.getLogicalName(controllerType, 'Controller'))
+        }
+        UrlMappingInfo info = readMappingInfo(unitTest)
+        info.controllerName
+    }
+
+    private void initUrlMappingsArtifacts(ControllerUnitTest unitTest) {
+        for (Class urlMappingClass in urlMappings) {
+            unitTest.grailsApplication.addArtefact(UrlMappingsArtefactHandler.TYPE, urlMappingClass)
+        }
     }
 
     @CompileDynamic
@@ -111,36 +143,5 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
         }
 
         return urlMappingInfo = mappingMatched
-    }
-
-    final GrailsControllerClass getControllerClass(ControllerUnitTest unitTest) {
-        return (GrailsControllerClass) unitTest.grailsApplication.getArtefactByLogicalPropertyName(ControllerArtefactHandler.TYPE, getControllerName(unitTest))
-    }
-
-    /**
-     * @return name of the action
-     */
-    final String getActionName(ControllerUnitTest unitTest) {
-        if (action) {
-            return action.method
-        }
-        UrlMappingInfo info = readMappingInfo(unitTest)
-        info.actionName ?: getControllerClass(unitTest).defaultAction
-    }
-
-    /**
-     * @return name of the controller
-     */
-    @SuppressWarnings('Instanceof')
-    final String getControllerName(ControllerUnitTest unitTest) {
-        if (action) {
-            Class controllerType = action.owner.class
-            if (action.owner instanceof ProxyObject || action.owner.class.simpleName.contains('$')) {
-                controllerType = action.owner.class.superclass
-            }
-            return GrailsNameUtils.getPropertyName(GrailsNameUtils.getLogicalName(controllerType, 'Controller'))
-        }
-        UrlMappingInfo info = readMappingInfo(unitTest)
-        info.controllerName
     }
 }

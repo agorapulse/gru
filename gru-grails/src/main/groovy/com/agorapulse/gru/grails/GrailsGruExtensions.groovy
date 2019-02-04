@@ -82,7 +82,6 @@ class GrailsGruExtensions {
         self.command(ForwardMinion) {
             forwardedUri = url
         }
-
     }
 
 // tag::footer[]

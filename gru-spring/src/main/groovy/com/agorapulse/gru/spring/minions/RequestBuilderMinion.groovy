@@ -19,6 +19,10 @@ class RequestBuilderMinion extends AbstractMinion<Spring> {
         super(Spring)
     }
 
+    void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
+        steps << step
+    }
+
     @Override
     protected GruContext doBeforeRun(Spring client, Squad squad, GruContext context) {
         for (Closure step : steps) {
@@ -27,7 +31,4 @@ class RequestBuilderMinion extends AbstractMinion<Spring> {
         return context
     }
 
-    void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
-        steps << step
-    }
 }

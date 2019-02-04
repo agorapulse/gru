@@ -3,6 +3,9 @@ package com.agorapulse.gru.http
 import spock.lang.Specification
 import spock.lang.Unroll
 
+/**
+ * Tests for Gru Http Request.
+ */
 class GruHttpRequestSpec extends Specification {
 
     @Unroll

@@ -50,13 +50,6 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
         return context
     }
 
-    @CompileDynamic
-    private static mockInterceptorAdapter(Grails grails) {
-        grails.unitTest.defineBeans {
-            grailsInterceptorHandlerInterceptorAdapter(GrailsInterceptorHandlerInterceptorAdapter)
-        }
-    }
-
     @Override
     @SuppressWarnings(['Instanceof', 'CatchException'])
     GruContext doAfterRun(Grails grails, Squad squad, GruContext ctx) {
@@ -91,16 +84,6 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
         }
     }
 
-    @SuppressWarnings('CatchThrowable')
-    private GruContext afterCompletionWithError(Grails grails, GruContext context, Exception e) {
-        try {
-            interceptorAdapter.afterCompletion(grails.unitTest.request, grails.unitTest.response, this, e)
-            return context
-        } catch (Throwable t) {
-            return context.withError(t)
-        }
-    }
-
     @Override
     void doVerify(Grails grails, Squad squad, GruContext resultAndError) throws Throwable {
         if (interceptors) {
@@ -110,6 +93,23 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
                     throw new AssertionError("Interceptor $interceptorClass.name should match but didn't!")
                 }
             }
+        }
+    }
+
+    @CompileDynamic
+    private static void mockInterceptorAdapter(Grails grails) {
+        grails.unitTest.defineBeans {
+            grailsInterceptorHandlerInterceptorAdapter(GrailsInterceptorHandlerInterceptorAdapter)
+        }
+    }
+
+    @SuppressWarnings('CatchThrowable')
+    private GruContext afterCompletionWithError(Grails grails, GruContext context, Exception e) {
+        try {
+            interceptorAdapter.afterCompletion(grails.unitTest.request, grails.unitTest.response, this, e)
+            return context
+        } catch (Throwable t) {
+            return context.withError(t)
         }
     }
 

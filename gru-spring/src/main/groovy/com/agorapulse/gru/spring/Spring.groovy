@@ -69,12 +69,11 @@ class Spring extends AbstractClient {
         return context.withResult(result)
     }
 
-    private URI getRequestURI() {
-        new URI("${request.baseUri ?: ''}${request.uri ?: ''}".replaceAll('/+', '/'))
-    }
-
     @Override
     Object getUnitTest() {
         super.unitTest
+    }
+    private URI getRequestURI() {
+        new URI("${request.baseUri ?: ''}${request.uri ?: ''}".replaceAll('/+', '/'))
     }
 }

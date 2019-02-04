@@ -20,6 +20,10 @@ class ResultMatcherMinion extends AbstractMinion<Spring> {
         super(Spring)
     }
 
+    void addMatcher(ResultMatcher matcher) {
+        matchers << matcher
+    }
+
     @Override
     @SuppressWarnings('Instanceof')
     protected void doVerify(Spring client, Squad squad, GruContext context) throws Throwable {
@@ -35,7 +39,4 @@ class ResultMatcherMinion extends AbstractMinion<Spring> {
         }
     }
 
-    void addMatcher(ResultMatcher matcher) {
-        matchers << matcher
-    }
 }

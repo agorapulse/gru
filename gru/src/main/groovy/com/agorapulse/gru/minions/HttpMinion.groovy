@@ -39,11 +39,6 @@ class HttpMinion extends AbstractMinion<Client> {
         assert redirectUri == null ||
             client.response.redirectUrl == redirectUri ||
             client.response.redirectUrl == client.request.baseUri + redirectUri
-
-    }
-
-    final int getIndex() {
-        return HTTP_MINION_INDEX
     }
 
     void setStatus(int status) {
@@ -63,9 +58,11 @@ class HttpMinion extends AbstractMinion<Client> {
     }
 
     public static final int DEFAULT_STATUS = 200
+    final int index = HTTP_MINION_INDEX
 
     private int status = DEFAULT_STATUS
     private final Multimap<String, String> requestHeaders = LinkedListMultimap.create()
     private final Multimap<String, String> responseHeaders = LinkedListMultimap.create()
     private String redirectUri
+
 }
