@@ -7,13 +7,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -124,8 +125,8 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
                 .orElseGet(()-> createNewInstance(clazz));
         }
 
-        private void configure(@DelegatesTo(MappingConfiguration.class) Closure<MappingConfiguration> configuration) {
-            DefaultGroovyMethods.with(this.configuration, configuration);
+        private void configure(Consumer<MappingConfiguration> configuration) {
+            configuration.accept(this.configuration);
         }
 
         private static <T> T createNewInstance(Class<T> clazz) {
@@ -167,6 +168,10 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         }
 
         public MappingConfiguration response(int number, @DelegatesTo(ResponseMappingConfiguration.class) Closure<ResponseMappingConfiguration> configuration) {
+            return response(number, ConsumerWithDelegate.create(configuration));
+        }
+
+        public MappingConfiguration response(int number, Consumer<ResponseMappingConfiguration> configuration) {
             responses.put(number, ResponseMappingConfiguration.from(configuration));
             return this;
         }
@@ -188,9 +193,9 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
 
         private Map<String, String> headers = new LinkedHashMap<>();
 
-        private static ResponseMappingConfiguration from(@DelegatesTo(ResponseMappingConfiguration.class) Closure<ResponseMappingConfiguration> configuration) {
+        private static ResponseMappingConfiguration from(Consumer<ResponseMappingConfiguration> configuration) {
             ResponseMappingConfiguration response = new ResponseMappingConfiguration();
-            DefaultGroovyMethods.with(response, configuration);
+            configuration.accept(response);
             return response;
         }
 
@@ -227,22 +232,27 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         }
 
         public Mapping to(Class handler) {
-            return to(handler.getName(), null);
+            return to(handler.getName());
         }
 
         public Mapping to(Class handler, @DelegatesTo(MappingConfiguration.class) Closure<MappingConfiguration> configuration) {
-            return to(handler.getName(), configuration);
+            return to(handler, ConsumerWithDelegate.create(configuration));
+        }
+
+        public Mapping to(Class handler, Consumer<MappingConfiguration> configuration) {
+            return to(handler.getName(), configuration, false);
         }
 
         public Mapping to(String handler) {
-            return to(handler, null);
+            return to(handler, (c) -> {}, true);
         }
 
         public Mapping to(String handler, @DelegatesTo(MappingConfiguration.class) Closure<MappingConfiguration> configuration) {
-            Mapping mapping = new Mapping(this, handler.contains("::") ? handler : (handler + "::handleRequest"), configuration == null);
-            Optional.ofNullable(configuration).ifPresent(mapping::configure);
-            self.mappings.add(mapping);
-            return mapping;
+            return to(handler, ConsumerWithDelegate.create(configuration),  true);
+        }
+
+        public Mapping to(String handler, Consumer<MappingConfiguration> configuration) {
+            return to(handler, configuration, false);
         }
 
         boolean matches(String method, String url) {
@@ -280,6 +290,13 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
                 return ret;
             }
             return Collections.emptySet();
+        }
+
+        private Mapping to(String handler, Consumer<MappingConfiguration> configuration, boolean proxied) {
+            Mapping mapping = new Mapping(this, handler.contains("::") ? handler : (handler + "::handleRequest"), proxied);
+            Optional.ofNullable(configuration).ifPresent(mapping::configure);
+            self.mappings.add(mapping);
+            return mapping;
         }
     }
 

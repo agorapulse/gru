@@ -4,8 +4,6 @@ import com.agorapulse.gru.content.FileContent;
 import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
 
 import java.util.Collections;
 import java.util.Map;
@@ -21,14 +19,6 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
     }
 
     /**
-     * @see Squad#command(Class, Closure)
-     */
-    public <M extends Minion> DefaultRequestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command) {
-        this.squad.command(minionType, command);
-        return this;
-    }
-
-    /**
      * @see Squad#command(Class, Command)
      */
     public <M extends Minion> DefaultRequestDefinitionBuilder command(Class<M> minionType, Command<M> command) {
@@ -38,12 +28,7 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
 
     public DefaultRequestDefinitionBuilder json(final Content content) {
         headers(Collections.singletonMap("Content-Type", "application/json"));
-        return command(JsonMinion.class, new Command<JsonMinion>() {
-            @Override
-            public void execute(JsonMinion minion) {
-                minion.setRequestJsonContent(content);
-            }
-        });
+        return command(JsonMinion.class, minion -> minion.setRequestJsonContent(content));
     }
 
     @Override
@@ -58,12 +43,7 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
      * @return self
      */
     public DefaultRequestDefinitionBuilder params(final Map<String, Object> params) {
-        return command(ParametersMinion.class, new Command<ParametersMinion>() {
-            @Override
-            public void execute(ParametersMinion minion) {
-                minion.addParameters(params);
-            }
-        });
+        return command(ParametersMinion.class, minion -> minion.addParameters(params));
     }
 
     /**
@@ -73,12 +53,7 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
      * @return self
      */
     public DefaultRequestDefinitionBuilder headers(final Map<String, String> headers) {
-        return command(HttpMinion.class, new Command<HttpMinion>() {
-            @Override
-            public void execute(HttpMinion minion) {
-                minion.getRequestHeaders().putAll(ImmutableMultimap.copyOf(headers.entrySet()));
-            }
-        });
+        return command(HttpMinion.class, minion -> minion.getRequestHeaders().putAll(ImmutableMultimap.copyOf(headers.entrySet())));
     }
 
     @Override

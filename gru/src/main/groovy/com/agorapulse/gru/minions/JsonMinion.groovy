@@ -13,6 +13,8 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Log
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert
 
+import java.util.function.Function
+
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson
 
 /**
@@ -26,7 +28,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
     Content requestJsonContent
 
     @SuppressWarnings('unchecked')
-    Closure<JsonFluentAssert> jsonUnitConfiguration = (Closure<JsonFluentAssert>) Closure.IDENTITY.clone()
+    Function<JsonFluentAssert, JsonFluentAssert> jsonUnitConfiguration = Function.identity()
 
     JsonMinion() {
         super(Client)
@@ -88,7 +90,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
                 .withMatcher('positiveIntegerString', MatchesPattern.POSITIVE_NUMBER_STRING)
                 .withMatcher('url', MatchesUrl.INSTANCE)
 
-        fluentAssert = fluentAssert.with jsonUnitConfiguration
+        fluentAssert = jsonUnitConfiguration.apply(fluentAssert)
 
         try {
             fluentAssert.isEqualTo(expected)

@@ -45,11 +45,11 @@ public class Squad {
      *
      * If the minion is not yet present in the squad it is instantiated using default constructor.
      * @param minionType type of the minion being commanded
-     * @param command closure executed within context of selected minion
+     * @param aCommand closure executed within context of selected minion
      */
     @SuppressWarnings("unchecked")
-    public <M extends Minion> void command(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure command) {
-        DefaultGroovyMethods.with(findOrCreateMinionByType(minionType), command);
+    public <M extends Minion> void command(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure aCommand) {
+        command(minionType, Command.create(aCommand));
     }
 
     /**

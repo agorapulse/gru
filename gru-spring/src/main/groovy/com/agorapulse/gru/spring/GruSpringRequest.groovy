@@ -6,6 +6,9 @@ import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
+import space.jasan.support.groovy.closure.ConsumerWithDelegate
+
+import java.util.function.Consumer
 
 /**
  * Gru wrapper around Spring mock request.
@@ -14,7 +17,7 @@ import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilde
 @CompileStatic
 class GruSpringRequest implements Client.Request {
 
-    final List<Closure<MockHttpServletRequestBuilder>> steps = []
+    final List<Consumer<MockHttpServletRequestBuilder>> steps = []
 
     String baseUri
     String method = TestDefinitionBuilder.GET
@@ -35,7 +38,11 @@ class GruSpringRequest implements Client.Request {
         addBuildStep { param(name, value?.toString()) }
     }
 
-    void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
+    void addBuildStep(Consumer<MockHttpServletRequestBuilder> step) {
         steps << step
+    }
+
+    void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
+        addBuildStep(ConsumerWithDelegate.create(step))
     }
 }

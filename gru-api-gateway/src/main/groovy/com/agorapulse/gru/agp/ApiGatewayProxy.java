@@ -9,21 +9,26 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
 import groovy.transform.stc.FromString;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Consumer;
 
 public class ApiGatewayProxy extends AbstractClient {
+
+    public static ApiGatewayProxy steal(Object unitTest, Consumer<ApiGatewayConfiguration> configuration) {
+        ApiGatewayConfiguration apiGatewayConfiguration = new ApiGatewayConfiguration();
+        configuration.accept(apiGatewayConfiguration);
+        return new ApiGatewayProxy(unitTest, apiGatewayConfiguration);
+    }
 
     public static ApiGatewayProxy steal(Object unitTest,
                                         @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ApiGatewayConfiguration.class)
                                         @ClosureParams(value = FromString.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration")
                                         Closure<ApiGatewayConfiguration.Mapping> configuration
     ) {
-        ApiGatewayConfiguration apiGatewayConfiguration = new ApiGatewayConfiguration();
-        DefaultGroovyMethods.with(apiGatewayConfiguration, configuration);
-        return new ApiGatewayProxy(unitTest, apiGatewayConfiguration);
+        return steal(unitTest, ConsumerWithDelegate.create(configuration));
     }
 
     private final ApiGatewayConfiguration configuration;

@@ -2,8 +2,8 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
+
+import java.util.function.Consumer;
 
 public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
 
@@ -12,15 +12,6 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
         this.squad = squad;
         this.requestDefinitionBuilder = new DefaultRequestDefinitionBuilder(squad);
         this.responseDefinitionBuilder = new DefaultResponseDefinitionBuilder(squad);
-    }
-
-    /**
-     * @see Squad#command(Class, Closure)
-     */
-    @Override
-    public <M extends Minion> TestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command) {
-        this.squad.command(minionType, command);
-        return this;
     }
 
     /**
@@ -38,8 +29,8 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder expect(@DelegatesTo(value = ResponseDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<ResponseDefinitionBuilder> definition) {
-        configure(client.getUnitTest(), responseDefinitionBuilder, definition);
+    public TestDefinitionBuilder expect(Consumer<ResponseDefinitionBuilder> definition) {
+        definition.accept(responseDefinitionBuilder);
         return this;
     }
 
@@ -51,7 +42,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder head(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder head(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, HEAD, definition);
     }
 
@@ -74,7 +65,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder post(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder post(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, POST, definition);
     }
 
@@ -97,7 +88,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder put(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder put(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, PUT, definition);
     }
 
@@ -120,7 +111,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder patch(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder patch(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, PATCH, definition);
     }
 
@@ -143,7 +134,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder delete(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder delete(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, DELETE, definition);
     }
 
@@ -166,7 +157,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder options(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder options(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, OPTIONS, definition);
     }
 
@@ -189,7 +180,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder trace(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder trace(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, TRACE, definition);
     }
 
@@ -212,7 +203,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder get(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder get(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, GET, definition);
     }
 
@@ -233,22 +224,16 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
         return this;
     }
 
-    private TestDefinitionBuilder request(CharSequence aUrl, String aMethod, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    private TestDefinitionBuilder request(CharSequence aUrl, String aMethod, Consumer<RequestDefinitionBuilder> definition) {
         client.getRequest().setUri(aUrl.toString());
         client.getRequest().setMethod(aMethod);
-        configure(client.getUnitTest(), requestDefinitionBuilder, definition);
+        definition.accept(requestDefinitionBuilder);
         return this;
     }
 
     @SuppressWarnings("unchecked")
     private TestDefinitionBuilder request(CharSequence uri, String method) {
-        return request(uri, method, Closure.IDENTITY);
-    }
-
-    private static <T> T configure(Object spec, Object delegate, Closure<T> closure) {
-        Closure<T> clonedClosure = closure.rehydrate(delegate, spec, closure.getThisObject());
-        clonedClosure.setResolveStrategy(Closure.DELEGATE_FIRST);
-        return clonedClosure.call(delegate);
+        return request(uri, method, (r) -> {});
     }
 
     private final Client client;

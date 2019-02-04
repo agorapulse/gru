@@ -6,8 +6,10 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Sets expectations for the response after the controller action has been executed.
@@ -18,7 +20,9 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
     /**
      * @see Squad#command(Class, Closure)
      */
-    <M extends Minion> ResponseDefinitionBuilder command(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure command);
+    default <M extends Minion> ResponseDefinitionBuilder command(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure command) {
+        return command(minionType, Command.create(command));
+    }
 
     /**
      * @see Squad#command(Class, Closure)
@@ -97,7 +101,17 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    ResponseDefinitionBuilder json(@DelegatesTo(value = JsonFluentAssert.class, strategy = Closure.DELEGATE_FIRST) Closure<JsonFluentAssert> additionalConfiguration);
+    default ResponseDefinitionBuilder json(@DelegatesTo(value = JsonFluentAssert.class, strategy = Closure.DELEGATE_FIRST) Closure<JsonFluentAssert> additionalConfiguration) {
+        return json(FunctionWithDelegate.create(additionalConfiguration));
+    }
+
+    /**
+     * Sets additional assertions and configuration for JsonFluentAssert instance which is testing the response.
+     *
+     * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
+     * @return self
+     */
+    DefaultResponseDefinitionBuilder json(Function<JsonFluentAssert, JsonFluentAssert> additionalConfiguration);
 
     /**
      * Adds HTTP headers which are expected to be returned after action execution.

@@ -15,7 +15,9 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
     /**
      * @see Squad#command(Class, Closure)
      */
-    <M extends Minion> RequestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command);
+    default <M extends Minion> RequestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command) {
+        return command(minionType, Command.create(command));
+    }
 
     /**
      * @see Squad#command(Class, Closure)
