@@ -51,7 +51,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder head(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder head(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, HEAD, definition);
     }
 
@@ -62,7 +62,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder head(String uri) {
+    public TestDefinitionBuilder head(CharSequence uri) {
         return request(uri, HEAD);
     }
 
@@ -74,7 +74,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder post(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder post(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, POST, definition);
     }
 
@@ -85,7 +85,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder post(String uri) {
+    public TestDefinitionBuilder post(CharSequence uri) {
         return request(uri, POST);
     }
 
@@ -97,7 +97,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder put(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder put(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, PUT, definition);
     }
 
@@ -108,7 +108,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder put(String uri) {
+    public TestDefinitionBuilder put(CharSequence uri) {
         return request(uri, PUT);
     }
 
@@ -120,7 +120,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder patch(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder patch(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, PATCH, definition);
     }
 
@@ -131,7 +131,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder patch(String uri) {
+    public TestDefinitionBuilder patch(CharSequence uri) {
         return request(uri, PATCH);
     }
 
@@ -143,7 +143,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder delete(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder delete(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, DELETE, definition);
     }
 
@@ -154,7 +154,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder delete(String uri) {
+    public TestDefinitionBuilder delete(CharSequence uri) {
         return request(uri, DELETE);
     }
 
@@ -166,7 +166,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder options(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder options(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, OPTIONS, definition);
     }
 
@@ -177,7 +177,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder options(String uri) {
+    public TestDefinitionBuilder options(CharSequence uri) {
         return request(uri, OPTIONS);
     }
 
@@ -189,7 +189,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder trace(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder trace(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, TRACE, definition);
     }
 
@@ -200,7 +200,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder trace(String uri) {
+    public TestDefinitionBuilder trace(CharSequence uri) {
         return request(uri, TRACE);
     }
 
@@ -212,7 +212,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder get(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder get(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
         return request(uri, GET, definition);
     }
 
@@ -223,7 +223,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder get(String uri) {
+    public TestDefinitionBuilder get(CharSequence uri) {
         return request(uri, GET);
     }
 
@@ -233,15 +233,15 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
         return this;
     }
 
-    private TestDefinitionBuilder request(String aUrl, String aMethod, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
-        client.getRequest().setUri(aUrl);
+    private TestDefinitionBuilder request(CharSequence aUrl, String aMethod, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        client.getRequest().setUri(aUrl.toString());
         client.getRequest().setMethod(aMethod);
         configure(client.getUnitTest(), requestDefinitionBuilder, definition);
         return this;
     }
 
     @SuppressWarnings("unchecked")
-    private TestDefinitionBuilder request(String uri, String method) {
+    private TestDefinitionBuilder request(CharSequence uri, String method) {
         return request(uri, method, Closure.IDENTITY);
     }
 

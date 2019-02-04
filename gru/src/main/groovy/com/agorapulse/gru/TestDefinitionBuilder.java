@@ -26,37 +26,37 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder expect(@DelegatesTo(value = ResponseDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<ResponseDefinitionBuilder> definition);
 
-    TestDefinitionBuilder head(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder head(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder head(String uri);
+    TestDefinitionBuilder head(CharSequence uri);
 
-    TestDefinitionBuilder post(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder post(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder post(String uri);
+    TestDefinitionBuilder post(CharSequence uri);
 
-    TestDefinitionBuilder put(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder put(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder put(String uri);
+    TestDefinitionBuilder put(CharSequence uri);
 
-    TestDefinitionBuilder patch(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder patch(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder patch(String uri);
+    TestDefinitionBuilder patch(CharSequence uri);
 
-    TestDefinitionBuilder delete(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder delete(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder delete(String uri);
+    TestDefinitionBuilder delete(CharSequence uri);
 
-    TestDefinitionBuilder options(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder options(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder options(String uri);
+    TestDefinitionBuilder options(CharSequence uri);
 
-    TestDefinitionBuilder trace(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder trace(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder trace(String uri);
+    TestDefinitionBuilder trace(CharSequence uri);
 
-    TestDefinitionBuilder get(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder get(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder get(String uri);
+    TestDefinitionBuilder get(CharSequence uri);
 
     TestDefinitionBuilder baseUri(String uri);
 }
