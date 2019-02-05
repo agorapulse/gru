@@ -5,9 +5,7 @@ import spock.lang.Specification
 
 class InDefaultPackageTest extends Specification {
 
-    @Rule Gru<Http> gru = Gru.equip(Http.steal(this)).prepare {
-        baseUri 'https://despicableme.fandom.com'
-    }
+    @Rule Gru<Http> gru = Gru.equip(Http.steal(this)).prepare('http://despicableme.wikia.com')
 
     void 'despicable me'() {
         expect:
