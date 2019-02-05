@@ -8,7 +8,7 @@ import spock.lang.Specification
 class HttpSpec extends Specification{
 
     @Rule Gru<Http> gru = Gru.equip(Http.steal(this))                                   // <1>
-                             .prepare('http://despicableme.fandom.com')                 // <2>
+                             .prepare('https://despicableme.fandom.com')                // <2>
 
     void 'despicable me'() {
         expect:
