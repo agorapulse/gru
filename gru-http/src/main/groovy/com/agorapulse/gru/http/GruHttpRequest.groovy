@@ -76,7 +76,7 @@ class GruHttpRequest implements Client.Request {
                 builder.method(method, form.build())
             }
         } else if (HttpMethod.requiresRequestBody(method)) {
-            builder.method(method, body ?: RequestBody.create(null, ""))
+            builder.method(method, body ?: RequestBody.create(null, ''))
         } else {
             builder.method(method, body)
         }

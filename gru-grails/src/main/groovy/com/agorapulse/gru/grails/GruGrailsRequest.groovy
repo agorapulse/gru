@@ -2,7 +2,6 @@ package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.Client
 import grails.testing.web.controllers.ControllerUnitTest
-import groovy.transform.PackageScope
 import org.grails.plugins.testing.GrailsMockHttpServletRequest
 
 /**
@@ -49,7 +48,7 @@ class GruGrailsRequest implements Client.Request {
 
     @Override
     void setJson(String jsonText) {
-        request.setJson(jsonText)
+        request.json = jsonText
     }
 
     @Override

@@ -11,6 +11,7 @@ import grails.plugin.json.view.JsonViewGrailsPlugin
 import grails.plugin.json.view.JsonViewTemplateEngine
 import grails.plugin.json.view.api.JsonView
 import grails.plugin.json.view.test.JsonRenderResult
+import grails.views.WritableScriptTemplate
 import grails.views.api.HttpView
 import groovy.text.Template
 import groovy.transform.CompileDynamic
@@ -30,6 +31,8 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver
 @CompileStatic
 class JsonViewRendererMinion extends AbstractMinion<Grails> {
 
+    private static final String GRAILS_DOMAIN_CLASS_MAPPING_CONTEXT = 'grailsDomainClassMappingContext'
+
     final int index = HTTP_MINION_INDEX - 1000
 
     private JsonViewTemplateEngine templateEngine
@@ -39,6 +42,7 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
         super(Grails)
     }
 
+    @Override
     GruContext doBeforeRun(Grails client, Squad squad, GruContext context) {
         setupJsonViewsPlugin(client)
         return context
@@ -47,13 +51,13 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
     @CompileDynamic
     void setupJsonViewsPlugin(Grails grails) {
         GrailsApplication ga = grails.unitTest.grailsApplication
-        def config = ga.config
+        Object config = ga.config
 
-        String[] names = grails.unitTest.applicationContext.getBeanDefinitionNames()
+        String[] names = grails.unitTest.applicationContext.beanDefinitionNames
 
         grails.unitTest.defineBeans {
             if (!names.contains('grailsLinkGenerator')) {
-                grailsLinkGenerator(DefaultLinkGenerator, config?.grails?.serverURL ?: "http://localhost:8080")
+                grailsLinkGenerator(DefaultLinkGenerator, config?.grails?.serverURL ?: 'http://localhost:8080')
             }
 
             if (!names.contains('localeResolver')) {
@@ -66,7 +70,7 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
                 }
             }
 
-            if (!names.contains('grailsDomainClassMappingContext')) {
+            if (!names.contains(GRAILS_DOMAIN_CLASS_MAPPING_CONTEXT)) {
                 grailsDomainClassMappingContext(KeyValueMappingContext, 'test') {
                     canInitializeEntities = true
                 }
@@ -75,16 +79,26 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
 
         grails.unitTest.defineBeans(new JsonViewGrailsPlugin())
 
-
         if (templateEngine == null) {
             templateEngine = grails.unitTest.applicationContext.getBean('jsonTemplateEngine', JsonViewTemplateEngine)
         }
         if (mappingContext == null) {
-            mappingContext = grails.unitTest.applicationContext.getBean('grailsDomainClassMappingContext', MappingContext)
+            mappingContext = grails.unitTest.applicationContext.getBean(GRAILS_DOMAIN_CLASS_MAPPING_CONTEXT, MappingContext)
         }
     }
 
+    JsonRenderResult render(String viewUri, Map model) {
+        WritableScriptTemplate template = templateEngine.resolveTemplate(viewUri)
+
+        if (template == null) {
+            throw new IllegalArgumentException("No view or template found for URI $viewUri")
+        }
+
+        return produceResult(template, model)
+    }
+
     @Override
+    @SuppressWarnings(['Instanceof', 'CatchException'])
     protected GruContext doAfterRun(Grails grails, Squad squad, GruContext context) {
         String actualResponseText = grails.response.text
 
@@ -100,8 +114,8 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
             JsonRenderResult result
             try {
                 result = render("/$controllerName/$actionName", context.result as Map)
-            } catch(Exception e) {
-                return context.withError(e);
+            } catch (Exception e) {
+                return context.withError(e)
             }
 
             if (result.status != HttpStatus.OK) {
@@ -131,28 +145,19 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
         return context
     }
 
-    JsonRenderResult render(String viewUri, Map model) {
-        def template = templateEngine.resolveTemplate(viewUri)
-
-        if (template == null) {
-            throw new IllegalArgumentException("No view or template found for URI $viewUri")
-        }
-
-        return produceResult(template, model)
-    }
-
+    @SuppressWarnings('Instanceof')
     private static JsonRenderResult produceResult(Template template, Map model) {
         JsonView writable = (JsonView) template.make(model)
 
-        def result = new JsonRenderResult()
+        JsonRenderResult result = new JsonRenderResult()
         if (writable instanceof HttpView) {
-            def httpView = (HttpView) writable
-            httpView.setResponse(new TestHttpResponse(result))
+            HttpView httpView = (HttpView) writable
+            httpView.response = new TestHttpResponse(result)
         }
 
-        def sw = new StringWriter()
+        StringWriter sw = new StringWriter()
         writable.writeTo(sw)
-        def str = sw.toString()
+        String str = sw
         result.jsonText = str
         return result
     }

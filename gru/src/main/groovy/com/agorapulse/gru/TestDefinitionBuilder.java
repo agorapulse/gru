@@ -4,6 +4,9 @@ import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
+
+import java.util.function.Consumer;
 
 public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
     /**
@@ -16,7 +19,9 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
     /**
      * @see Squad#command(Class, Closure)
      */
-    <M extends Minion> TestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command);
+    default <M extends Minion> TestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command) {
+        return command(minionType, Command.create(command));
+    }
 
     /**
      * @see Squad#command(Class, Closure)
@@ -24,39 +29,75 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
     <M extends Minion> TestDefinitionBuilder command(Class<M> minionType, Command<M> command);
 
 
-    TestDefinitionBuilder expect(@DelegatesTo(value = ResponseDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<ResponseDefinitionBuilder> definition);
+    default TestDefinitionBuilder expect(@DelegatesTo(value = ResponseDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<ResponseDefinitionBuilder> definition) {
+        return expect(ConsumerWithDelegate.create(definition));
+    }
 
-    TestDefinitionBuilder head(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder expect(Consumer<ResponseDefinitionBuilder> definition);
 
-    TestDefinitionBuilder head(String uri);
+    default TestDefinitionBuilder head(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return head(uri, ConsumerWithDelegate.create(definition));
+    }
 
-    TestDefinitionBuilder post(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder head(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder post(String uri);
+    TestDefinitionBuilder head(CharSequence uri);
 
-    TestDefinitionBuilder put(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    default TestDefinitionBuilder post(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return post(uri, ConsumerWithDelegate.create(definition));
+    }
 
-    TestDefinitionBuilder put(String uri);
+    TestDefinitionBuilder post(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder patch(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder post(CharSequence uri);
 
-    TestDefinitionBuilder patch(String uri);
+    default TestDefinitionBuilder put(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return put(uri, ConsumerWithDelegate.create(definition));
+    }
 
-    TestDefinitionBuilder delete(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder put(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder delete(String uri);
+    TestDefinitionBuilder put(CharSequence uri);
 
-    TestDefinitionBuilder options(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    default TestDefinitionBuilder patch(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return patch(uri, ConsumerWithDelegate.create(definition));
+    }
 
-    TestDefinitionBuilder options(String uri);
+    TestDefinitionBuilder patch(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder trace(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder patch(CharSequence uri);
 
-    TestDefinitionBuilder trace(String uri);
+    default TestDefinitionBuilder delete(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return delete(uri, ConsumerWithDelegate.create(definition));
+    }
 
-    TestDefinitionBuilder get(String uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder delete(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder get(String uri);
+    TestDefinitionBuilder delete(CharSequence uri);
+
+    default TestDefinitionBuilder options(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return options(uri, ConsumerWithDelegate.create(definition));
+    }
+
+    TestDefinitionBuilder options(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+
+    TestDefinitionBuilder options(CharSequence uri);
+
+    default TestDefinitionBuilder trace(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return trace(uri, ConsumerWithDelegate.create(definition));
+    }
+
+    TestDefinitionBuilder trace(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+
+    TestDefinitionBuilder trace(CharSequence uri);
+
+    default TestDefinitionBuilder get(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+        return get(uri, ConsumerWithDelegate.create(definition));
+    }
+
+    TestDefinitionBuilder get(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+
+    TestDefinitionBuilder get(CharSequence uri);
 
     TestDefinitionBuilder baseUri(String uri);
 }

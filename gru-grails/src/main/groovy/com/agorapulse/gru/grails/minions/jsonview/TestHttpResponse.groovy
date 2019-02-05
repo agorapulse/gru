@@ -6,7 +6,9 @@ import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
 import org.springframework.http.HttpStatus
 
-
+/**
+ * Test HTTP response.
+ */
 @CompileStatic @PackageScope
 class TestHttpResponse implements Response {
     final JsonRenderResult result

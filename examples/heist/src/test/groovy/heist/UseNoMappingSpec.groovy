@@ -14,9 +14,7 @@ class UseNoMappingSpec extends Specification implements ControllerUnitTest<MoonC
     void 'look at the moon'() {
         when:
             gru.test {
-                command(HttpMinion) {
-                    baseUri '/moons'
-                }
+                baseUri '/moons'
                 get '/earth/moon'
             }.verify()
         then:

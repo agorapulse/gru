@@ -22,7 +22,6 @@ import spock.lang.Unroll
             false   | null
 
             matchesDesc = matches ? 'matches' : 'does not match'
-
     }
 
     void 'test description'() {

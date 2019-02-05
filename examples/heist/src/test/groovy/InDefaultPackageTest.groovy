@@ -5,22 +5,13 @@ import spock.lang.Specification
 
 class InDefaultPackageTest extends Specification {
 
-    @Rule Gru<Http> gru = Gru.equip(Http.steal(this)).prepare('http://despicableme.wikia.com')
+    @Rule Gru<Http> gru = Gru.equip(Http.steal(this)).prepare('https://despicableme.fandom.com')
 
     void 'despicable me'() {
         expect:
             gru.test {
                 get "/wiki/Felonius_Gru"
             }
-    }
-
-    void 'get fixture location'() {
-        given:
-            Http client = Http.steal(this)
-        expect:
-            client.getFixtureLocation('file.json') == 'InDefaultPackageTest/file.json'
-            client.unitTest == this
-
     }
 
 }

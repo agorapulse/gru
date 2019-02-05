@@ -13,6 +13,8 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Log
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert
 
+import java.util.function.Function
+
 import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson
 
 /**
@@ -26,7 +28,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
     Content requestJsonContent
 
     @SuppressWarnings('unchecked')
-    Closure<JsonFluentAssert> jsonUnitConfiguration = (Closure<JsonFluentAssert>) Closure.IDENTITY.clone()
+    Function<JsonFluentAssert, JsonFluentAssert> jsonUnitConfiguration = Function.identity()
 
     JsonMinion() {
         super(Client)
@@ -46,6 +48,40 @@ class JsonMinion extends AbstractContentMinion<Client> {
         context
     }
 
+    List mergeMapToList(List actual, Map expected) {
+        // expect map is not single item of the list
+        mergeLists(actual, [expected])
+    }
+
+    Map mergeListToMap(Map actual, List expected) {
+        // expect list has moved to first entry of the map
+        mergeMaps(actual, [(actual.keySet().first()): expected])
+    }
+
+    List mergeLists(List actual, List expected) {
+        List result = []
+        actual.eachWithIndex { Object entry, int i ->
+            if (i < expected.size()) {
+                result.add(mergeObjects(entry, expected[i]))
+            } else {
+                result.add(entry)
+            }
+        }
+        return result
+    }
+
+    Map mergeMaps(Map actual, Map expected) {
+        Set removedKeys = expected.keySet() - actual.keySet()
+
+        removedKeys.each expected.&remove
+
+        actual.keySet().each {
+            expected.put(it, mergeObjects(actual[it], expected[it]))
+        }
+
+        return expected
+    }
+
     protected void similar(String actual, String expected) throws AssertionError {
         JsonFluentAssert fluentAssert = assertThatJson(actual)
                 .as("Response must match ${responseContent} content")
@@ -54,7 +90,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
                 .withMatcher('positiveIntegerString', MatchesPattern.POSITIVE_NUMBER_STRING)
                 .withMatcher('url', MatchesUrl.INSTANCE)
 
-        fluentAssert = fluentAssert.with jsonUnitConfiguration
+        fluentAssert = jsonUnitConfiguration.apply(fluentAssert)
 
         try {
             fluentAssert.isEqualTo(expected)
@@ -91,6 +127,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
         mergedJson
     }
 
+    @SuppressWarnings('Instanceof')
     private Object mergeObjects(Object actual, Object expected) {
         if (expected instanceof String && expected.startsWith('${json-unit.')) {
             // keep the placeholders
@@ -131,39 +168,5 @@ class JsonMinion extends AbstractContentMinion<Client> {
 
         // primitive value and the expected value was not placeholder
         return actual
-    }
-
-    List mergeMapToList(List actual, Map expected) {
-        // expect map is not single item of the list
-        mergeLists(actual, [expected])
-    }
-
-    Map mergeListToMap(Map actual, List expected) {
-        // expect list has moved to first entry of the map
-        mergeMaps(actual, [(actual.keySet().first()): expected])
-    }
-
-    List mergeLists(List actual, List expected) {
-        List result = []
-        actual.eachWithIndex { Object entry, int i ->
-            if (i < expected.size()) {
-                result.add(mergeObjects(entry, expected[i]))
-            } else {
-                result.add(entry)
-            }
-        }
-        return result
-    }
-
-    Map mergeMaps(Map actual, Map expected) {
-        Set removedKeys = expected.keySet() - actual.keySet()
-
-        removedKeys.each expected.&remove
-
-        actual.keySet().each {
-            expected.put(it, mergeObjects(actual[it], expected[it]))
-        }
-
-        return expected
     }
 }

@@ -4,12 +4,11 @@ import com.agorapulse.gru.content.FileContent;
 import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 
 import java.util.Map;
+import java.util.function.Function;
 
 /**
  * Sets expectations for the response after the controller action has been executed.
@@ -19,14 +18,6 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
 
     protected DefaultResponseDefinitionBuilder(Squad squad) {
         this.squad = squad;
-    }
-
-    /**
-     * @see Squad#command(Class, Closure)
-     */
-    public <M extends Minion> DefaultResponseDefinitionBuilder command(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure command) {
-        this.squad.command(minionType, command);
-        return this;
     }
 
     /**
@@ -45,30 +36,15 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      * @return self
      */
     public DefaultResponseDefinitionBuilder status(final int aStatus) {
-        return command(HttpMinion.class, new Command<HttpMinion>() {
-            @Override
-            public void execute(HttpMinion minion) {
-                minion.setStatus(aStatus);
-            }
-        });
+        return command(HttpMinion.class, minion -> minion.setStatus(aStatus));
     }
 
     public DefaultResponseDefinitionBuilder json(final Content content) {
-        return command(JsonMinion.class, new Command<JsonMinion>() {
-            @Override
-            public void execute(JsonMinion minion) {
-                minion.setResponseContent(content);
-            }
-        });
+        return command(JsonMinion.class, minion -> minion.setResponseContent(content));
     }
 
     public DefaultResponseDefinitionBuilder html(final Content content) {
-        return command(HtmlMinion.class, new Command<HtmlMinion>() {
-            @Override
-            public void execute(HtmlMinion minion) {
-                minion.setResponseContent(content);
-            }
-        });
+        return command(HtmlMinion.class, minion -> minion.setResponseContent(content));
     }
 
     @Override
@@ -88,12 +64,7 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
 
     @Override
     public DefaultResponseDefinitionBuilder text(final Content content) {
-        return command(TextMinion.class, new Command<TextMinion>() {
-            @Override
-            public void execute(TextMinion minion) {
-                minion.setResponseContent(content);
-            }
-        });
+        return command(TextMinion.class, minion -> minion.setResponseContent(content));
     }
 
     /**
@@ -102,13 +73,8 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    public DefaultResponseDefinitionBuilder json(@DelegatesTo(value = JsonFluentAssert.class, strategy = Closure.DELEGATE_FIRST) final Closure<JsonFluentAssert> additionalConfiguration) {
-        return command(JsonMinion.class, new Command<JsonMinion>() {
-            @Override
-            public void execute(JsonMinion minion) {
-                minion.setJsonUnitConfiguration(additionalConfiguration);
-            }
-        });
+    public DefaultResponseDefinitionBuilder json(Function<JsonFluentAssert, JsonFluentAssert> additionalConfiguration) {
+        return command(JsonMinion.class, minion -> minion.setJsonUnitConfiguration(additionalConfiguration));
     }
 
     /**
@@ -118,12 +84,7 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      * @return self
      */
     public DefaultResponseDefinitionBuilder headers(final Map<String, String> additionalHeaders) {
-        return command(HttpMinion.class, new Command<HttpMinion>() {
-            @Override
-            public void execute(HttpMinion minion) {
-                minion.getResponseHeaders().putAll(ImmutableMultimap.copyOf(additionalHeaders.entrySet()));
-            }
-        });
+        return command(HttpMinion.class, minion -> minion.getResponseHeaders().putAll(ImmutableMultimap.copyOf(additionalHeaders.entrySet())));
     }
 
     /**
@@ -133,12 +94,9 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      * @return self
      */
     public DefaultResponseDefinitionBuilder redirect(final String uri) {
-        return command(HttpMinion.class, new Command<HttpMinion>() {
-            @Override
-            public void execute(HttpMinion minion) {
-                minion.setRedirectUri(uri);
-                minion.setStatus(FOUND);
-            }
+        return command(HttpMinion.class, minion -> {
+            minion.setRedirectUri(uri);
+            minion.setStatus(FOUND);
         });
     }
 
@@ -154,11 +112,7 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      */
     public DefaultResponseDefinitionBuilder json(String relativePath, final Option option, final Option... options) {
         json(relativePath);
-        return json(new Closure<JsonFluentAssert>(this, this) {
-            public JsonFluentAssert doCall(Object it) {
-                return ((JsonFluentAssert)it).when(option, options);
-            }
-        });
+        return json((a) -> a.when(option, options));
     }
 
     @Override

@@ -4,6 +4,9 @@ import com.agorapulse.gru.Client
 import com.agorapulse.gru.Gru
 import groovy.transform.CompileStatic
 
+/**
+ * Extensions for Gru and HTTP client.
+ */
 @CompileStatic
 class HttpExtensions {
 

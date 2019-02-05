@@ -15,13 +15,12 @@ class MoonControllerIntegrationTest extends Specification {
     @Rule Gru<Http> gru = Gru.equip(Http.steal(this))                                   // <3>
 
     void setup() {
-        final String serverUrl = "http://localhost:${serverPort}"                       // <4>
         gru.prepare {
-            baseUri serverUrl                                                           // <5>
+            baseUri "http://localhost:${serverPort}"                                    // <4>
         }
     }
 
-    void 'render json'() {                                                              // <6>
+    void 'render json'() {                                                              // <5>
         expect:
             gru.test {
                 get('/moons/earth/moon')
@@ -30,6 +29,5 @@ class MoonControllerIntegrationTest extends Specification {
                 }
             }
     }
-
 
 }

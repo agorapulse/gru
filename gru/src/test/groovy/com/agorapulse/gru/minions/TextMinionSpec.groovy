@@ -46,7 +46,6 @@ class TextMinionSpec extends Specification {
         then:
             fixtureFile.exists()
             fixtureFile.text == TEXT
-
     }
 
 }

@@ -10,7 +10,7 @@ import spock.lang.Specification
 class GruSpec extends Specification {
 
     @SuppressWarnings('UnnecessaryGetter')
-    void 'test is verified'() {
+    void 'expectations are verified'() {
         given:
             Description description = Description.createTestDescription(GruSpec, 'test is verified')
             Statement statement = new Statement() { @Override void evaluate() throws Throwable { } }
@@ -29,7 +29,6 @@ class GruSpec extends Specification {
         then:
             AssertionError e = thrown(AssertionError)
             e.message?.startsWith('Test wasn\'t verified.')
-
     }
 
 }

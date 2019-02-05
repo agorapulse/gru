@@ -7,6 +7,8 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 
+import java.util.function.Consumer
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request
 
 /**
@@ -61,20 +63,19 @@ class Spring extends AbstractClient {
         }
 
         MockHttpServletRequestBuilder builder = request(request.method, requestURI)
-        for (Closure step in request.steps) {
-            builder.with step
+        for (Consumer step in request.steps) {
+            step.accept(builder)
         }
         MvcResult result = mockMvc.perform(builder).andReturn()
         response = new GruSpringResponse(result.response)
         return context.withResult(result)
     }
 
-    private URI getRequestURI() {
-        new URI("${request.baseUri ?: ''}${request.uri ?: ''}".replaceAll('/+', '/'))
-    }
-
     @Override
     Object getUnitTest() {
         super.unitTest
+    }
+    private URI getRequestURI() {
+        new URI("${request.baseUri ?: ''}${request.uri ?: ''}".replaceAll('/+', '/'))
     }
 }

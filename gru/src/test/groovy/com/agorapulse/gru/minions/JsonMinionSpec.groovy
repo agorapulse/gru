@@ -22,7 +22,7 @@ class JsonMinionSpec extends Specification {
     private static final String JSON = '{\n\n}'
     private static final String FILE_NAME = 'empty.json'
     private static final String FILE_NAME_EXPECTED = 'expected.json'
-    private static final String FILE_NAME_ACTUAL= 'actual.json'
+    private static final String FILE_NAME_ACTUAL = 'actual.json'
     private static final String FILE_NAME_AFTER_REWRITE = 'rewritten.json'
     private static final String FIXTURES_ROOT = 'com/agorapulse/gru/minions/JsonMinionSpec/'
 
@@ -41,7 +41,6 @@ class JsonMinionSpec extends Specification {
         then:
             fixtureFile.exists()
             fixtureFile.text == JSON
-
     }
 
     void 'response file is rewritten'() {

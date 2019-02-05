@@ -3,8 +3,10 @@ package com.agorapulse.gru.agp
 import groovy.json.JsonOutput
 import spock.lang.Specification
 
+/**
+ * Tests for API Gateway Proxy Response.
+ */
 class ApiGatewayProxyResponseSpec extends Specification {
-
 
     public static final String BODY = 'mock body'
     public static final int STATUS = 201
