@@ -164,6 +164,27 @@ with the content same as the one returned from the controller is created if resp
 so you have to run the test again and verify it is repeatable. Fixture files are generated inside directory from system property `TEST_RESOURCES_FOLDER` or
 in `src/test/resources` relatively to the working directory. See the following example how to easily set the property in Gradle.
 
+[[generic-payload,Generic Payload]]
+==== Generic Payload
+
+You can use generic payload from file.
+
+.Generic Payload
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=newMoonGeneric,indent=0]
+----
+
+[NOTE]
+Content files are loaded relatively to directory having the same name as the current specification and it is placed
+in the same directory corresponding the package of the the current specification. For example if your specification name
+is `org.example.ExampleSpec` then `createNewMoonResponse.json` file's path should be `org/example/ExampleSpec/createNewMoonResponse.json`.
+
+[TIP]
+Content files are created automatically if missing. Empty file is created for missing request content file.
+Fixture files are generated inside directory from system property `TEST_RESOURCES_FOLDER` or
+in `src/test/resources` relatively to the working directory.
+
 
 === Response
 

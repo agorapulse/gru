@@ -41,6 +41,8 @@ public interface Client {
 
         void setJson(String jsonText);
 
+        void setContent(String contentType, byte[] payload);
+
         void addParameter(String name, Object value);
     }
 

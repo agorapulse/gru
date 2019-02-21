@@ -49,6 +49,11 @@ class GruHttpRequest implements Client.Request {
     }
 
     @Override
+    void setContent(String contentType, byte[] payload) {
+        body = RequestBody.create(MediaType.parse(contentType), payload)
+    }
+
+    @Override
     void addParameter(String name, Object value) {
         parameters.put(name, value == null ? '' : value.toString())
     }

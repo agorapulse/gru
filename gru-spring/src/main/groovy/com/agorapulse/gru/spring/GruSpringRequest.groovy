@@ -34,6 +34,11 @@ class GruSpringRequest implements Client.Request {
     }
 
     @Override
+    void setContent(String mediaType, byte[] payload) {
+        addBuildStep { contentType(MediaType.parseMediaType(mediaType)).content(payload) }
+    }
+
+    @Override
     void addParameter(String name, Object value) {
         addBuildStep { param(name, value?.toString()) }
     }

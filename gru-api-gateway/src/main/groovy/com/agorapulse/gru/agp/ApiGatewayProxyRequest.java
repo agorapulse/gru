@@ -70,6 +70,12 @@ class ApiGatewayProxyRequest implements Client.Request {
     }
 
     @Override
+    public void setContent(String contentType, byte[] payload) {
+        addHeader("Content-Type", contentType);
+        body = new String(payload);
+    }
+
+    @Override
     public void addParameter(String name, Object value) {
         if (queryStringParameters == null) {
             queryStringParameters = new LinkedHashMap<>();

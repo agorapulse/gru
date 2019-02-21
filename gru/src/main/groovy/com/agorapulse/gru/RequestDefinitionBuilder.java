@@ -50,6 +50,31 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
     RequestDefinitionBuilder json(Content content);
 
     /**
+     * Sets a payload for the request from given file.
+     * The file must reside in same package as the test in the directory with the same name as the test
+     * e.g. src/test/resources/org/example/foo/MySpec.
+     * The file is created automatically during first run if it does not exist yet with empty object definition.
+     *
+     * It automatically applies Content-Type header.
+     *
+     * @param relativePath relative path to the payload file for the request
+     * @param contentType content type of the payload
+     * @return self
+     */
+    RequestDefinitionBuilder content(String relativePath, String contentType);
+
+    /**
+     * Sets a request payload from given content.
+     *
+     * It automatically applies Content-Type header.
+     *
+     * @param content payload for the request
+     * @param contentType content type of the payload
+     * @return self
+     */
+    RequestDefinitionBuilder content(Content content, String contentType);
+
+    /**
      * Adds URL parameters for the action execution.
      *
      * @param params additional URL parameters for the action execution

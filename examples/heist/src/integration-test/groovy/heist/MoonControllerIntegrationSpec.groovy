@@ -75,6 +75,18 @@ class MoonControllerIntegrationSpec extends Specification {
             }
     }
 
+    void 'echo with generic content call'() {
+        expect:
+            gru.test {
+                post '/moon/echo', {
+                    content 'echoRequest.json', 'application/json'
+                }
+                expect {
+                    json 'echoResponse.json'
+                }
+            }
+    }
+
     void 'verify html'() {
         expect:
             gru.test {

@@ -36,6 +36,19 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
         return json(FileContent.create(relativePath));
     }
 
+    @Override
+    public RequestDefinitionBuilder content(String relativePath, String contentType) {
+        return content(FileContent.create(relativePath), contentType);
+    }
+
+    @Override
+    public RequestDefinitionBuilder content(Content content, String contentType) {
+        return command(PayloadMinion.class, minion -> {
+            minion.setPayload(content);
+            minion.setContentType(contentType);
+        });
+    }
+
     /**
      * Adds URL parameters for the action execution.
      *

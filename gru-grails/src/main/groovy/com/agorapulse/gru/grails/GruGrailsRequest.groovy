@@ -52,6 +52,12 @@ class GruGrailsRequest implements Client.Request {
     }
 
     @Override
+    void setContent(String contentType, byte[] content) {
+        request.content = content
+        request.contentType = contentType
+    }
+
+    @Override
     void addParameter(String name, Object value) {
         unitTest.params.put(name, value)
     }
