@@ -116,6 +116,19 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
 
+    void 'echo with generic content call'() {
+        expect:
+            gru.test {
+                include DefaultUrlMappings
+                post '/moon/echo', {
+                    content 'echoRequest.json', 'application/json'
+                }
+                expect {
+                    json 'echoResponse.json'
+                }
+            }
+    }
+
     void 'good interceptor'() {
         expect:
             gru.test {
@@ -282,6 +295,17 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
     // end::newMoon[]
+
+    // tag::newMoonGeneric[]
+    void 'create moon for Margot generic'() {
+        expect:
+            gru.test {
+                post '/moons/earth', {
+                    content 'newMoonRequest.json', 'application/json'
+                }
+            }
+    }
+    // end::newMoonGeneric[]
 
     // tag::jsonHeaders[]
     void 'json is rendered'() {
