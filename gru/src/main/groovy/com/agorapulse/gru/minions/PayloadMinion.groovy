@@ -4,18 +4,8 @@ import com.agorapulse.gru.Client
 import com.agorapulse.gru.Content
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
-import com.agorapulse.gru.jsonunit.MatchesIsoDateNow
-import com.agorapulse.gru.jsonunit.MatchesPattern
-import com.agorapulse.gru.jsonunit.MatchesUrl
-import groovy.json.JsonOutput
-import groovy.json.JsonSlurper
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
-import net.javacrumbs.jsonunit.fluent.JsonFluentAssert
-
-import java.util.function.Function
-
-import static net.javacrumbs.jsonunit.fluent.JsonFluentAssert.assertThatJson
 
 /**
  * Minion responsible for JSON requests and responses.
