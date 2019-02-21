@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/gru.css?v=0.6.6" />
+<link rel="stylesheet" href="css/gru.css?v=0.7.1" />
 <style>
 .hidden {
 	display: none;
@@ -565,9 +565,9 @@ $(addBlockSwitches);
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.6.6"                                     <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.6.6"                                   <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.6.6"                                   <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-http:0.7.1"                                     <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.7.1"                                   <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.7.1"                                   <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -631,7 +631,7 @@ import spock.lang.Specification
 class HttpSpec extends Specification{
 
     @Rule Gru&lt;Http&gt; gru = Gru.equip(Http.steal(this))                                   <i class="conum" data-value="1"></i><b>(1)</b>
-                             .prepare('http://despicableme.wikia.com')                  <i class="conum" data-value="2"></i><b>(2)</b>
+                             .prepare('https://despicableme.fandom.com')                <i class="conum" data-value="2"></i><b>(2)</b>
 
     void 'despicable me'() {
         expect:
@@ -946,6 +946,53 @@ Fixture JSON files are created automatically if missing. Empty object (<code>{}<
 with the content same as the one returned from the controller is created if response file is missing but exception is thrown
 so you have to run the test again and verify it is repeatable. Fixture files are generated inside directory from system property <code>TEST_RESOURCES_FOLDER</code> or
 in <code>src/test/resources</code> relatively to the working directory. See the following example how to easily set the property in Gradle.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="generic-payload">Generic Payload</h4>
+<div class="paragraph">
+<p>You can use generic payload from file.</p>
+</div>
+<div class="listingblock">
+<div class="title">Generic Payload</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">void 'create moon for Margot generic'() {
+    expect:
+        gru.test {
+            post '/moons/earth', {
+                content 'newMoonRequest.json', 'application/json'
+            }
+        }
+}</code></pre>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+Content files are loaded relatively to directory having the same name as the current specification and it is placed
+in the same directory corresponding the package of the the current specification. For example if your specification name
+is <code>org.example.ExampleSpec</code> then <code>createNewMoonResponse.json</code> file&#8217;s path should be <code>org/example/ExampleSpec/createNewMoonResponse.json</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Content files are created automatically if missing. Empty file is created for missing request content file.
+Fixture files are generated inside directory from system property <code>TEST_RESOURCES_FOLDER</code> or
+in <code>src/test/resources</code> relatively to the working directory.
 </td>
 </tr>
 </table>
@@ -1674,13 +1721,12 @@ class MoonControllerIntegrationTest extends Specification {
     @Rule Gru&lt;Http&gt; gru = Gru.equip(Http.steal(this))                                   <i class="conum" data-value="3"></i><b>(3)</b>
 
     void setup() {
-        final String serverUrl = "http://localhost:${serverPort}"                       <i class="conum" data-value="4"></i><b>(4)</b>
         gru.prepare {
-            baseUri serverUrl                                                           <i class="conum" data-value="5"></i><b>(5)</b>
+            baseUri "http://localhost:${serverPort}"                                    <i class="conum" data-value="4"></i><b>(4)</b>
         }
     }
 
-    void 'render json'() {                                                              <i class="conum" data-value="6"></i><b>(6)</b>
+    void 'render json'() {                                                              <i class="conum" data-value="5"></i><b>(5)</b>
         expect:
             gru.test {
                 get('/moons/earth/moon')
@@ -1689,7 +1735,6 @@ class MoonControllerIntegrationTest extends Specification {
                 }
             }
     }
-
 
 }</code></pre>
 </div>
@@ -1757,7 +1802,6 @@ with Gru. First of all you need to tell Gru which handlers are responsible for p
                     response(200) {                                                     <i class="conum" data-value="4"></i><b>(4)</b>
                         headers 'Content-Type': 'application/json'                              <i class="conum" data-value="5"></i><b>(5)</b>
                     }
-
                 }
             })</code></pre>
 </div>
@@ -2029,7 +2073,7 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2018-10-13 07:36:41 CEST
+Last updated 2019-02-21 12:46:13 CET
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
