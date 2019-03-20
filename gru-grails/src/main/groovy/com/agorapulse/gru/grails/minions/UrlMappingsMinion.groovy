@@ -1,13 +1,14 @@
 package com.agorapulse.gru.grails.minions
 
+import com.agorapulse.gru.DefaultTestDefinitionBuilder
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
-import com.agorapulse.gru.DefaultTestDefinitionBuilder
 import com.agorapulse.gru.grails.Grails
 import com.agorapulse.gru.minions.AbstractMinion
 import grails.core.GrailsControllerClass
 import grails.testing.web.controllers.ControllerUnitTest
 import grails.util.GrailsNameUtils
+import grails.util.GrailsStringUtils
 import grails.web.mapping.UrlMapping
 import grails.web.mapping.UrlMappingInfo
 import grails.web.mapping.UrlMappingsHolder
@@ -19,6 +20,8 @@ import org.grails.core.artefact.ControllerArtefactHandler
 import org.grails.core.artefact.UrlMappingsArtefactHandler
 import org.grails.web.mapping.UrlMappingsHolderFactoryBean
 import org.grails.web.mapping.mvc.GrailsControllerUrlMappings
+
+import static org.grails.web.servlet.mvc.GrailsWebRequest.ID_PARAMETER
 
 /**
  * Minion responsible for url mappings.
@@ -55,6 +58,16 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
         try {
             readMappingInfo(grails.unitTest)
             grails.unitTest.params.putAll(urlMappingInfo.parameters)
+
+            String id = urlMappingInfo.parameters.get(ID_PARAMETER)
+            if (!GrailsStringUtils.isBlank(id)) {
+                try {
+                    grails.unitTest.params.put(ID_PARAMETER, URLDecoder.decode(id, 'UTF-8'))
+                }
+                catch (UnsupportedEncodingException e) {
+                    grails.unitTest.params.put(ID_PARAMETER, id)
+                }
+            }
 
             return context
         } catch (AssertionError ae) {
