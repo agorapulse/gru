@@ -4,7 +4,9 @@ import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -48,6 +50,30 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @return self
      */
     RequestDefinitionBuilder json(Content content);
+
+    /**
+     * Sets a JSON request from given content.
+     *
+     * It automatically applies Content-Type: application/json header.
+     *
+     * @param map map to be converted to JSON
+     * @return self
+     */
+    default RequestDefinitionBuilder json(Map map) {
+        return json(inline(JsonUtils.convertToJson(map, "request").asText()));
+    }
+
+    /**
+     * Sets a JSON request from given content.
+     *
+     * It automatically applies Content-Type: application/json header.
+     *
+     * @param list list to be converted to JSON
+     * @return self
+     */
+    default RequestDefinitionBuilder json(List list) {
+        return json(inline(JsonUtils.convertToJson(list, "request").asText()));
+    }
 
     /**
      * Sets a payload for the request from given file.
