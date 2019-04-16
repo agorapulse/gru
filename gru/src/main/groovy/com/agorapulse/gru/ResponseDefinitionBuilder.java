@@ -5,9 +5,11 @@ import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import net.javacrumbs.jsonunit.core.Option;
+import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -56,6 +58,30 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @return self
      */
     ResponseDefinitionBuilder json(Content content);
+
+    /**
+     * Sets a JSON request from given content.
+     *
+     * It automatically applies Content-Type: application/json header.
+     *
+     * @param map map to be converted to JSON
+     * @return self
+     */
+    default ResponseDefinitionBuilder json(Map map) {
+        return json(inline(JsonUtils.convertToJson(map, "response").asText()));
+    }
+
+    /**
+     * Sets a JSON request from given content.
+     *
+     * It automatically applies Content-Type: application/json header.
+     *
+     * @param list list to be converted to JSON
+     * @return self
+     */
+    default ResponseDefinitionBuilder json(List list) {
+        return json(inline(JsonUtils.convertToJson(list, "response").asText()));
+    }
 
 
     /**
