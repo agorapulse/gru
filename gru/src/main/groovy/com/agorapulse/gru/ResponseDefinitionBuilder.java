@@ -68,7 +68,7 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @return self
      */
     default ResponseDefinitionBuilder json(Map map) {
-        return json(inline(JsonUtils.convertToJson(map, "response").asText()));
+        return json(inline(JsonUtils.convertToJson(map, "response").toString()));
     }
 
     /**
@@ -80,7 +80,7 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @return self
      */
     default ResponseDefinitionBuilder json(List list) {
-        return json(inline(JsonUtils.convertToJson(list, "response").asText()));
+        return json(inline(JsonUtils.convertToJson(list, "response").toString()));
     }
 
 

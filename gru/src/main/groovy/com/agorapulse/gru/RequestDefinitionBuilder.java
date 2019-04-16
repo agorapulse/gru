@@ -60,7 +60,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @return self
      */
     default RequestDefinitionBuilder json(Map map) {
-        return json(inline(JsonUtils.convertToJson(map, "request").asText()));
+        return json(inline(JsonUtils.convertToJson(map, "request").toString()));
     }
 
     /**
@@ -72,7 +72,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @return self
      */
     default RequestDefinitionBuilder json(List list) {
-        return json(inline(JsonUtils.convertToJson(list, "request").asText()));
+        return json(inline(JsonUtils.convertToJson(list, "request").toString()));
     }
 
     /**
