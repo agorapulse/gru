@@ -3,12 +3,15 @@ package com.agorapulse.gru.spring
 import com.agorapulse.gru.AbstractClient
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
+import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder
 
 import java.util.function.Consumer
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request
 
 /**
@@ -40,7 +43,7 @@ class Spring extends AbstractClient {
 
     @Override
     void reset() {
-        request = new GruSpringRequest()
+        request = new  GruSpringRequest()
         response = null
     }
 
@@ -62,9 +65,23 @@ class Spring extends AbstractClient {
                 'Please provide \'@Autowired MockMvc mockMvc\' field in your specification')
         }
 
-        MockHttpServletRequestBuilder builder = request(request.method, requestURI)
+        MockHttpServletRequestBuilder builder = request.multipart ? fileUpload(requestURI) : request(request.method, requestURI)
         for (Consumer step in request.steps) {
             step.accept(builder)
+        }
+        if (request.multipart) {
+            MockMultipartHttpServletRequestBuilder upload = builder as MockMultipartHttpServletRequestBuilder
+            request.multipart.parameters.each { k, v ->
+                builder.param(k, v ? String.valueOf(v) : null)
+            }
+            request.multipart.files.each { k, f ->
+                upload.file(new MockMultipartFile(
+                    f.parameterName,
+                    f.filename,
+                    f.contentType,
+                    f.bytes
+                ))
+            }
         }
         MvcResult result = mockMvc.perform(builder).andReturn()
         response = new GruSpringResponse(result.response)

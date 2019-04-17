@@ -1,12 +1,14 @@
 package com.agorapulse.gru.http
 
 import com.agorapulse.gru.Client
+import com.agorapulse.gru.MultipartDefinition
 import com.agorapulse.gru.TestDefinitionBuilder
 import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
 import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.MediaType
+import okhttp3.MultipartBody
 import okhttp3.Request
 import okhttp3.RequestBody
 import okhttp3.internal.http.HttpMethod
@@ -51,6 +53,24 @@ class GruHttpRequest implements Client.Request {
     @Override
     void setContent(String contentType, byte[] payload) {
         body = RequestBody.create(MediaType.parse(contentType), payload)
+    }
+
+    @Override
+    void setMultipart(MultipartDefinition definition) {
+        MultipartBody.Builder builder = new MultipartBody.Builder()
+
+        definition.files.each { k, f ->
+            builder.addFormDataPart(f.parameterName, f.filename, RequestBody.create(
+                MediaType.parse(f.contentType),
+                f.bytes
+            ))
+        }
+
+        definition.parameters.each { k, v ->
+            builder.addFormDataPart(k, v ? String.valueOf(v) : null)
+        }
+
+        body = builder.build()
     }
 
     @Override

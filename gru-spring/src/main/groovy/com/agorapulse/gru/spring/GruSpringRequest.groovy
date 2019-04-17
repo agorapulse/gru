@@ -1,6 +1,7 @@
 package com.agorapulse.gru.spring
 
 import com.agorapulse.gru.Client
+import com.agorapulse.gru.MultipartDefinition
 import com.agorapulse.gru.TestDefinitionBuilder
 import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
@@ -22,6 +23,7 @@ class GruSpringRequest implements Client.Request {
     String baseUri
     String method = TestDefinitionBuilder.GET
     String uri
+    MultipartDefinition multipart
 
     @Override
     void addHeader(String name, String value) {
@@ -49,5 +51,10 @@ class GruSpringRequest implements Client.Request {
 
     void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
         addBuildStep(ConsumerWithDelegate.create(step))
+    }
+
+    @Override
+    void setMultipart(MultipartDefinition definition) {
+        this.multipart = definition
     }
 }

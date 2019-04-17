@@ -5,9 +5,12 @@ import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Prepares the request for controller action.
@@ -108,6 +111,10 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      */
     RequestDefinitionBuilder params(Map<String, Object> params);
 
+    default RequestDefinitionBuilder param(String name, String value) {
+        return params(Collections.singletonMap(name, value));
+    }
+
     /**
      * Adds HTTP headers for the action execution.
      *
@@ -115,4 +122,10 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @return self
      */
     RequestDefinitionBuilder headers(Map<String, String> headers);
+
+    RequestDefinitionBuilder upload(Consumer<MultipartDefinitionBuilder> definition);
+
+    default RequestDefinitionBuilder upload(@DelegatesTo(value = MultipartDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<MultipartDefinitionBuilder> definition) {
+        return upload(ConsumerWithDelegate.create(definition));
+    }
 }

@@ -87,4 +87,19 @@ class MoonControllerSpec extends Specification {
             }
     }
 
+    void 'upload file with message'() {
+        expect:
+            gru.test {
+                post '/moons/upload', {
+                    upload {
+                        params message: 'Hello'
+                        file 'theFile', 'hello.txt', inline('Hello World'), 'text/plain'
+                    }
+                }
+                expect {
+                    json 'uploadResult.json'
+                }
+            }
+    }
+
 }
