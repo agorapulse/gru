@@ -5,6 +5,8 @@ import com.agorapulse.gru.MultipartDefinition
 import com.agorapulse.gru.TestDefinitionBuilder
 import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
+import groovy.transform.stc.ClosureParams
+import groovy.transform.stc.SimpleType
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import space.jasan.support.groovy.closure.ConsumerWithDelegate
@@ -49,7 +51,11 @@ class GruSpringRequest implements Client.Request {
         steps << step
     }
 
-    void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
+    void addBuildStep(
+        @DelegatesTo(value = MockHttpServletRequestBuilder, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType, options = 'org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder')
+            Closure<MockHttpServletRequestBuilder> step
+    ) {
         addBuildStep(ConsumerWithDelegate.create(step))
     }
 

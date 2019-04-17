@@ -4,6 +4,9 @@ import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.FromString;
+import groovy.transform.stc.SimpleType;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
@@ -20,7 +23,12 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
     /**
      * @see Squad#command(Class, Closure)
      */
-    default <M extends Minion> RequestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command) {
+    default <M extends Minion> RequestDefinitionBuilder command(
+        @DelegatesTo.Target Class<M> minionType,
+        @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString.class, options = "M")
+            Closure command
+    ) {
         return command(minionType, Command.create(command));
     }
 
@@ -125,7 +133,11 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
 
     RequestDefinitionBuilder upload(Consumer<MultipartDefinitionBuilder> definition);
 
-    default RequestDefinitionBuilder upload(@DelegatesTo(value = MultipartDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<MultipartDefinitionBuilder> definition) {
+    default RequestDefinitionBuilder upload(
+        @DelegatesTo(value = MultipartDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.MultipartDefinitionBuilder")
+            Closure<MultipartDefinitionBuilder> definition
+    ) {
         return upload(ConsumerWithDelegate.create(definition));
     }
 }

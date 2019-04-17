@@ -5,13 +5,16 @@ import com.agorapulse.gru.minions.HttpMinion;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.SimpleType;
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;
 import org.junit.runners.model.Statement;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Gru steals the controller's unit test to verify controller's actions in context.
@@ -30,7 +33,7 @@ public class Gru<C extends Client> implements TestRule {
      * @return new Gru instance stealing current unit test
      */
     public static <C extends Client> Gru<C> equip(C client) {
-        return new Gru<C>(client);
+        return new Gru<>(client);
     }
 
     private Gru(C client) {
@@ -43,7 +46,22 @@ public class Gru<C extends Client> implements TestRule {
      * @param configuration configuration applied to every feature method
      * @return self
      */
-    public final Gru prepare(@DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<TestDefinitionBuilder> configuration) {
+    public final Gru prepare(
+        @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
+            Closure<TestDefinitionBuilder> configuration
+    ) {
+        return prepare(ConsumerWithDelegate.create(configuration));
+    }
+
+    /**
+     * Prepare every test with following configuration.
+     *
+     * @param configuration configuration applied to every feature method
+     * @return self
+     */
+    public final Gru prepare(Consumer<TestDefinitionBuilder> configuration
+    ) {
         this.configurations.add(configuration);
         return this;
     }
@@ -79,22 +97,38 @@ public class Gru<C extends Client> implements TestRule {
      * @param expectation test definition
      * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
      */
-    public final Gru test(@DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<TestDefinitionBuilder> expectation) {
+    public final Gru test(
+        @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
+            Closure<TestDefinitionBuilder> expectation
+    ) {
+        return test(ConsumerWithDelegate.create(expectation));
+    }
+
+    /**
+     * Defines API test and runs the controller initialization and the action under test.
+     * <p>
+     * Use this method either in when or expect block.
+     *
+     * @param expectation test definition
+     * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
+     */
+    public final Gru test(Consumer<TestDefinitionBuilder> expectation) {
         definition = true;
 
         DefaultTestDefinitionBuilder builder = new DefaultTestDefinitionBuilder(client, this.squad);
 
-        for (Minion minion: client.getInitialSquad()) {
+        for (Minion minion : client.getInitialSquad()) {
             squad.add(minion);
         }
 
         squad.command(HttpMinion.class, Command.NOOP);
 
-        for (Closure<TestDefinitionBuilder> configuration: configurations) {
-            DefaultGroovyMethods.with(builder, configuration);
+        for (Consumer<TestDefinitionBuilder> configuration : configurations) {
+            configuration.accept(builder);
         }
 
-        DefaultGroovyMethods.with(builder, expectation);
+        expectation.accept(builder);
 
         checkExpectationsPresent();
 
@@ -155,11 +189,12 @@ public class Gru<C extends Client> implements TestRule {
      * Reset the internal state. This is done by the rule automatically.
      */
     public Gru reset() {
-       return reset(true);
+        return reset(true);
     }
 
     /**
      * Reset the internal state. This is done by the rule automatically.
+     *
      * @param resetConfigurations also clear the configurations created using {@link #prepare(Closure)} method
      */
     public Gru reset(boolean resetConfigurations) {
@@ -181,7 +216,7 @@ public class Gru<C extends Client> implements TestRule {
     /**
      * Additional configurations to be applied to every feature method.
      */
-    private List<Closure<TestDefinitionBuilder>> configurations = new ArrayList<Closure<TestDefinitionBuilder>>();
+    private List<Consumer<TestDefinitionBuilder>> configurations = new ArrayList<>();
     /**
      * Squad for current feature method.
      */
