@@ -4,6 +4,9 @@ import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.FromString;
+import groovy.transform.stc.SimpleType;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.util.function.Consumer;
@@ -19,7 +22,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
     /**
      * @see Squad#command(Class, Closure)
      */
-    default <M extends Minion> TestDefinitionBuilder command(@DelegatesTo.Target Class<M> minionType, @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST) Closure command) {
+    default <M extends Minion> TestDefinitionBuilder command(
+        @DelegatesTo.Target Class<M> minionType,
+        @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString.class, options = "M")
+            Closure command
+    ) {
         return command(minionType, Command.create(command));
     }
 
@@ -29,13 +37,22 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
     <M extends Minion> TestDefinitionBuilder command(Class<M> minionType, Command<M> command);
 
 
-    default TestDefinitionBuilder expect(@DelegatesTo(value = ResponseDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<ResponseDefinitionBuilder> definition) {
+    default TestDefinitionBuilder expect(
+        @DelegatesTo(value = ResponseDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<ResponseDefinitionBuilder> definition
+    ) {
         return expect(ConsumerWithDelegate.create(definition));
     }
 
     TestDefinitionBuilder expect(Consumer<ResponseDefinitionBuilder> definition);
 
-    default TestDefinitionBuilder head(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder head(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return head(uri, ConsumerWithDelegate.create(definition));
     }
 
@@ -43,7 +60,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder head(CharSequence uri);
 
-    default TestDefinitionBuilder post(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder post(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return post(uri, ConsumerWithDelegate.create(definition));
     }
 
@@ -51,7 +73,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder post(CharSequence uri);
 
-    default TestDefinitionBuilder put(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder put(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return put(uri, ConsumerWithDelegate.create(definition));
     }
 
@@ -59,7 +86,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder put(CharSequence uri);
 
-    default TestDefinitionBuilder patch(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder patch(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return patch(uri, ConsumerWithDelegate.create(definition));
     }
 
@@ -67,7 +99,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder patch(CharSequence uri);
 
-    default TestDefinitionBuilder delete(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder delete(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return delete(uri, ConsumerWithDelegate.create(definition));
     }
 
@@ -75,7 +112,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder delete(CharSequence uri);
 
-    default TestDefinitionBuilder options(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder options(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return options(uri, ConsumerWithDelegate.create(definition));
     }
 
@@ -83,7 +125,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder options(CharSequence uri);
 
-    default TestDefinitionBuilder trace(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder trace(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return trace(uri, ConsumerWithDelegate.create(definition));
     }
 
@@ -91,7 +138,12 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder trace(CharSequence uri);
 
-    default TestDefinitionBuilder get(CharSequence uri, @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST) Closure<RequestDefinitionBuilder> definition) {
+    default TestDefinitionBuilder get(
+        CharSequence uri,
+        @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+            Closure<RequestDefinitionBuilder> definition
+    ) {
         return get(uri, ConsumerWithDelegate.create(definition));
     }
 

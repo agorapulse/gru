@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.SimpleType;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.ByteArrayOutputStream;
@@ -122,7 +124,7 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
                 .filter(f -> clazz.equals(f.getType()))
                 .findFirst()
                 .map(f -> getFieldValue(unitTest, clazz, f))
-                .orElseGet(()-> createNewInstance(clazz));
+                .orElseGet(() -> createNewInstance(clazz));
         }
 
         private void configure(Consumer<MappingConfiguration> configuration) {
@@ -167,7 +169,12 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             return this;
         }
 
-        public MappingConfiguration response(int number, @DelegatesTo(ResponseMappingConfiguration.class) Closure<ResponseMappingConfiguration> configuration) {
+        public MappingConfiguration response(
+            int number,
+            @DelegatesTo(value = ResponseMappingConfiguration.class, strategy = Closure.DELEGATE_FIRST)
+            @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration.ResponseMappingConfiguration")
+            Closure<ResponseMappingConfiguration> configuration
+        ) {
             return response(number, ConsumerWithDelegate.create(configuration));
         }
 
@@ -235,7 +242,12 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             return to(handler.getName());
         }
 
-        public Mapping to(Class handler, @DelegatesTo(MappingConfiguration.class) Closure<MappingConfiguration> configuration) {
+        public Mapping to(
+            Class handler,
+            @DelegatesTo(value = MappingConfiguration.class, strategy = Closure.DELEGATE_FIRST)
+            @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration.MappingConfiguration")
+            Closure<MappingConfiguration> configuration
+        ) {
             return to(handler, ConsumerWithDelegate.create(configuration));
         }
 
@@ -244,11 +256,17 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         }
 
         public Mapping to(String handler) {
-            return to(handler, (c) -> {}, true);
+            return to(handler, (c) -> {
+            }, true);
         }
 
-        public Mapping to(String handler, @DelegatesTo(MappingConfiguration.class) Closure<MappingConfiguration> configuration) {
-            return to(handler, ConsumerWithDelegate.create(configuration),  true);
+        public Mapping to(
+            String handler,
+            @DelegatesTo(value = MappingConfiguration.class, strategy = Closure.DELEGATE_FIRST)
+            @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration.MappingConfiguration")
+            Closure<MappingConfiguration> configuration
+        ) {
+            return to(handler, ConsumerWithDelegate.create(configuration), true);
         }
 
         public Mapping to(String handler, Consumer<MappingConfiguration> configuration) {

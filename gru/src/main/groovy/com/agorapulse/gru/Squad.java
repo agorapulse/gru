@@ -7,13 +7,16 @@ import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.MutableClassToInstanceMap;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
-import org.codehaus.groovy.runtime.DefaultGroovyMethods;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.FromString;
+import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.function.Function;
 
 /**
  * Squad is pool of minions engaged in a test.
@@ -48,7 +51,12 @@ public class Squad {
      * @param aCommand closure executed within context of selected minion
      */
     @SuppressWarnings("unchecked")
-    public <M extends Minion> void command(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure aCommand) {
+    public <M extends Minion> void command(
+        Class<M> minionType,
+        @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString.class, options = "M")
+            Closure aCommand
+    ) {
         command(minionType, Command.create(aCommand));
     }
 
@@ -83,14 +91,32 @@ public class Squad {
      * @param query closure executed within context of selected minion which returns the result of this method
      * @return result returned from the query closure or null if minion of given type is not present in the squad
      */
-    public <T, M extends Minion> T ask(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure<T> query) {
+    public <T, M extends Minion> T ask(
+        Class<M> minionType,
+        @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString.class, options = "M")
+            Closure<T> query
+    ) {
+        return ask(minionType, FunctionWithDelegate.create(query));
+    }
+
+    /**
+     * Asks minion of given type for something.
+     * @param minionType type of the minion being asked
+     * @param query function executed with the selected minion which returns the result of this method
+     * @return result returned from the query closure or null if minion of given type is not present in the squad
+     */
+    public <T, M extends Minion> T ask(
+        Class<M> minionType,
+        Function<M, T> query
+    ) {
         M minion = minions.getInstance(minionType);
 
         if (minion == null) {
             return null;
         }
 
-        return DefaultGroovyMethods.with(minion, query);
+        return query.apply(minion);
     }
 
     GruContext beforeRun(Client client, GruContext context) {

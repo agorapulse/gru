@@ -4,6 +4,8 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.minions.AbstractMinion
 import com.agorapulse.gru.spring.Spring
+import groovy.transform.stc.ClosureParams
+import groovy.transform.stc.SimpleType
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
 import space.jasan.support.groovy.closure.ConsumerWithDelegate
 
@@ -22,7 +24,11 @@ class RequestBuilderMinion extends AbstractMinion<Spring> {
         super(Spring)
     }
 
-    void addBuildStep(@DelegatesTo(MockHttpServletRequestBuilder) Closure<MockHttpServletRequestBuilder> step) {
+    void addBuildStep(
+        @DelegatesTo(MockHttpServletRequestBuilder)
+        @ClosureParams(value = SimpleType, options = 'org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder')
+            Closure<MockHttpServletRequestBuilder> step
+    ) {
         addBuildStep(ConsumerWithDelegate.create(step))
     }
 

@@ -4,6 +4,9 @@ import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
+import groovy.transform.stc.ClosureParams;
+import groovy.transform.stc.FromString;
+import groovy.transform.stc.SimpleType;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
@@ -22,7 +25,12 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
     /**
      * @see Squad#command(Class, Closure)
      */
-    default <M extends Minion> ResponseDefinitionBuilder command(Class<M> minionType, @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST) Closure command) {
+    default <M extends Minion> ResponseDefinitionBuilder command(
+        Class<M> minionType,
+        @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = FromString.class, options = "M")
+            Closure command
+    ) {
         return command(minionType, Command.create(command));
     }
 
@@ -127,7 +135,11 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    default ResponseDefinitionBuilder json(@DelegatesTo(value = JsonFluentAssert.class, strategy = Closure.DELEGATE_FIRST) Closure<JsonFluentAssert> additionalConfiguration) {
+    default ResponseDefinitionBuilder json(
+        @DelegatesTo(value = JsonFluentAssert.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "net.javacrumbs.jsonunit.fluent.JsonFluentAssert")
+            Closure<JsonFluentAssert> additionalConfiguration
+    ) {
         return json(FunctionWithDelegate.create(additionalConfiguration));
     }
 
