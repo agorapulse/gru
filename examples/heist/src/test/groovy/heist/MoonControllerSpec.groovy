@@ -290,7 +290,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
         expect:
             gru.test {
                 post '/moons/earth', {
-                    json(name: 'Margot')
+                    json 'newMoonRequest.json'
                 }
             }
     }
