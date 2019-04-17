@@ -915,7 +915,7 @@ declared in default package. See <a href="#minimal-grails-usage">Minimal Grails 
     expect:
         gru.test {
             post '/moons/earth', {
-                json(name: 'Margot')
+                json 'newMoonRequest.json'
             }
         }
 }</code></pre>
