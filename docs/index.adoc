@@ -153,6 +153,9 @@ You can use JSON payload from file.
 include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=newMoon,indent=0]
 ----
 
+[TIP]
+You can also define json as map or list e.g. `json(foo: 'bar')`. Both are serialized to JSON using a JSON integration on the classpath.
+
 [NOTE]
 JSON files are loaded relatively to directory having the same name as the current specification and it is placed
 in the same directory corresponding the package of the the current specification. For example if your specification name
