@@ -1,6 +1,7 @@
 package com.agorapulse.gru.agp;
 
 import com.agorapulse.gru.Client;
+import com.agorapulse.gru.MultipartDefinition;
 import groovy.json.JsonOutput;
 import groovy.json.JsonSlurper;
 
@@ -81,6 +82,11 @@ class ApiGatewayProxyRequest implements Client.Request {
             queryStringParameters = new LinkedHashMap<>();
         }
         queryStringParameters.put(name, value == null ? null : value.toString());
+    }
+
+    @Override
+    public void setMultipart(MultipartDefinition definition) {
+        throw new UnsupportedOperationException("File uploads are currently not supported for API Gateway!");
     }
 
     public void setPathParameters(Map<String, String> pathParameters) {

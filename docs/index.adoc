@@ -185,6 +185,20 @@ Content files are created automatically if missing. Empty file is created for mi
 Fixture files are generated inside directory from system property `TEST_RESOURCES_FOLDER` or
 in `src/test/resources` relatively to the working directory.
 
+[[file-upload,File Upload]]
+==== File Upload
+
+You can emulate multipart file uploads.
+
+.File Upload
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=fileUpload,indent=0]
+----
+<1> Define upload files and parameters
+<2> You can specify arbitrary parameter (i.g. hidden fields)
+<3> Specify the file to be uploaded with the name of the parameter, original filename, content and content type
+<4> In case of Grails unit test, you must point to the controller action's method
 
 === Response
 

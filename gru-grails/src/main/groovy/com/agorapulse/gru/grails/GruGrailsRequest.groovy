@@ -1,8 +1,10 @@
 package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.Client
+import com.agorapulse.gru.MultipartDefinition
 import grails.testing.web.controllers.ControllerUnitTest
 import org.grails.plugins.testing.GrailsMockHttpServletRequest
+import org.springframework.mock.web.MockMultipartFile
 
 /**
  * Wrapper around Grails mock request.
@@ -60,6 +62,22 @@ class GruGrailsRequest implements Client.Request {
     @Override
     void addParameter(String name, Object value) {
         unitTest.params.put(name, value)
+    }
+
+    @Override
+    void setMultipart(MultipartDefinition definition) {
+        definition.parameters.each { k, v ->
+            unitTest.params.put(k, v ? String.valueOf(v) : null)
+        }
+
+        definition.files.each { k, f ->
+            request.addFile(new MockMultipartFile(
+                f.parameterName,
+                f.filename,
+                f.contentType,
+                f.bytes
+            ))
+        }
     }
 
     private void updateRequestUri() {

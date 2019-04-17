@@ -44,6 +44,8 @@ public interface Client {
         void setContent(String contentType, byte[] payload);
 
         void addParameter(String name, Object value);
+
+        void setMultipart(MultipartDefinition definition);
     }
 
     interface Response {

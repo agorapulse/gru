@@ -556,4 +556,23 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             error.message.startsWith 'GET: \'/moons/earth/moon\' is not mapped to heist.MoonController'
             error.message.endsWith '.steal!'
     }
+
+    // tag::fileUpload[]
+    void 'upload file with message'() {
+        expect:
+            gru.test {
+                post '/moons/upload', {
+                    upload {                                                            // <1>
+                        params message: 'Hello'                                         // <2>
+                        file 'theFile', 'hello.txt', inline('Hello World'), 'text/plain'// <3>
+                    }
+                    // Grails only - required because of bug in mock request
+                    executes controller.&postWithMessageAndImage                        // <4>
+                }
+                expect {
+                    json 'uploadResult.json'
+                }
+            }
+    }
+    // end::fileUpload[]
 }

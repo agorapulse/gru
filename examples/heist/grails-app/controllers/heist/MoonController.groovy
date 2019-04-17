@@ -3,6 +3,7 @@ package heist
 import grails.converters.JSON
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 
 class MoonController {
@@ -103,6 +104,16 @@ class MoonController {
 
     def all(String planet) {
         render(moonService.findByPlanet(planet) as JSON)
+    }
+
+    def postWithMessageAndImage() {
+        MultipartFile file = request.getFile('theFile')
+        render([
+                message: params.message,
+                size: file.bytes.length,
+                contentType: file.contentType,
+                filename: file.originalFilename
+        ] as JSON)
     }
 
 

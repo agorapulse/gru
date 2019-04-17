@@ -20,6 +20,7 @@ public interface Minion {
     int JSON_MINION_INDEX = 30000;
     int HTML_MINION_INDEX = 30001;
     int TEXT_MINION_INDEX = 30002;
+    int MULTIPART_MINION_INDEX = 30003;
     int INTERCEPTORS_MINION_INDEX = 50000;
     int MODEL_MINION_INDEX = 60000;
     // end::constants[]

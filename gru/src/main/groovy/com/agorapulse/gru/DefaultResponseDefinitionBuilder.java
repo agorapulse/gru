@@ -1,7 +1,6 @@
 package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
-import com.agorapulse.gru.content.StringContent;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
 import net.javacrumbs.jsonunit.core.Option;
@@ -113,11 +112,6 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
     public DefaultResponseDefinitionBuilder json(String relativePath, final Option option, final Option... options) {
         json(relativePath);
         return json((a) -> a.when(option, options));
-    }
-
-    @Override
-    public Content inline(String string) {
-        return StringContent.create(string);
     }
 
     private Squad squad;
