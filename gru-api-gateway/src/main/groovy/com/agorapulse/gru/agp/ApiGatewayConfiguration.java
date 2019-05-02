@@ -3,7 +3,6 @@ package com.agorapulse.gru.agp;
 import com.agorapulse.gru.HttpVerbsShortcuts;
 import com.agorapulse.gru.agp.ignore.Safe;
 import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;

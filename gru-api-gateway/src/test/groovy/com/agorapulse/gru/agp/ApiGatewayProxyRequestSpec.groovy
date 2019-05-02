@@ -37,7 +37,7 @@ class ApiGatewayProxyRequestSpec extends Specification {
 
                 context
 
-                toJson() == '{"path":"/context/path","body":"{ \\"foo\\" : \\"bar\\" }","headers":{"Auth":"Bearer TeddyTheBear","Content-Type":"application/json"},"httpMethod":"POST","queryStringParameters":{"max":"8","offset":"5"},"pathParameters":{"id":"1"}}'
+                toJson() == '{"path":"/context/path","body":"{ \\"foo\\" : \\"bar\\" }","headers":{"Auth":"Bearer TeddyTheBear","Content-Type":"application/json"},"multiValueHeaders":{"Auth":["Bearer TeddyTheBear"],"Content-Type":["application/json"]},"httpMethod":"POST","queryStringParameters":{"max":"8","offset":"5"},"multiValueQueryStringParameters":{"max":["8"],"offset":["5"]},"pathParameters":{"id":"1"}}'
             }
 
         when:
