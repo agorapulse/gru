@@ -3,6 +3,8 @@ package com.agorapulse.gru.agp
 import com.agorapulse.gru.Gru
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
+import com.amazonaws.services.lambda.runtime.RequestStreamHandler
+import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonOutput
 import spock.lang.Specification
 
@@ -145,6 +147,22 @@ class ApiGatewayConfigurationSpec extends Specification {
             error.cause instanceof ClassNotFoundException
     }
 
+    void 'proxy to streaming'() {
+        given:
+            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+                map '/six' to StreamingHandler
+            })
+        when:
+            gru.reset().test {
+                get '/six'
+                expect {
+                    json 'sixthResponse.json'
+                }
+            }
+        then:
+            gru.verify()
+    }
+
 }
 
 class SampleHandler implements RequestHandler<Map, Map> {
@@ -170,5 +188,13 @@ class NoZeroArgConstructorHandler  implements RequestHandler<Map, Map> {
 
     @Override Map handleRequest(Map input, Context context) {
         throw new UnsupportedOperationException()
+    }
+}
+
+class StreamingHandler implements RequestStreamHandler {
+    @Override
+    void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
+        ObjectMapper mapper = new ObjectMapper()
+        mapper.writer().writeValue(output, [body: [input: mapper.readValue(input, Map)]])
     }
 }

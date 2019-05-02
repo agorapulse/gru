@@ -3,6 +3,8 @@ package com.agorapulse.gru.agp;
 import com.agorapulse.gru.HttpVerbsShortcuts;
 import com.agorapulse.gru.agp.ignore.Safe;
 import com.amazonaws.services.lambda.runtime.Context;
+import com.amazonaws.services.lambda.runtime.RequestHandler;
+import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Preconditions;
 import groovy.lang.Closure;
@@ -11,6 +13,7 @@ import groovy.transform.stc.ClosureParams;
 import groovy.transform.stc.SimpleType;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -44,6 +47,11 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             String methodName = parts[1];
 
             Class clazz = Class.forName(className);
+
+            if (RequestStreamHandler.class.isAssignableFrom(clazz)) {
+                return handleRequestStreamHandler(request, clazz);
+            }
+
             Method method = Arrays.stream(clazz.getMethods())
                 .filter(m -> m.getGenericParameterTypes().length == 2 && Context.class.equals(m.getGenericParameterTypes()[1]))
                 .min(comparing((Method m) -> distanceToObject(m.getParameterTypes()[0])).reversed())
@@ -81,13 +89,32 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
 
             Object input = mapper.readValue(prepareRequestObject(request), firstParameter);
 
-            OutputStream outputStream = new ByteArrayOutputStream();
-
             Object result = method.invoke(getOrCreateHandler(unitTest, clazz), input, request.getContext());
 
+            OutputStream outputStream = new ByteArrayOutputStream();
             mapper.writeValue(outputStream, prepareResponseObject(result));
-
             return outputStream.toString();
+        }
+
+        private String handleRequestStreamHandler(ApiGatewayProxyRequest request, Class<? extends RequestStreamHandler> handlerClass) {
+            try {
+                RequestStreamHandler streamHandler = handlerClass.newInstance();
+
+                ByteArrayInputStream bais = new ByteArrayInputStream(prepareRequestObject(request).getBytes());
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+                streamHandler.handleRequest(bais, baos, request.getContext());
+
+                baos.flush();
+
+                return baos.toString();
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException("Unreachable constructor in " + handlerClass, e);
+            } catch (InstantiationException e) {
+                throw new IllegalArgumentException("Error instantiating " + handlerClass, e);
+            } catch (IOException e) {
+                throw new IllegalStateException("Exception flushing output stream for " + handlerClass, e);
+            }
         }
 
         private String prepareRequestObject(ApiGatewayProxyRequest request) {

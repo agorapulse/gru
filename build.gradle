@@ -41,7 +41,7 @@ dependencies {
 
 }
 
-String currentVersion = '0.8.0'
+String currentVersion = '0.8.1'
 
 version = currentVersion
 
@@ -184,6 +184,7 @@ asciidoctor {
             'stylesdir': 'css',
             icons: 'font',
             'toc': 'left',
+            'toclevels': '3',
             version: project.version,
             'projectUrl': 'https://github.com/agorapulse/gru'
 }
