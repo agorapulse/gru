@@ -4,14 +4,12 @@ import com.agorapulse.gru.Client;
 import groovy.json.JsonOutput;
 import groovy.json.JsonSlurper;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 class ApiGatewayProxyResponse implements Client.Response {
 
     private String text;
-    private Map<String, String> headers;
+    private Map<String, List<String>> multiValueHeaders;
     private int status;
 
     // TODO: base64 encoded
@@ -24,7 +22,17 @@ class ApiGatewayProxyResponse implements Client.Response {
             this.text = body instanceof String ? body.toString() : JsonOutput.toJson(body);
         }
 
-        this.headers = (Map<String, String>) response.getOrDefault("headers", null);
+        multiValueHeaders = (Map<String, List<String>>) response.getOrDefault("multiValueHeaders", new LinkedHashMap<>());
+
+        if (response.containsKey("headers")) {
+            Map<String, String> headers = (Map<String, String>) response.get("headers");
+            headers.forEach((k, v) -> {
+                List<String> values = multiValueHeaders.computeIfAbsent(k, (key) -> new ArrayList<>());
+                if (!values.contains(v)) {
+                    values.add(v);
+                }
+            });
+        }
 
         if (response.get("statusCode") == null) {
             this.status = 200;
@@ -40,8 +48,8 @@ class ApiGatewayProxyResponse implements Client.Response {
 
     @Override
     public List<String> getHeaders(String name) {
-        if (headers.containsKey(name)) {
-            return Collections.singletonList(headers.get(name));
+        if (multiValueHeaders.containsKey(name)) {
+            return multiValueHeaders.get(name);
         }
         return Collections.emptyList();
     }

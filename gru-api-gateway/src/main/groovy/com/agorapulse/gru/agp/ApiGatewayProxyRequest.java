@@ -7,6 +7,7 @@ import groovy.json.JsonSlurper;
 
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 class ApiGatewayProxyRequest implements Client.Request {
@@ -115,6 +116,9 @@ class ApiGatewayProxyRequest implements Client.Request {
 
         if (headers != null) {
             output.put("headers", headers);
+            Map<String, List<String>> multiValueHeaders = new LinkedHashMap<>();
+            headers.forEach((k, v) -> multiValueHeaders.put(k, Collections.singletonList(v)));
+            output.put("multiValueHeaders", multiValueHeaders);
 
         }
 
@@ -125,6 +129,9 @@ class ApiGatewayProxyRequest implements Client.Request {
 
         if (queryStringParameters != null) {
             output.put("queryStringParameters", queryStringParameters);
+            Map<String, List<String>> multiValueQueryStringParameters = new LinkedHashMap<>();
+            queryStringParameters.forEach((k, v) -> multiValueQueryStringParameters.put(k, Collections.singletonList(v)));
+            output.put("multiValueQueryStringParameters", multiValueQueryStringParameters);
         }
 
         if (pathParameters != null) {
