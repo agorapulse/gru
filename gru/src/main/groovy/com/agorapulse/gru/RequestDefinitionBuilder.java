@@ -1,6 +1,5 @@
 package com.agorapulse.gru;
 
-import com.agorapulse.gru.cookie.Cookie;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
@@ -15,8 +14,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import static java.util.stream.Collectors.toMap;
 
 /**
  * Prepares the request for controller action.

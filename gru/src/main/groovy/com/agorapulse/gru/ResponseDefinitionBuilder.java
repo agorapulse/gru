@@ -189,7 +189,7 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
     default ResponseDefinitionBuilder cookie(
         @DelegatesTo(value = ResponseCookieDefinition.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseCookieDefinition")
-            Closure<ResponseCookieDefinition > cookieDefinition
+            Closure<ResponseCookieDefinition> cookieDefinition
     ) {
         return cookie(ConsumerWithDelegate.create(cookieDefinition));
     }

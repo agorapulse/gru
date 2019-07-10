@@ -79,9 +79,17 @@ public final class Cookie {
     }
 
     Cookie(Builder builder) {
-        if (builder.name == null) throw new NullPointerException("builder.name == null");
-        if (builder.value == null) throw new NullPointerException("builder.value == null");
-        if (builder.domain == null) throw new NullPointerException("builder.domain == null");
+        if (builder.name == null) {
+            throw new NullPointerException("builder.name == null");
+        }
+
+        if (builder.value == null) {
+            throw new NullPointerException("builder.value == null");
+        }
+
+        if (builder.domain == null) {
+            throw new NullPointerException("builder.domain == null");
+        }
 
         this.name = builder.name;
         this.value = builder.value;
@@ -182,8 +190,12 @@ public final class Cookie {
 
         for (int i = 0, size = cookieStrings.size(); i < size; i++) {
             Cookie cookie = Cookie.parse(cookieStrings.get(i));
-            if (cookie == null) continue;
-            if (cookies == null) cookies = new ArrayList<>();
+            if (cookie == null) {
+                continue;
+            }
+            if (cookies == null) {
+                cookies = new ArrayList<>();
+            }
             cookies.add(cookie);
         }
 
@@ -206,13 +218,19 @@ public final class Cookie {
         int cookiePairEnd = delimiterOffset(setCookie, pos, limit, ';');
 
         int pairEqualsSign = delimiterOffset(setCookie, pos, cookiePairEnd, '=');
-        if (pairEqualsSign == cookiePairEnd) return null;
+        if (pairEqualsSign == cookiePairEnd) {
+            return null;
+        }
 
         String cookieName = trimSubstring(setCookie, pos, pairEqualsSign);
-        if (cookieName.isEmpty() || indexOfControlOrNonAscii(cookieName) != -1) return null;
+        if (cookieName.isEmpty() || indexOfControlOrNonAscii(cookieName) != -1) {
+            return null;
+        }
 
         String cookieValue = trimSubstring(setCookie, pairEqualsSign + 1, cookiePairEnd);
-        if (indexOfControlOrNonAscii(cookieValue) != -1) return null;
+        if (indexOfControlOrNonAscii(cookieValue) != -1) {
+            return null;
+        }
 
         long expiresAt = MAX_DATE;
         long deltaSeconds = -1L;
@@ -317,17 +335,39 @@ public final class Cookie {
         }
 
         // Convert two-digit years into four-digit years. 99 becomes 1999, 15 becomes 2015.
-        if (year >= 70 && year <= 99) year += 1900;
-        if (year >= 0 && year <= 69) year += 2000;
+        if (year >= 70 && year <= 99) {
+            year += 1900;
+        }
+
+        if (year >= 0 && year <= 69) {
+            year += 2000;
+        }
 
         // If any partial is omitted or out of range, return -1. The date is impossible. Note that leap
         // seconds are not supported by this syntax.
-        if (year < 1601) throw new IllegalArgumentException();
-        if (month == -1) throw new IllegalArgumentException();
-        if (dayOfMonth < 1 || dayOfMonth > 31) throw new IllegalArgumentException();
-        if (hour < 0 || hour > 23) throw new IllegalArgumentException();
-        if (minute < 0 || minute > 59) throw new IllegalArgumentException();
-        if (second < 0 || second > 59) throw new IllegalArgumentException();
+        if (year < 1601) {
+            throw new IllegalArgumentException();
+        }
+
+        if (month == -1) {
+            throw new IllegalArgumentException();
+        }
+
+        if (dayOfMonth < 1 || dayOfMonth > 31) {
+            throw new IllegalArgumentException();
+        }
+
+        if (hour < 0 || hour > 23) {
+            throw new IllegalArgumentException();
+        }
+
+        if (minute < 0 || minute > 59) {
+            throw new IllegalArgumentException();
+        }
+
+        if (second < 0 || second > 59) {
+            throw new IllegalArgumentException();
+        }
 
         Calendar calendar = new GregorianCalendar(UTC);
         calendar.setLenient(false);
@@ -353,7 +393,9 @@ public final class Cookie {
                 || (c >= 'a' && c <= 'z')
                 || (c >= 'A' && c <= 'Z')
                 || (c == ':');
-            if (dateCharacter == !invert) return i;
+            if (dateCharacter == !invert) {
+                return i;
+            }
         }
         return limit;
     }
@@ -398,7 +440,9 @@ public final class Cookie {
      */
     private static int delimiterOffset(String input, int pos, int limit, char delimiter) {
         for (int i = pos; i < limit; i++) {
-            if (input.charAt(i) == delimiter) return i;
+            if (input.charAt(i) == delimiter) {
+                return i;
+            }
         }
         return limit;
     }
@@ -484,22 +528,40 @@ public final class Cookie {
         boolean hostOnly = true;
 
         public Builder name(String name) {
-            if (name == null) throw new NullPointerException("name == null");
-            if (!name.trim().equals(name)) throw new IllegalArgumentException("name is not trimmed");
+            if (name == null) {
+                throw new NullPointerException("name == null");
+            }
+
+            if (!name.trim().equals(name)) {
+                throw new IllegalArgumentException("name is not trimmed");
+            }
+
             this.name = name;
             return this;
         }
 
         public Builder value(String value) {
-            if (value == null) throw new NullPointerException("value == null");
-            if (!value.trim().equals(value)) throw new IllegalArgumentException("value is not trimmed");
+            if (value == null) {
+                throw new NullPointerException("value == null");
+            }
+
+            if (!value.trim().equals(value)) {
+                throw new IllegalArgumentException("value is not trimmed");
+            }
+
             this.value = value;
             return this;
         }
 
         public Builder expiresAt(long expiresAt) {
-            if (expiresAt <= 0) expiresAt = Long.MIN_VALUE;
-            if (expiresAt > MAX_DATE) expiresAt = MAX_DATE;
+            if (expiresAt <= 0) {
+                expiresAt = Long.MIN_VALUE;
+            }
+
+            if (expiresAt > MAX_DATE) {
+                expiresAt = MAX_DATE;
+            }
+
             this.expiresAt = expiresAt;
             this.persistent = true;
             return this;
@@ -522,14 +584,19 @@ public final class Cookie {
         }
 
         private Builder domain(String domain, boolean hostOnly) {
-            if (domain == null) throw new NullPointerException("domain == null");
+            if (domain == null) {
+                throw new NullPointerException("domain == null");
+            }
+
             this.domain = domain;
             this.hostOnly = hostOnly;
             return this;
         }
 
         public Builder path(String path) {
-            if (!path.startsWith("/")) throw new IllegalArgumentException("path must start with '/'");
+            if (!path.startsWith("/")) {
+                throw new IllegalArgumentException("path must start with '/'");
+            }
             this.path = path;
             return this;
         }
@@ -640,7 +707,10 @@ public final class Cookie {
 
     @Override
     public boolean equals(Object other) {
-        if (!(other instanceof Cookie)) return false;
+        if (!(other instanceof Cookie)) {
+            return false;
+        }
+
         Cookie that = (Cookie) other;
         return that.name.equals(name)
             && that.value.equals(value)
