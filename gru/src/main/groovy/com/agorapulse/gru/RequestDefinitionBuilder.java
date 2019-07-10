@@ -1,5 +1,6 @@
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.cookie.Cookie;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import groovy.lang.Closure;
@@ -14,6 +15,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+
+import static java.util.stream.Collectors.toMap;
 
 /**
  * Prepares the request for controller action.
@@ -140,4 +143,22 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
     ) {
         return upload(ConsumerWithDelegate.create(definition));
     }
+
+    /**
+     * Add a HTTP cookie to the action execution.
+     * @param name name of the cookie
+     * @param value value of the cookie
+     * @return self
+     */
+    default RequestDefinitionBuilder cookie(String name, String value) {
+        return cookies(Collections.singletonMap(name, value));
+    }
+
+
+    /**
+     * Add a HTTP cookies to the action execution.
+     * @param cookies cookies to be added
+     * @return self
+     */
+    RequestDefinitionBuilder cookies(Map<String, String> cookies);
 }

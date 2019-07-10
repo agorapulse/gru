@@ -10,10 +10,12 @@ import groovy.transform.stc.SimpleType;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -178,4 +180,25 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @return self other JsonUnit options e.g. IGNORING_EXTRA_ARRAY_ITEMS
      */
     ResponseDefinitionBuilder json(String relativePath, Option option, Option... options);
+
+    /**
+     * Expect a cookie returned by the server.
+     * @param cookieDefinition definition of the cookie
+     * @return self
+     */
+    default ResponseDefinitionBuilder cookie(
+        @DelegatesTo(value = ResponseCookieDefinition.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseCookieDefinition")
+            Closure<ResponseCookieDefinition > cookieDefinition
+    ) {
+        return cookie(ConsumerWithDelegate.create(cookieDefinition));
+    }
+
+    /**
+     * Expect a cookie returned by the server.
+     * @param cookieDefinition definition of the cookie
+     * @return self
+     */
+    ResponseDefinitionBuilder cookie(Consumer<ResponseCookieDefinition> cookieDefinition);
+
 }
