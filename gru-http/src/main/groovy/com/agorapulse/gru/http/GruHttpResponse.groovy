@@ -1,6 +1,7 @@
 package com.agorapulse.gru.http
 
 import com.agorapulse.gru.Client
+import com.agorapulse.gru.cookie.Cookie
 import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
 import okhttp3.Response

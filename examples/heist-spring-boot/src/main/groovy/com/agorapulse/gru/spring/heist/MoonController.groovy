@@ -1,5 +1,6 @@
 package com.agorapulse.gru.spring.heist
 
+import org.springframework.http.HttpRequest
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
+
+import javax.servlet.http.HttpServletRequest
 
 
 @Controller
@@ -61,6 +64,11 @@ class MoonController {
             contentType: file.contentType,
             filename: file.originalFilename
         ]
+    }
+
+    @RequestMapping(value = '/cookie', method=RequestMethod.GET)
+    @ResponseBody Map cookies(HttpServletRequest request) {
+        return request.cookies?.collectEntries { [(it.name): it.value] } ?: [:]
     }
 
 }

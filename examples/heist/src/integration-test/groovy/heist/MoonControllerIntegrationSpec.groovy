@@ -236,4 +236,16 @@ class MoonControllerIntegrationSpec extends Specification {
                 }
             }
     }
+
+    void 'send cookies'() {
+        expect:
+            gru.test {
+                get '/moons/cookie', {
+                    cookies chocolate: 'rules'
+                }
+                expect {
+                    json 'cookies.json', IGNORING_EXTRA_FIELDS
+                }
+            }
+    }
 }

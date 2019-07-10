@@ -116,5 +116,9 @@ class MoonController {
         ] as JSON)
     }
 
+    def cookie() {
+        render((request.cookies?.collectEntries { [(it.name): it.value] } ?: [:]) as JSON)
+    }
+
 
 }

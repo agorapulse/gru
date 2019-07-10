@@ -17,7 +17,8 @@ public class CookieMinion extends AbstractMinion<Client> {
     @Override
     protected GruContext doBeforeRun(Client client, Squad squad, GruContext context) {
         for (Cookie cookie : requestCookies) {
-            client.getRequest().addHeader("Cookie", cookie.toString());
+            client.getRequest().addCookie(cookie);
+            // client.getRequest().addHeader("Cookie", cookie.toString());
         }
 
         return context;
@@ -25,8 +26,8 @@ public class CookieMinion extends AbstractMinion<Client> {
 
     @Override
     protected void doVerify(Client client, Squad squad, GruContext context) {
+        List<Cookie> cookies = client.getResponse().getCookies();
         for (Cookie cookie : requestCookies) {
-            List<Cookie> cookies = Cookie.parseAll(client.getResponse().getHeaders("Set-Cookie"));
             if (cookies.stream().anyMatch(cookie::similarTo)) {
                 throw new AssertionError("Missing response cookie " + cookie + "\nFound: " + cookies);
             }

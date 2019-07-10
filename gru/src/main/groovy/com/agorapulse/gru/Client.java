@@ -1,5 +1,6 @@
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.cookie.Cookie;
 import com.agorapulse.gru.minions.Minion;
 
 import java.io.InputStream;
@@ -39,6 +40,10 @@ public interface Client {
 
         void addHeader(String name, String value);
 
+        default void addCookie(Cookie cookie) {
+            addHeader("Cookie", cookie.toString());
+        }
+
         void setJson(String jsonText);
 
         void setContent(String contentType, byte[] payload);
@@ -57,6 +62,10 @@ public interface Client {
         String getText();
 
         String getRedirectUrl();
+
+        default List<Cookie> getCookies() {
+            return Cookie.parseAll(getHeaders("Set-Cookie"));
+        }
     }
 
 }

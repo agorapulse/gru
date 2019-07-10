@@ -1,6 +1,7 @@
 package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.Client
+import com.agorapulse.gru.cookie.Cookie
 import org.grails.plugins.testing.GrailsMockHttpServletResponse
 
 /**
@@ -32,5 +33,28 @@ class GruGrailsResponse implements Client.Response {
     @Override
     String getRedirectUrl() {
         return response.redirectUrl
+    }
+
+    @Override
+    List<Cookie> getCookies() {
+        List<javax.servlet.http.Cookie> cookies = response.cookies ? response.cookies.toList() : []
+
+        return cookies.collect {
+            Cookie.Builder builder = new Cookie.Builder()
+                .name(it.name)
+                .value(it.value)
+
+            // TODO: expires?
+
+            if (it.domain) {
+                builder.domain(it.domain)
+            }
+
+            builder
+                .httpOnly(it.httpOnly)
+                .path(it.path)
+                .secure(it.secure)
+                .build()
+        }
     }
 }
