@@ -598,6 +598,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                         name 'coffee'
                         value 'lover'
                         secure true
+                        domain 'localhost'
                     }
                 }
             }

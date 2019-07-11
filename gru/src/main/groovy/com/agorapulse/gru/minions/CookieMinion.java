@@ -7,6 +7,7 @@ import com.agorapulse.gru.cookie.Cookie;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 public class CookieMinion extends AbstractMinion<Client> {
 
@@ -18,7 +19,6 @@ public class CookieMinion extends AbstractMinion<Client> {
     protected GruContext doBeforeRun(Client client, Squad squad, GruContext context) {
         for (Cookie cookie : requestCookies) {
             client.getRequest().addCookie(cookie);
-            // client.getRequest().addHeader("Cookie", cookie.toString());
         }
 
         return context;
@@ -27,8 +27,8 @@ public class CookieMinion extends AbstractMinion<Client> {
     @Override
     protected void doVerify(Client client, Squad squad, GruContext context) {
         List<Cookie> cookies = client.getResponse().getCookies();
-        for (Cookie cookie : requestCookies) {
-            if (cookies.stream().anyMatch(cookie::similarTo)) {
+        for (Cookie cookie : responseCookies) {
+            if (cookies.stream().noneMatch(cookie::similarTo)) {
                 throw new AssertionError("Missing response cookie " + cookie + "\nFound: " + cookies);
             }
         }

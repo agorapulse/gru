@@ -191,13 +191,12 @@ public final class Cookie {
 
         for (int i = 0, size = cookieStrings.size(); i < size; i++) {
             Cookie cookie = Cookie.parse(cookieStrings.get(i));
-            if (cookie == null) {
-                continue;
-            }
             if (cookies == null) {
                 cookies = new ArrayList<>();
             }
-            cookies.add(cookie);
+            if (cookie != null) {
+                cookies.add(cookie);
+            }
         }
 
         return cookies != null
@@ -681,11 +680,11 @@ public final class Cookie {
             return false;
         }
 
-        if (domain != null && !DEFAULT_DOMAIN.equals(domain) && !domain.equals(other.domain)) {
+        if (domain != null && !DEFAULT_DOMAIN.equals(domain) && !DEFAULT_DOMAIN.equals(other.domain) && !domain.equals(other.domain)) {
             return false;
         }
 
-        if (path != null && !DEFAULT_PATH.equals(path) && !path.equals(other.path)) {
+        if (path != null && !DEFAULT_PATH.equals(path) && !DEFAULT_PATH.equals(other.path) && !path.equals(other.path)) {
             return false;
         }
 
@@ -702,12 +701,7 @@ public final class Cookie {
 
         }
 
-        if (persistent != other.persistent) {
-            return false;
-
-        }
-
-        return hostOnly == other.hostOnly;
+        return persistent == other.persistent;
     }
 
     @Override

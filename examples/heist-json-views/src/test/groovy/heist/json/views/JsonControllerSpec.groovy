@@ -20,7 +20,7 @@ class JsonControllerSpec extends Specification implements ControllerUnitTest<Jso
                 expect {
                     status NON_AUTHORITATIVE_INFORMATION
                     headers foo: 'bar', 'Content-Type': 'x-application/moons'
-                    json 'moons.json'
+                    json([[name: "Moon", planet: "Earth"]])
                 }
             }
     }
@@ -30,7 +30,7 @@ class JsonControllerSpec extends Specification implements ControllerUnitTest<Jso
             gru.test {
                 get '/json/moon'
                 expect {
-                    json 'moon.json'
+                    json name: "Moon", planet: "Earth"
                 }
             }
     }
@@ -40,7 +40,7 @@ class JsonControllerSpec extends Specification implements ControllerUnitTest<Jso
             gru.test {
                 get '/json/moon', {
                     executes controller.&show
-                    params manual: true
+                    param 'manual', 'true'
                 }
                 expect {
                     json 'moon.json'

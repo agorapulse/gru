@@ -76,7 +76,11 @@ class MoonController {
     @RequestMapping(value = '/setCookie', method=RequestMethod.GET)
     void setCookie(HttpServletResponse response) {
         response.addCookie(new Cookie('chocolate', 'rules'))
-        response.addCookie(new Cookie('coffee', 'lover').with { secure = true; it })
+        response.addCookie(new Cookie('coffee', 'lover').with {
+            secure = true
+            domain = 'localhost'
+            it
+        })
     }
 
 }

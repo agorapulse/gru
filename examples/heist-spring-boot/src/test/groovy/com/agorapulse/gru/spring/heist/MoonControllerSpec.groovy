@@ -106,7 +106,7 @@ class MoonControllerSpec extends Specification {
         expect:
             gru.test {
                 get '/moons/cookie', {
-                    cookies chocolate: 'rules'
+                    cookie 'chocolate', 'rules'
                 }
                 expect {
                     json 'cookies.json', IGNORING_EXTRA_FIELDS
@@ -124,6 +124,7 @@ class MoonControllerSpec extends Specification {
                         name 'coffee'
                         value 'lover'
                         secure true
+                        domain 'localhost'
                     }
                 }
             }

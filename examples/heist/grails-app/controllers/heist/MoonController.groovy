@@ -124,7 +124,11 @@ class MoonController {
 
     def setCookie() {
         response.addCookie(new Cookie('chocolate', 'rules'))
-        response.addCookie(new Cookie('coffee', 'lover').with { secure = true; it })
+        response.addCookie(new Cookie('coffee', 'lover').with {
+            secure = true
+            domain = 'localhost'
+            it
+        })
         render 'OK'
     }
 

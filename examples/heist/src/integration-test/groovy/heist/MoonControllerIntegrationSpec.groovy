@@ -263,4 +263,20 @@ class MoonControllerIntegrationSpec extends Specification {
                 }
             }
     }
+
+    void 'set cookies failure'() {
+        when:
+            gru.test {
+                get '/moons/setCookie'
+                expect {
+                    cookie {
+                        name 'tea'
+                        value 'lover'
+                    }
+                }
+            }
+            gru.verify()
+        then:
+            thrown(AssertionError)
+    }
 }
