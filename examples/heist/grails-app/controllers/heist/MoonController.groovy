@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 
+import javax.servlet.http.Cookie
+
 class MoonController {
 
     MoonService moonService
@@ -118,6 +120,12 @@ class MoonController {
 
     def cookie() {
         render((request.cookies?.collectEntries { [(it.name): it.value] } ?: [:]) as JSON)
+    }
+
+    def setCookie() {
+        response.addCookie(new Cookie('chocolate', 'rules'))
+        response.addCookie(new Cookie('coffee', 'lover').with { secure = true; it })
+        render 'OK'
     }
 
 

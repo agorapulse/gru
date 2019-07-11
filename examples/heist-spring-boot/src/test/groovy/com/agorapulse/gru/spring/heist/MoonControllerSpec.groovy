@@ -114,4 +114,19 @@ class MoonControllerSpec extends Specification {
             }
     }
 
+    void 'set cookies'() {
+        expect:
+            gru.test {
+                get '/moons/setCookie'
+                expect {
+                    cookies chocolate: 'rules'
+                    cookie {
+                        name 'coffee'
+                        value 'lover'
+                        secure true
+                    }
+                }
+            }
+    }
+
 }

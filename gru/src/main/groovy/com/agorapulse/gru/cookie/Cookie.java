@@ -33,6 +33,9 @@ import java.util.regex.Pattern;
  * extension</a>.
  */
 public final class Cookie {
+    static final long MAX_DATE = 253402300799999L;
+    static final TimeZone UTC = TimeZone.getTimeZone("GMT");
+
     private static final Pattern YEAR_PATTERN
         = Pattern.compile("(\\d{2,4})[^\\d]*");
     private static final Pattern MONTH_PATTERN
@@ -41,8 +44,6 @@ public final class Cookie {
         = Pattern.compile("(\\d{1,2})[^\\d]*");
     private static final Pattern TIME_PATTERN
         = Pattern.compile("(\\d{1,2}):(\\d{1,2}):(\\d{1,2})[^\\d]*");
-    private static final TimeZone UTC = TimeZone.getTimeZone("GMT");
-    private static final long MAX_DATE = 253402300799999L;
     private static final DateFormat STANDARD_DATE_FORMAT;
     private static final String DEFAULT_DOMAIN = "localhost";
     private static final String DEFAULT_PATH = "/";
@@ -234,8 +235,8 @@ public final class Cookie {
 
         long expiresAt = MAX_DATE;
         long deltaSeconds = -1L;
-        String domain = null;
-        String path = null;
+        String domain = DEFAULT_DOMAIN;
+        String path = DEFAULT_PATH;
         boolean secureOnly = false;
         boolean httpOnly = false;
         boolean hostOnly = true;
@@ -529,7 +530,7 @@ public final class Cookie {
 
         public Builder name(String name) {
             if (name == null) {
-                throw new NullPointerException("name == null");
+                throw new IllegalArgumentException("name == null");
             }
 
             if (!name.trim().equals(name)) {
@@ -542,7 +543,7 @@ public final class Cookie {
 
         public Builder value(String value) {
             if (value == null) {
-                throw new NullPointerException("value == null");
+                throw new IllegalArgumentException("value == null");
             }
 
             if (!value.trim().equals(value)) {
@@ -585,7 +586,7 @@ public final class Cookie {
 
         private Builder domain(String domain, boolean hostOnly) {
             if (domain == null) {
-                throw new NullPointerException("domain == null");
+                throw new IllegalArgumentException("domain == null");
             }
 
             this.domain = domain;
@@ -594,6 +595,10 @@ public final class Cookie {
         }
 
         public Builder path(String path) {
+            if (path == null) {
+                this.path = "/";
+                return this;
+            }
             if (!path.startsWith("/")) {
                 throw new IllegalArgumentException("path must start with '/'");
             }
