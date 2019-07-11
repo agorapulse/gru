@@ -580,7 +580,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
         expect:
             gru.test {
                 get '/moons/cookie', {
-                    cookies chocolate: 'rules'
+                    cookies chocolate: 'rules'                                          // <1>
                 }
                 expect {
                     json 'cookies.json', IGNORING_EXTRA_FIELDS
@@ -593,8 +593,8 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             gru.test {
                 get '/moons/setCookie'
                 expect {
-                    cookies chocolate: 'rules'
-                    cookie {
+                    cookies chocolate: 'rules'                                          // <2>
+                    cookie {                                                            // <3>
                         name 'coffee'
                         value 'lover'
                         secure true
@@ -602,5 +602,5 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                 }
             }
     }
-    // tag::cookies[]
+    // end::cookies[]
 }
