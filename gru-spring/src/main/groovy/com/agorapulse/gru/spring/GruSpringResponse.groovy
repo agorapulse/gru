@@ -40,8 +40,9 @@ class GruSpringResponse implements Client.Response {
     }
 
     @Override
+    @SuppressWarnings('ExplicitArrayListInstantiation')
     List<Cookie> getCookies() {
-        List<javax.servlet.http.Cookie> cookies = response.cookies ? response.cookies.toList() : []
+        List<javax.servlet.http.Cookie> cookies = response.cookies ? response.cookies.toList() : new ArrayList<javax.servlet.http.Cookie>()
 
         return cookies.collect {
             Cookie.Builder builder = new Cookie.Builder()

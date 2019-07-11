@@ -2,7 +2,6 @@ package com.agorapulse.gru.agp;
 
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.MultipartDefinition;
-import com.agorapulse.gru.cookie.Cookie;
 import groovy.json.JsonOutput;
 import groovy.json.JsonSlurper;
 

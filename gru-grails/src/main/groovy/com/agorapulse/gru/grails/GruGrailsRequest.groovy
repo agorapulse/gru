@@ -57,6 +57,8 @@ class GruGrailsRequest implements Client.Request {
         javax.servlet.http.Cookie servletCookie = new javax.servlet.http.Cookie(cookie.name, cookie.value)
 
         cookies.add(servletCookie)
+
+        request.cookies = cookies.toArray(new javax.servlet.http.Cookie[cookies.size()])
     }
 
     @Override
