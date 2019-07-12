@@ -107,6 +107,8 @@ public final class CookieTest {
             .isEqualTo(MAX_DATE);
         assertThat(parseCookie(50000L, "a=b; Max-Age=10000000000000000000").getExpiresAt())
             .isEqualTo(MAX_DATE);
+        assertThat(parseCookie(50000L, "a=b; Max-Age=For-Eva").getExpiresAt())
+            .isEqualTo(MAX_DATE);
     }
 
     @Test
@@ -125,12 +127,18 @@ public final class CookieTest {
 
     @Test
     public void domainAndPath() throws Exception {
-        Cookie cookie = Cookie.parse("SID=31d4d96e407aad42; Path=/; Domain=example.com");
+        Cookie cookie = Cookie.parse("SID=31d4d96e407aad42; Path=/; Domain=.example.com");
         assertThat(cookie.getDomain()).isEqualTo("example.com");
         assertThat(cookie.getPath()).isEqualTo("/");
         assertThat(cookie.getHostOnly()).isFalse();
         assertThat(cookie.toString()).isEqualTo(
             "SID=31d4d96e407aad42; domain=example.com; path=/");
+    }
+
+    @Test
+    public void invalidDomain() throws Exception {
+        Cookie cookie = Cookie.parse("SID=31d4d96e407aad42; Path=/; Domain=example.com.");
+        assertThat(cookie.getDomain()).isEqualTo(Cookie.DEFAULT_DOMAIN);
     }
 
     @Test
@@ -150,6 +158,8 @@ public final class CookieTest {
             .getExpiresAt())).isEqualTo(date("2021-06-09T10:18:14.000+0000"));
         assertThat(new Date(Cookie.parse("a=b; Expires=Sun, 06 Nov 1994 08:49:37 GMT")
             .getExpiresAt())).isEqualTo(date("1994-11-06T08:49:37.000+0000"));
+        assertThat(new Date(Cookie.parse("a=b; Expires=Sun, 06 Nov 68 08:49:37 GMT")
+            .getExpiresAt())).isEqualTo(date("2068-11-06T08:49:37.000+0000"));
     }
 
     @Test

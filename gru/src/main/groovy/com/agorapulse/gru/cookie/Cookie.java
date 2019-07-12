@@ -35,6 +35,8 @@ import java.util.regex.Pattern;
 public final class Cookie {
     static final long MAX_DATE = 253402300799999L;
     static final TimeZone UTC = TimeZone.getTimeZone("GMT");
+    static final String DEFAULT_DOMAIN = "localhost";
+    static final String DEFAULT_PATH = "/";
 
     private static final Pattern YEAR_PATTERN
         = Pattern.compile("(\\d{2,4})[^\\d]*");
@@ -45,8 +47,6 @@ public final class Cookie {
     private static final Pattern TIME_PATTERN
         = Pattern.compile("(\\d{1,2}):(\\d{1,2}):(\\d{1,2})[^\\d]*");
     private static final DateFormat STANDARD_DATE_FORMAT;
-    private static final String DEFAULT_DOMAIN = "localhost";
-    private static final String DEFAULT_PATH = "/";
 
     static {
         DateFormat rfc1123 = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss 'GMT'", Locale.US);
@@ -79,19 +79,7 @@ public final class Cookie {
         this.persistent = persistent;
     }
 
-    Cookie(Builder builder) {
-        if (builder.name == null) {
-            throw new NullPointerException("builder.name == null");
-        }
-
-        if (builder.value == null) {
-            throw new NullPointerException("builder.value == null");
-        }
-
-        if (builder.domain == null) {
-            throw new NullPointerException("builder.domain == null");
-        }
-
+    private Cookie(Builder builder) {
         this.name = builder.name;
         this.value = builder.value;
         this.expiresAt = builder.expiresAt;
@@ -622,15 +610,6 @@ public final class Cookie {
 
     @Override
     public String toString() {
-        return toString(false);
-    }
-
-    /**
-     * @param forObsoleteRfc2965 true to include a leading {@code .} on the domain pattern. This is
-     *                           necessary for {@code example.com} to match {@code www.example.com} under RFC 2965. This
-     *                           extra dot is ignored by more recent specifications.
-     */
-    String toString(boolean forObsoleteRfc2965) {
         StringBuilder result = new StringBuilder();
         result.append(name);
         result.append('=');
@@ -646,9 +625,6 @@ public final class Cookie {
 
         if (!hostOnly) {
             result.append("; domain=");
-            if (forObsoleteRfc2965) {
-                result.append(".");
-            }
             result.append(domain);
         }
 

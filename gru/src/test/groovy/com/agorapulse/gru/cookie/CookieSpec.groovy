@@ -28,6 +28,23 @@ class CookieSpec extends Specification {
             'name=value; expires=Wed, 18 May 2033 03:33:20 GMT; path=/; secure' | build { name 'name' value 'value' secure true expiresAt 2000000000000 }
     }
 
+    @Unroll
+    void 'cookie #cookie is not similar to #reference'() {
+        expect:
+            !reference.similarTo(cookie)
+            !cookie.similarTo(reference)
+        where:
+            reference = Cookie.parse('a=b; Path=/c; Domain=example.com; Max-Age=5; Secure; HttpOnly')
+            cookie << [
+                build { name 'c' },
+                build { name 'a' value 'c' },
+                build { name 'a' value 'b' path '/a' },
+                build { name 'a' value 'b' path '/c' domain 'test.org' },
+                build { name 'a' value 'b' path '/c' domain 'example.com' },
+                build { name 'a' value 'b' path '/c' domain 'example.com' secure true },
+            ]
+    }
+
     private static Cookie build(
         @DelegatesTo(value = Cookie.Builder, strategy = Closure.DELEGATE_FIRST)
         Closure<Cookie.Builder> builder
