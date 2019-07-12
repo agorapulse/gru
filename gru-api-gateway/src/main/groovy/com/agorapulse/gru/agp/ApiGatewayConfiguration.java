@@ -40,7 +40,7 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         }
 
         @SuppressWarnings("unchecked")
-        String executeHandler(ApiGatewayProxyRequest request, Object unitTest) throws ClassNotFoundException, IOException, IllegalAccessException, InvocationTargetException {
+        String executeHandler(ApiGatewayProxyRequest request, Object unitTest) throws ClassNotFoundException, IOException, IllegalAccessException, InvocationTargetException, InstantiationException {
             String[] parts = handler.split("::");
             String className = parts[0];
             String methodName = parts[1];
@@ -95,25 +95,17 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             return outputStream.toString();
         }
 
-        private String handleRequestStreamHandler(ApiGatewayProxyRequest request, Class<? extends RequestStreamHandler> handlerClass) {
-            try {
-                RequestStreamHandler streamHandler = handlerClass.newInstance();
+        private String handleRequestStreamHandler(ApiGatewayProxyRequest request, Class<? extends RequestStreamHandler> handlerClass) throws IllegalAccessException, InstantiationException, IOException {
+            RequestStreamHandler streamHandler = handlerClass.newInstance();
 
-                ByteArrayInputStream bais = new ByteArrayInputStream(prepareRequestObject(request).getBytes());
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ByteArrayInputStream bais = new ByteArrayInputStream(prepareRequestObject(request).getBytes());
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-                streamHandler.handleRequest(bais, baos, request.getContext());
+            streamHandler.handleRequest(bais, baos, request.getContext());
 
-                baos.flush();
+            baos.flush();
 
-                return baos.toString();
-            } catch (IllegalAccessException e) {
-                throw new IllegalArgumentException("Unreachable constructor in " + handlerClass, e);
-            } catch (InstantiationException e) {
-                throw new IllegalArgumentException("Error instantiating " + handlerClass, e);
-            } catch (IOException e) {
-                throw new IllegalStateException("Exception flushing output stream for " + handlerClass, e);
-            }
+            return baos.toString();
         }
 
         private String prepareRequestObject(ApiGatewayProxyRequest request) {
@@ -278,7 +270,7 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         }
 
         public Mapping to(Class handler, Consumer<MappingConfiguration> configuration) {
-            return to(handler.getName(), configuration, false);
+            return to(handler.getName(), configuration);
         }
 
         public Mapping to(String handler) {

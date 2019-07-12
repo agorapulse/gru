@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import groovy.json.JsonOutput
 import spock.lang.Specification
 
+import java.lang.reflect.InvocationTargetException
+
 /**
  * Tests for API Gateway configuration.
  */
@@ -81,6 +83,20 @@ class ApiGatewayConfigurationSpec extends Specification {
             error.cause instanceof IllegalArgumentException
     }
 
+    void 'generic bound parent handler'() {
+        given:
+            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+                map '/bound' to BoundParentHandler
+            })
+        when:
+            gru.reset().test {
+                get '/bound'
+            }.verify()
+        then:
+            AssertionError error = thrown(AssertionError)
+            error.cause instanceof InvocationTargetException
+    }
+
     void 'no zero arg constructor handler'() {
         given:
             Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
@@ -89,6 +105,20 @@ class ApiGatewayConfigurationSpec extends Specification {
         when:
             gru.reset().test {
                 get '/no-zero-arg'
+            }.verify()
+        then:
+            AssertionError error = thrown(AssertionError)
+            error.cause instanceof IllegalStateException
+    }
+
+    void 'private constructor handler'() {
+        given:
+            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+                map '/failing' to FailingConstructorHandler
+            })
+        when:
+            gru.reset().test {
+                get '/failing'
             }.verify()
         then:
             AssertionError error = thrown(AssertionError)
@@ -181,6 +211,19 @@ class GenericHandler<I, O> implements RequestHandler<I, O> {
         throw new UnsupportedOperationException()
     }
 }
+
+class FailingConstructorHandler implements RequestHandler<Map, Map> {
+
+    FailingConstructorHandler() {
+        throw new IllegalStateException('I am sorry!')
+    }
+
+    @Override Map handleRequest(Map input, Context context) {
+        throw new UnsupportedOperationException()
+    }
+}
+
+class BoundParentHandler extends GenericHandler<Map, Map> { }
 
 class NoZeroArgConstructorHandler  implements RequestHandler<Map, Map> {
 
