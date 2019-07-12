@@ -7,7 +7,6 @@ import com.agorapulse.gru.cookie.Cookie;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringJoiner;
 
 public class CookieMinion extends AbstractMinion<Client> {
 
