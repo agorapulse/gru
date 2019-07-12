@@ -1,12 +1,14 @@
 package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
+import com.agorapulse.gru.cookie.Cookie;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 
 import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -112,6 +114,14 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
     public DefaultResponseDefinitionBuilder json(String relativePath, final Option option, final Option... options) {
         json(relativePath);
         return json((a) -> a.when(option, options));
+    }
+
+    @Override
+    public DefaultResponseDefinitionBuilder cookie(Consumer<ResponseCookieDefinition> cookieDefinition) {
+        Cookie.Builder builder = new Cookie.Builder();
+        cookieDefinition.accept(builder);
+        command(CookieMinion.class, m -> m.getResponseCookies().add(builder.build()));
+        return this;
     }
 
     private Squad squad;

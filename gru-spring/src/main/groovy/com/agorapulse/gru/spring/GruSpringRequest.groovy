@@ -3,6 +3,7 @@ package com.agorapulse.gru.spring
 import com.agorapulse.gru.Client
 import com.agorapulse.gru.MultipartDefinition
 import com.agorapulse.gru.TestDefinitionBuilder
+import com.agorapulse.gru.cookie.Cookie
 import groovy.transform.CompileStatic
 import groovy.transform.PackageScope
 import groovy.transform.stc.ClosureParams
@@ -62,5 +63,12 @@ class GruSpringRequest implements Client.Request {
     @Override
     void setMultipart(MultipartDefinition definition) {
         this.multipart = definition
+    }
+
+    @Override
+    void addCookie(Cookie c) {
+        addBuildStep {
+            cookie new javax.servlet.http.Cookie(c.name, c.value)
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
+import com.agorapulse.gru.cookie.Cookie;
 import com.agorapulse.gru.minions.*;
 import com.google.common.collect.ImmutableMultimap;
 
@@ -37,12 +38,12 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
     }
 
     @Override
-    public RequestDefinitionBuilder content(String relativePath, String contentType) {
+    public DefaultRequestDefinitionBuilder content(String relativePath, String contentType) {
         return content(FileContent.create(relativePath), contentType);
     }
 
     @Override
-    public RequestDefinitionBuilder content(Content content, String contentType) {
+    public DefaultRequestDefinitionBuilder content(Content content, String contentType) {
         return command(PayloadMinion.class, minion -> {
             minion.setPayload(content);
             minion.setContentType(contentType);
@@ -70,8 +71,16 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
     }
 
     @Override
-    public RequestDefinitionBuilder upload(Consumer<MultipartDefinitionBuilder> definition) {
+    public DefaultRequestDefinitionBuilder upload(Consumer<MultipartDefinitionBuilder> definition) {
         command(MultipartMinion.class, minion -> minion.multipart(definition));
+        return this;
+    }
+
+    @Override
+    public DefaultRequestDefinitionBuilder cookies(Map<String, String> cookies) {
+        command(CookieMinion.class, m -> cookies.forEach((name, value) ->
+            m.getRequestCookies().add(new Cookie.Builder().name(name).value(value).build()))
+        );
         return this;
     }
 

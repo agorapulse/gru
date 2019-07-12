@@ -140,4 +140,22 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
     ) {
         return upload(ConsumerWithDelegate.create(definition));
     }
+
+    /**
+     * Add a HTTP cookie to the action execution.
+     * @param name name of the cookie
+     * @param value value of the cookie
+     * @return self
+     */
+    default RequestDefinitionBuilder cookie(String name, String value) {
+        return cookies(Collections.singletonMap(name, value));
+    }
+
+
+    /**
+     * Add a HTTP cookies to the action execution.
+     * @param cookies cookies to be added
+     * @return self
+     */
+    RequestDefinitionBuilder cookies(Map<String, String> cookies);
 }

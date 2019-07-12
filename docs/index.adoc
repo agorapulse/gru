@@ -203,6 +203,20 @@ include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=f
 <3> Specify the file to be uploaded with the name of the parameter, original filename, content and content type
 <4> In case of Grails unit test, you must point to the controller action's method
 
+[[cookies,File Upload]]
+==== Cookies
+
+You can emulate cookies send by the browser or set by the server.
+
+.File Upload
+[source,groovy]
+----
+include::../examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=cookies,indent=0]
+----
+<1> Send browser cookies
+<2> Expect cookies sent by the server
+<3> More detailed response cookie expectations
+
 === Response
 
 Response expectation are defined using `expect` method within `test` definition.

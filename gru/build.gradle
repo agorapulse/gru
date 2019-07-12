@@ -12,4 +12,5 @@ dependencies {
     compile 'com.agorapulse.testing:fixt:0.1'
 
     testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    testCompile 'org.assertj:assertj-core:3.11.0'
 }

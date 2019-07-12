@@ -3,7 +3,6 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.exception.GroovyAssertAwareMultipleFailureException
 import com.agorapulse.gru.grails.Grails
-import com.agorapulse.gru.grails.minions.GrailsHtmlMinion
 import com.agorapulse.gru.grails.minions.InterceptorsMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.jsonunit.MatchesPattern
@@ -575,4 +574,34 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
     // end::fileUpload[]
+
+    // tag::cookies[]
+    void 'send cookies'() {
+        expect:
+            gru.test {
+                get '/moons/cookie', {
+                    cookies chocolate: 'rules'                                          // <1>
+                }
+                expect {
+                    json 'cookies.json', IGNORING_EXTRA_FIELDS
+                }
+            }
+    }
+
+    void 'set cookies'() {
+        expect:
+            gru.test {
+                get '/moons/setCookie'
+                expect {
+                    cookies chocolate: 'rules'                                          // <2>
+                    cookie {                                                            // <3>
+                        name 'coffee'
+                        value 'lover'
+                        secure true
+                        domain 'localhost'
+                    }
+                }
+            }
+    }
+    // end::cookies[]
 }
