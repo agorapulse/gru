@@ -417,7 +417,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 .show-for-print{display:inherit!important}}
 </style>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.4.0/css/font-awesome.min.css">
-<link rel="stylesheet" href="css/gru.css?v=0.8.1" />
+<link rel="stylesheet" href="css/gru.css?v=0.8.2" />
 <style>
 .hidden {
 	display: none;
@@ -516,6 +516,7 @@ $(addBlockSwitches);
 <li><a href="#json-payload">JSON Payload</a></li>
 <li><a href="#generic-payload">Generic Payload</a></li>
 <li><a href="#file-upload">File Upload</a></li>
+<li><a href="#cookies">Cookies</a></li>
 </ul>
 </li>
 <li><a href="#_response">Response</a>
@@ -596,9 +597,9 @@ $(addBlockSwitches);
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.8.1"                                     <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.8.1"                                   <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.8.1"                                   <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-http:0.8.2"                                     <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.8.2"                                   <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.8.2"                                   <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -1084,6 +1085,60 @@ in <code>src/test/resources</code> relatively to the working directory.
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>In case of Grails unit test, you must point to the controller action&#8217;s method</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect3">
+<h4 id="cookies">Cookies</h4>
+<div class="paragraph">
+<p>You can emulate cookies send by the browser or set by the server.</p>
+</div>
+<div class="listingblock">
+<div class="title">File Upload</div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy" data-lang="groovy">void 'send cookies'() {
+    expect:
+        gru.test {
+            get '/moons/cookie', {
+                cookies chocolate: 'rules'                                          <i class="conum" data-value="1"></i><b>(1)</b>
+            }
+            expect {
+                json 'cookies.json', IGNORING_EXTRA_FIELDS
+            }
+        }
+}
+
+void 'set cookies'() {
+    expect:
+        gru.test {
+            get '/moons/setCookie'
+            expect {
+                cookies chocolate: 'rules'                                          <i class="conum" data-value="2"></i><b>(2)</b>
+                cookie {                                                            <i class="conum" data-value="3"></i><b>(3)</b>
+                    name 'coffee'
+                    value 'lover'
+                    secure true
+                    domain 'localhost'
+                }
+            }
+        }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Send browser cookies</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Expect cookies sent by the server</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>More detailed response cookie expectations</td>
 </tr>
 </table>
 </div>
@@ -2163,7 +2218,7 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2019-04-17 15:03:16 +02:00
+Last updated 2019-07-12 10:29:24 +02:00
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.9.1/styles/github.min.css">
