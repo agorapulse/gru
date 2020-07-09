@@ -28,7 +28,14 @@ class JsonMinion extends AbstractContentMinion<Client> {
     Content requestJsonContent
 
     @SuppressWarnings('unchecked')
-    Function<JsonFluentAssert, JsonFluentAssert> jsonUnitConfiguration = Function.identity()
+    Function<JsonFluentAssert, JsonFluentAssert> jsonUnitConfiguration = new Function<JsonFluentAssert, JsonFluentAssert>() {
+
+        @Override
+        JsonFluentAssert apply(JsonFluentAssert jsonFluentAssert) {
+            return jsonFluentAssert
+        }
+
+    }
 
     JsonMinion() {
         super(Client)
