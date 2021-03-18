@@ -16,6 +16,8 @@
  * limitations under the License.
  */
 dependencies {
-    compile project(':gru')
-    compile "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+    api project(':gru')
+    api "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+
+    implementation 'org.codehaus.groovy:groovy'
 }

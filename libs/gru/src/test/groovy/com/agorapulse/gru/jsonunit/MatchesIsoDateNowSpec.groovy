@@ -24,6 +24,8 @@ import org.joda.time.format.ISODateTimeFormat
 import spock.lang.Specification
 import spock.lang.Unroll
 
+import java.time.Instant
+
 /**
  * Tests for MatchesIsoDateNow.
  */
@@ -38,6 +40,7 @@ class MatchesIsoDateNowSpec extends Specification {
             matches | date
             true    | new DateTime().toString(ISODateTimeFormat.dateTime())
             true    | new DateTime().toString(ISODateTimeFormat.dateTimeNoMillis())
+            true    | Instant.now().toString()
             false   | 'foo.bar'
             false   | null
 

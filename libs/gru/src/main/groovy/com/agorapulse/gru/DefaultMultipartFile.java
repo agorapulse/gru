@@ -17,10 +17,11 @@
  */
 package com.agorapulse.gru;
 
-import com.google.common.io.ByteStreams;
-
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Objects;
 
 class DefaultMultipartFile implements MultipartDefinition.MultipartFile {
 
@@ -52,7 +53,7 @@ class DefaultMultipartFile implements MultipartDefinition.MultipartFile {
             return new byte[0];
         }
         try {
-            return ByteStreams.toByteArray(stream);
+            return toByteArray(stream);
         } catch (IOException e) {
             throw new IllegalArgumentException("Cannot read streams for " + content, e);
         }
@@ -62,4 +63,34 @@ class DefaultMultipartFile implements MultipartDefinition.MultipartFile {
         return contentType;
     }
 
+
+    // from Guava
+    private static byte[] toByteArray(InputStream in) throws IOException {
+        // Presize the ByteArrayOutputStream since we know how large it will need
+        // to be, unless that value is less than the default ByteArrayOutputStream
+        // size (32).
+        ByteArrayOutputStream out = new ByteArrayOutputStream(Math.max(32, in.available()));
+        copy(in, out);
+        return out.toByteArray();
+    }
+
+    private static long copy(InputStream from, OutputStream to) throws IOException {
+        Objects.requireNonNull(from);
+        Objects.requireNonNull(to);
+        byte[] buf = createBuffer();
+        long total = 0;
+        while (true) {
+            int r = from.read(buf);
+            if (r == -1) {
+                break;
+            }
+            to.write(buf, 0, r);
+            total += r;
+        }
+        return total;
+    }
+
+    private static byte[] createBuffer() {
+        return new byte[8192];
+    }
 }

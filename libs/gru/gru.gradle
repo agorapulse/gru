@@ -16,18 +16,17 @@
  * limitations under the License.
  */
 dependencies {
-    compile "com.google.guava:guava:${guavaVersion}"
-    compile "joda-time:joda-time:${jodaTimeVersion}"
-    compile "org.spockframework:spock-core:$spockVersion", {
-        force = true
-    }
-    compile "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
-    compile group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
-    compile group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
+    api 'space.jasan:groovy-closure-support:0.6.1'
+    api 'com.agorapulse.testing:fixt:0.2.1.1'
 
-    compile 'space.jasan:groovy-closure-support:0.6.1'
-    compile 'com.agorapulse.testing:fixt:0.2.1.1'
+    api "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
+    api group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
+    api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
-    testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
-    testCompile 'org.assertj:assertj-core:3.11.0'
+    implementation 'org.codehaus.groovy:groovy'
+    implementation 'org.codehaus.groovy:groovy-json'
+
+    testImplementation "joda-time:joda-time:${jodaTimeVersion}"
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    testImplementation 'org.assertj:assertj-core:3.11.0'
 }

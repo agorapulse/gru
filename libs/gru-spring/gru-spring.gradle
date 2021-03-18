@@ -16,8 +16,11 @@
  * limitations under the License.
  */
 dependencies {
-    compile project(':gru')
-    compile group: 'org.spockframework', name: 'spock-spring', version: spockVersion
+    api project(':gru')
+
+    implementation 'org.codehaus.groovy:groovy'
+
+    implementation group: 'org.spockframework', name: 'spock-spring', version: spockVersion
 
     compileOnly group: 'org.springframework', name: 'spring-webmvc', version: springVersion
     compileOnly group: 'org.springframework', name: 'spring-test', version: springVersion

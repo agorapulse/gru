@@ -17,24 +17,57 @@
  */
 package com.agorapulse.gru.exception;
 
-import org.junit.runners.model.MultipleFailureException;
-
+import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class GroovyAssertAwareMultipleFailureException extends MultipleFailureException {
+public class GroovyAssertAwareMultipleFailureException extends RuntimeException {
+
+    private final List<Throwable> errors;
+
+    public GroovyAssertAwareMultipleFailureException(List<Throwable> errors) {
+        if (errors.isEmpty()) {
+            throw new IllegalArgumentException(
+                "List of Throwables must not be empty");
+        }
+        this.errors = new ArrayList<>(errors);
+    }
+
+    public List<Throwable> getFailures() {
+        return Collections.unmodifiableList(errors);
+    }
 
     @Override
     public String getMessage() {
         StringBuilder sb = new StringBuilder(String.format("There were %d errors:", getFailures().size()));
         for (Throwable e : getFailures()) {
-            sb.append(String.format("\n  %s(%s)", e.getClass().getName(), e.toString()));
+            sb.append(String.format("%n  %s(%s)", e.getClass().getName(), e.toString()));
         }
 
         return sb.toString();
     }
 
-    public GroovyAssertAwareMultipleFailureException(List<Throwable> errors) {
-        super(errors);
+    @Override
+    public void printStackTrace() {
+        for (Throwable e: errors) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void printStackTrace(PrintStream s) {
+        for (Throwable e: errors) {
+            e.printStackTrace(s);
+        }
+    }
+
+    @Override
+    public void printStackTrace(PrintWriter s) {
+        for (Throwable e: errors) {
+            e.printStackTrace(s);
+        }
     }
 
 }

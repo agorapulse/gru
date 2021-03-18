@@ -20,8 +20,6 @@ package com.agorapulse.gru;
 import com.agorapulse.gru.exception.GroovyAssertAwareMultipleFailureException;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
-import com.google.common.collect.ClassToInstanceMap;
-import com.google.common.collect.MutableClassToInstanceMap;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
@@ -29,10 +27,7 @@ import groovy.transform.stc.FromString;
 import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -40,7 +35,7 @@ import java.util.function.Function;
  */
 public class Squad {
 
-    private ClassToInstanceMap<Minion> minions = MutableClassToInstanceMap.create();
+    private Map<Class<? extends Minion>, Minion> minions = new LinkedHashMap<>();
     private Set<Minion> sorted = new TreeSet<>(Minion.COMPARATOR);
 
     /**
@@ -53,7 +48,7 @@ public class Squad {
         Class sc = minion.getClass().getSuperclass();
         while (sc != null && !Modifier.isAbstract(sc.getModifiers()) && !sc.equals(Minion.class)
         ) {
-            minions.putInstance(sc, minion);
+            minions.put(sc, minion);
             sc = sc.getSuperclass();
         }
 
@@ -89,7 +84,7 @@ public class Squad {
     }
 
     private <M extends Minion> M findOrCreateMinionByType(Class<M> minionType) {
-        M minion = minions.getInstance(minionType);
+        M minion = (M) minions.get(minionType);
 
         if (minion == null) {
             try {
@@ -127,7 +122,7 @@ public class Squad {
         Class<M> minionType,
         Function<M, T> query
     ) {
-        M minion = minions.getInstance(minionType);
+        M minion = (M) minions.get(minionType);
 
         if (minion == null) {
             return null;

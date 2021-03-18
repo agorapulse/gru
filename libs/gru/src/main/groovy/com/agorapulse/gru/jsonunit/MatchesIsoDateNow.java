@@ -20,7 +20,8 @@ package com.agorapulse.gru.jsonunit;
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
-import org.joda.time.DateTime;
+
+import java.time.OffsetDateTime;
 
 /**
  * Matcher to match ISO date which is within one hour before or after current time.
@@ -35,8 +36,8 @@ public class MatchesIsoDateNow extends TypeSafeMatcher<String> {
             return false;
         }
 
-        DateTime dateTime = new DateTime(item);
-        return dateTime.isAfter(dateTime.minusHours(1)) && dateTime.isBefore(dateTime.plusMinutes(1));
+        OffsetDateTime dateTime = OffsetDateTime.parse(item);
+        return dateTime.isAfter(dateTime.minusSeconds(3600)) && dateTime.isBefore(dateTime.plusSeconds(60));
     }
 
     @Override

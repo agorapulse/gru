@@ -170,6 +170,10 @@ projects {
                 compileOnly platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
                 testCompile platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
                 testImplementation platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+
+                testImplementation "org.spockframework:spock-core:$spockVersion", {
+                    force = true
+                }
             }
         }
 

@@ -16,7 +16,11 @@
  * limitations under the License.
  */
 dependencies {
-    compile project(':gru')
-    compile 'com.amazonaws:aws-lambda-java-core:1.2.0'
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+    api project(':gru')
+    api 'com.amazonaws:aws-lambda-java-core:1.2.0'
+
+    implementation 'org.codehaus.groovy:groovy'
+    implementation 'org.codehaus.groovy:groovy-json'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
 }

@@ -21,7 +21,6 @@ import com.agorapulse.gru.AbstractClient;
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.GruContext;
 import com.agorapulse.gru.Squad;
-import com.google.common.base.Preconditions;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
@@ -30,6 +29,7 @@ import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 public class ApiGatewayProxy extends AbstractClient {
@@ -79,7 +79,7 @@ public class ApiGatewayProxy extends AbstractClient {
 
     @Override
     public Client.Response getResponse() {
-        return Preconditions.checkNotNull(response, "Response hasn't been set yet");
+        return Objects.requireNonNull(response, "Response hasn't been set yet");
     }
 
     @Override

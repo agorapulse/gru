@@ -19,15 +19,20 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
 import com.agorapulse.gru.cookie.Cookie;
-import com.agorapulse.gru.minions.*;
-import com.google.common.collect.ImmutableMultimap;
+import com.agorapulse.gru.minions.Command;
+import com.agorapulse.gru.minions.CookieMinion;
+import com.agorapulse.gru.minions.HtmlMinion;
+import com.agorapulse.gru.minions.HttpMinion;
+import com.agorapulse.gru.minions.JsonMinion;
+import com.agorapulse.gru.minions.Minion;
+import com.agorapulse.gru.minions.TextMinion;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.UnaryOperator;
 
 /**
  * Sets expectations for the response after the controller action has been executed.
@@ -103,7 +108,11 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      * @return self
      */
     public DefaultResponseDefinitionBuilder headers(final Map<String, String> additionalHeaders) {
-        return command(HttpMinion.class, minion -> minion.getResponseHeaders().putAll(ImmutableMultimap.copyOf(additionalHeaders.entrySet())));
+        return command(HttpMinion.class, minion ->
+            additionalHeaders.forEach((key, value) ->
+                minion.getResponseHeaders().computeIfAbsent(key, k -> new ArrayList<>()).add(value)
+            )
+        );
     }
 
     /**

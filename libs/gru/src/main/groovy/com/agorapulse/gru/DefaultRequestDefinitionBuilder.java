@@ -19,9 +19,16 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
 import com.agorapulse.gru.cookie.Cookie;
-import com.agorapulse.gru.minions.*;
-import com.google.common.collect.ImmutableMultimap;
+import com.agorapulse.gru.minions.Command;
+import com.agorapulse.gru.minions.CookieMinion;
+import com.agorapulse.gru.minions.HttpMinion;
+import com.agorapulse.gru.minions.JsonMinion;
+import com.agorapulse.gru.minions.Minion;
+import com.agorapulse.gru.minions.MultipartMinion;
+import com.agorapulse.gru.minions.ParametersMinion;
+import com.agorapulse.gru.minions.PayloadMinion;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -84,7 +91,11 @@ public final class DefaultRequestDefinitionBuilder implements RequestDefinitionB
      * @return self
      */
     public DefaultRequestDefinitionBuilder headers(final Map<String, String> headers) {
-        return command(HttpMinion.class, minion -> minion.getRequestHeaders().putAll(ImmutableMultimap.copyOf(headers.entrySet())));
+        return command(HttpMinion.class, minion ->
+            headers.forEach((key, value) ->
+                minion.getRequestHeaders().computeIfAbsent(key, k -> new ArrayList<>()).add(value)
+            )
+        );
     }
 
     @Override

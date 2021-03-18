@@ -29,6 +29,7 @@ public abstract class AbstractClient implements Client {
     protected AbstractClient(Object unitTest) {
         this.unitTest = unitTest;
         this.fixt = Fixt.create(unitTest.getClass());
+        this.fixt.mkdirs();
     }
 
     public final InputStream loadFixture(String fileName) {

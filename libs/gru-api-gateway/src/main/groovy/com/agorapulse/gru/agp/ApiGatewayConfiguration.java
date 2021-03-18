@@ -22,7 +22,6 @@ import com.agorapulse.gru.agp.ignore.Safe;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.base.Preconditions;
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
@@ -315,7 +314,9 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         Map<String, String> extractPathParameters(String path) {
             Matcher matcher = this.url.matcher(path);
 
-            Preconditions.checkState(matcher.matches(), "Path does not match");
+            if (!matcher.matches()) {
+                throw new IllegalStateException("Path " + path + " does not match!");
+            }
 
             Map<String, String> ret = new LinkedHashMap<>();
 
