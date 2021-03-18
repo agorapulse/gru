@@ -1,5 +1,5 @@
 {
     "name": "Moon",
     "planet": "Earth",
-    "created": "${json-unit.matches:positiveIntegerString}"
+    "created": "${json-unit.matches:isoDateNow}"
 }

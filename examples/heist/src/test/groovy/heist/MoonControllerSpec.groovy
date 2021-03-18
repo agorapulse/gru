@@ -1,3 +1,20 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2018-2021 Agorapulse.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package heist
 
 import com.agorapulse.gru.Gru
@@ -10,17 +27,17 @@ import com.agorapulse.gru.minions.Command
 import com.agorapulse.gru.minions.HttpMinion
 import grails.testing.web.controllers.ControllerUnitTest
 import groovy.transform.NotYetImplemented
-import org.junit.Rule
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.ModelAndView
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
- * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
+ * See the API for {@link ControllerUnitTest} for usage instructions
  */
 class MoonControllerSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @Rule Gru<Grails<MoonControllerSpec>> gru = Gru.equip(Grails.steal(this)).prepare {
+    @AutoCleanup Gru<Grails<MoonControllerSpec>> gru = Gru.create(Grails.create(this)).prepare {
         include UrlMappings
     }
 
@@ -97,7 +114,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
                     executes controller.&forwardToTeapot
                 }
                 expect {
-                    forward '/moon/teapot?format='
+                    forward '/moon/teapot'
                 }
             }
     }
@@ -475,7 +492,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
 
     void 'add wrong artifact'() {
         when:
-            Gru.equip(Grails.steal(this)).test {
+            Gru.create(Grails.create(this)).test {
                 include MoonControllerSpec
                 get '/moons/earth/moon'
             }.verify()
@@ -485,7 +502,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
 
     void 'pass wrong closure'() {
         when:
-            Gru.equip(Grails.steal(this)).test {
+            Gru.create(Grails.create(this)).test {
                 get '/moons/earth/moon', {
                     executes {}
                 }
