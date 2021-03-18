@@ -18,19 +18,14 @@
 package heist
 
 import com.agorapulse.gru.Gru
-import com.agorapulse.gru.grails.minions.InterceptorsMinion
-import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.http.Http
-import com.agorapulse.gru.jsonunit.MatchesPattern
 import grails.testing.mixin.integration.Integration
-import org.junit.Rule
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.HttpStatus
-import org.springframework.web.servlet.ModelAndView
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
- * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
+ * See the API for {@link grails.testing.web.controllers.ControllerUnitTest} for usage instructions
  */
 @Integration
 class MoonControllerIntegrationSpec extends Specification {
@@ -39,7 +34,7 @@ class MoonControllerIntegrationSpec extends Specification {
     @Value('${local.server.port}')
     Integer serverPort                                                                      // <1>
 
-    @Rule Gru<Http> gru = Gru.equip(Http.steal(this))                                       // <2>
+    @AutoCleanup Gru<Http> gru = Gru.create(Http.create(this))                              // <2>
 
     void setup() {
         final String serverUrl = "http://localhost:${serverPort}"                           // <3>

@@ -20,12 +20,12 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import grails.testing.web.controllers.ControllerUnitTest
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class BasicSpec extends Specification implements ControllerUnitTest<MoonController> {   // <1>
 
-    @Rule Gru<Grails<BasicSpec>> gru = Gru.equip(Grails.steal(this)).prepare {          // <2>
+    @AutoCleanup Gru<Grails<BasicSpec>> gru = Gru.create(Grails.create(this)).prepare { // <2>
         include UrlMappings                                                             // <3>
     }
 

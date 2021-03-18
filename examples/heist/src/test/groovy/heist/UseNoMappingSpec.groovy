@@ -19,14 +19,13 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
-import com.agorapulse.gru.minions.HttpMinion
 import grails.testing.web.controllers.ControllerUnitTest
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class UseNoMappingSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @Rule Gru<Grails<UseNoMappingSpec>> gru = Gru.equip(Grails.steal(this))
+    @AutoCleanup Gru<Grails<UseNoMappingSpec>> gru = Gru.create(Grails.create(this))
 
     void 'look at the moon'() {
         when:

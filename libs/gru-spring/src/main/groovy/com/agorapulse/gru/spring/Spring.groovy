@@ -36,7 +36,12 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
  */
 class Spring extends AbstractClient {
 
+    @Deprecated
     static Spring steal(Object unitTest) {
+        return create(unitTest)
+    }
+
+    static Spring create(Object unitTest) {
         return new Spring(unitTest)
     }
 

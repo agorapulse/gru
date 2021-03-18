@@ -35,8 +35,13 @@ import grails.testing.web.controllers.ControllerUnitTest
  */
 class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
 
-    static <U extends ControllerUnitTest<?>> Grails<U> steal(U unitTest) {
+    static <U extends ControllerUnitTest<?>> Grails<U> create(U unitTest) {
         return new Grails<U>(unitTest)
+    }
+
+    @Deprecated
+    static <U extends ControllerUnitTest<?>> Grails<U> steal(U unitTest) {
+        return create(unitTest)
     }
 
     private GruGrailsRequest request

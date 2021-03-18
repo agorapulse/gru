@@ -3,17 +3,18 @@
 [.ribbon]
 image::ribbon.png[link={project-url}]
 
-Gru is HTTP interaction testing framework with out-of-box support for Grails and REST interfaces.
+Gru is HTTP interaction testing framework with out-of-box support for Grails, Spring MVC, API Gateway but it can be used with any
+HTTP server such as Micronaut embedded server.
 
 == Installation
 
-Gru is available in JCenter. You can use Grails module or HTTP module or both in your project.
+Gru is available in Maven Central. You can use any combination of the following libraries you need.
 
 .Gradle Installation
 [source,groovy,subs='verbatim,attributes']
 ----
 repositories {
-    jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -21,11 +22,13 @@ dependencies {
     testCompile "com.agorapulse:gru-http:{project-version}"                             // <1>
     testCompile "com.agorapulse:gru-grails:{project-version}"                           // <2>
     testCompile "com.agorapulse:gru-spring:{project-version}"                           // <3>
+    testCompile "com.agorapulse:gru-api-gateway:{project-version}"                      // <4>
 }
 ----
-<1> HTTP module for any HTTP backend
+<1> HTTP module for any HTTP backend such as Micronaut embedded server
 <2> Grails module to emulate HTTP interaction within Grails Unit tests
 <3> Spring module to emulate HTTP interaction using `MockMvc`
+<4> AWS API Gateway module for HTTP proxy lambdas
 
 [NOTE]
 ====
@@ -40,14 +43,15 @@ testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
 == Setup
 
 === HTTP
-Gru can be used to test any HTTP endpoint, including Grails application running within integration tests.
+Gru can be used to test any HTTP endpoint, including Micronaut applications running on embedded server or
+Grails application running within integration tests.
 
 .Minimal HTTP Usage
 [source,groovy]
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=18..-1]
 ----
-<1> `Gru` must be used as JUnit `@Rule` and initialized with the specification object
+<1> `Gru` initialized with the specification object must be closed after each execution which can be done with @AutoCleanup annotation
 <2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
 <3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
@@ -63,7 +67,7 @@ Gru steals a lot from link:https://testing.grails.org/latest/guide/index.html[Gr
 include::{root-dir}/examples/heist/src/test/groovy/heist/BasicSpec.groovy[lines=18..-1]
 ----
 <1> The only requirement for Grails integration is that specification must implement `ControllerUnitTest` trait
-<2> `Gru` must be used as JUnit `@Rule` and initialized with the specification object
+<2> `Gru` initialized with the specification object must be closed after each execution which can be done with @AutoCleanup annotation
 <3> Include the appropriate `UrlMappings` so `Gru` knows which controller action should be executed
 <4> `Gru` executes action for `GET` request to URL `/moons/earth/moon` and verifies it does not throw any exception and
 it returns status `OK(200)`

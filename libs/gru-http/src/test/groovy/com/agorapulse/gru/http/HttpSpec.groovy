@@ -30,7 +30,7 @@ class HttpSpec extends Specification {
 
     void 'response is not set before the action is executed'() {
         when:
-            Gru.equip(Http.steal(this)).engage(new VioletMinion()).test {
+            Gru.create(Http.create(this)).engage(new VioletMinion()).test {
                 get '/foo/bar'
             }.verify()
         then:

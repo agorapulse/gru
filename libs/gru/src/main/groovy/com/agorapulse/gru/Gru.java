@@ -24,11 +24,9 @@ import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
 import groovy.transform.stc.SimpleType;
-import org.junit.rules.TestRule;
-import org.junit.runner.Description;
-import org.junit.runners.model.Statement;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
+import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -40,16 +38,30 @@ import java.util.function.Consumer;
  *
  * @param <C> type of the client
  */
-public class Gru<C extends Client> implements TestRule {
+public class Gru<C extends Client> implements Closeable {
     /**
      * Steals the unit test for himself.
      * <p>
-     * Typical usage is <code>@Rule Gru gru = Gru.steal(this)</code>
+     * Typical usage is <code>@Rule Gru gru = Gru.create(this)</code>
      *
      * @param client unit test being stolen
      * @return new Gru instance stealing current unit test
+     * @deprecated use {@link #create(Client)} instead
      */
+    @Deprecated
     public static <C extends Client> Gru<C> equip(C client) {
+        return create(client);
+    }
+
+    /**
+     * Creates Gru's instance for a given unit test.
+     * <p>
+     * Typical usage is <code>@AutoCleanup Gru gru = Gru.create(this)</code>
+     *
+     * @param client unit test
+     * @return new Gru instance using the current unit test
+     */
+    public static <C extends Client> Gru<C> create(C client) {
         return new Gru<>(client);
     }
 
@@ -63,7 +75,7 @@ public class Gru<C extends Client> implements TestRule {
      * @param configuration configuration applied to every feature method
      * @return self
      */
-    public final Gru prepare(
+    public final Gru<C> prepare(
         @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
             Closure<TestDefinitionBuilder> configuration
@@ -77,7 +89,7 @@ public class Gru<C extends Client> implements TestRule {
      * @param configuration configuration applied to every feature method
      * @return self
      */
-    public final Gru prepare(Consumer<TestDefinitionBuilder> configuration
+    public final Gru<C> prepare(Consumer<TestDefinitionBuilder> configuration
     ) {
         this.configurations.add(configuration);
         return this;
@@ -89,21 +101,25 @@ public class Gru<C extends Client> implements TestRule {
      * @param minion minion to be added to the squad
      * @return self
      */
-    public final Gru engage(Minion minion) {
+    public final Gru<C> engage(Minion minion) {
         this.squad.add(minion);
         return this;
     }
 
+
     /**
-     * Handles the fresh test configuration for each feature method and verifies the test has been verified.
-     *
-     * @param base        base statement
-     * @param description description of the statement
-     * @return new statement which handles the fresh test configuration for each feature method and verifies the test has been verified
+     * Checks if the expectations has been verified and resets the internal state.
      */
     @Override
-    public final Statement apply(Statement base, Description description) {
-        return new GruStatement(base, this);
+    public void close() {
+        if (!verified) {
+            context.throwErrorIfPresent();
+            if (definition) {
+                throw new AssertionError("Test wasn't verified. Call assertion.verify() from the then block manually!");
+            }
+        }
+
+        reset();
     }
 
     /**
@@ -114,7 +130,7 @@ public class Gru<C extends Client> implements TestRule {
      * @param expectation test definition
      * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
      */
-    public final Gru test(
+    public final Gru<C> test(
         @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
             Closure<TestDefinitionBuilder> expectation
@@ -130,7 +146,7 @@ public class Gru<C extends Client> implements TestRule {
      * @param expectation test definition
      * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
      */
-    public final Gru test(Consumer<TestDefinitionBuilder> expectation) {
+    public final Gru<C> test(Consumer<TestDefinitionBuilder> expectation) {
         definition = true;
 
         DefaultTestDefinitionBuilder builder = new DefaultTestDefinitionBuilder(client, this.squad);
@@ -205,7 +221,7 @@ public class Gru<C extends Client> implements TestRule {
     /**
      * Reset the internal state. This is done by the rule automatically.
      */
-    public Gru reset() {
+    public Gru<C> reset() {
         return reset(true);
     }
 
@@ -214,7 +230,7 @@ public class Gru<C extends Client> implements TestRule {
      *
      * @param resetConfigurations also clear the configurations created using {@link #prepare(Closure)} method
      */
-    public Gru reset(boolean resetConfigurations) {
+    public Gru<C> reset(boolean resetConfigurations) {
         verified = false;
         verificationResult = false;
         definition = false;
@@ -233,7 +249,7 @@ public class Gru<C extends Client> implements TestRule {
     /**
      * Additional configurations to be applied to every feature method.
      */
-    private List<Consumer<TestDefinitionBuilder>> configurations = new ArrayList<>();
+    private final List<Consumer<TestDefinitionBuilder>> configurations = new ArrayList<>();
     /**
      * Squad for current feature method.
      */
@@ -256,29 +272,4 @@ public class Gru<C extends Client> implements TestRule {
      * IF test method has been called
      */
     private boolean definition;
-
-    private static class GruStatement extends Statement {
-        GruStatement(Statement base, Gru assertion) {
-            this.base = base;
-            this.assertion = assertion;
-        }
-
-        @Override
-        public void evaluate() throws Throwable {
-            base.evaluate();
-            // automatically verify?
-            if (!assertion.verified) {
-                assertion.context.throwErrorIfPresent();
-                if (assertion.definition) {
-                    throw new AssertionError("Test wasn't verified. Call assertion.verify() from the then block manually!");
-                }
-
-            }
-
-            assertion.reset();
-        }
-
-        private final Statement base;
-        private final Gru assertion;
-    }
 }

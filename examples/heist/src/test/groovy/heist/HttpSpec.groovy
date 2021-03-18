@@ -19,13 +19,13 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.http.Http
-import org.junit.Rule
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class HttpSpec extends Specification{
 
-    @Rule Gru<Http> gru = Gru.equip(Http.steal(this))                                   // <1>
-                             .prepare('https://despicableme.fandom.com')                // <2>
+    @AutoCleanup Gru<Http> gru = Gru.create(Http.create(this))                          // <1>
+                                    .prepare('https://despicableme.fandom.com')         // <2>
 
     void 'despicable me'() {
         expect:
@@ -33,4 +33,5 @@ class HttpSpec extends Specification{
                 get "/wiki/Felonius_Gru"                                                // <3>
             }
     }
+
 }

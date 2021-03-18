@@ -27,17 +27,17 @@ import com.agorapulse.gru.minions.Command
 import com.agorapulse.gru.minions.HttpMinion
 import grails.testing.web.controllers.ControllerUnitTest
 import groovy.transform.NotYetImplemented
-import org.junit.Rule
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.ModelAndView
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
- * See the API for {@link grails.test.mixin.web.ControllerUnitTestMixin} for usage instructions
+ * See the API for {@link ControllerUnitTest} for usage instructions
  */
 class MoonControllerSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @Rule Gru<Grails<MoonControllerSpec>> gru = Gru.equip(Grails.steal(this)).prepare {
+    @AutoCleanup Gru<Grails<MoonControllerSpec>> gru = Gru.create(Grails.create(this)).prepare {
         include UrlMappings
     }
 
@@ -492,7 +492,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
 
     void 'add wrong artifact'() {
         when:
-            Gru.equip(Grails.steal(this)).test {
+            Gru.create(Grails.create(this)).test {
                 include MoonControllerSpec
                 get '/moons/earth/moon'
             }.verify()
@@ -502,7 +502,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
 
     void 'pass wrong closure'() {
         when:
-            Gru.equip(Grails.steal(this)).test {
+            Gru.create(Grails.create(this)).test {
                 get '/moons/earth/moon', {
                     executes {}
                 }

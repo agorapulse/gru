@@ -34,18 +34,32 @@ import java.util.function.Consumer;
 
 public class ApiGatewayProxy extends AbstractClient {
 
+    @Deprecated
     public static ApiGatewayProxy steal(Object unitTest, Consumer<ApiGatewayConfiguration> configuration) {
-        ApiGatewayConfiguration apiGatewayConfiguration = new ApiGatewayConfiguration();
-        configuration.accept(apiGatewayConfiguration);
-        return new ApiGatewayProxy(unitTest, apiGatewayConfiguration);
+        return create(unitTest, configuration);
     }
 
+    @Deprecated
     public static ApiGatewayProxy steal(Object unitTest,
                                         @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ApiGatewayConfiguration.class)
                                         @ClosureParams(value = FromString.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration")
                                         Closure<ApiGatewayConfiguration.Mapping> configuration
     ) {
-        return steal(unitTest, ConsumerWithDelegate.create(configuration));
+        return create(configuration);
+    }
+
+    public static ApiGatewayProxy create(Object unitTest, Consumer<ApiGatewayConfiguration> configuration) {
+        ApiGatewayConfiguration apiGatewayConfiguration = new ApiGatewayConfiguration();
+        configuration.accept(apiGatewayConfiguration);
+        return new ApiGatewayProxy(unitTest, apiGatewayConfiguration);
+    }
+
+    public static ApiGatewayProxy create(
+                                        @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ApiGatewayConfiguration.class)
+                                        @ClosureParams(value = FromString.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration")
+                                            Closure<ApiGatewayConfiguration.Mapping> configuration
+    ) {
+        return create(configuration.getOwner(), ConsumerWithDelegate.create(configuration));
     }
 
     private final ApiGatewayConfiguration configuration;

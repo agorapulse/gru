@@ -38,7 +38,7 @@ class ApiGatewayConfigurationSpec extends Specification {
     void 'sample handler'() {
         given:
             // tag::simple[]
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/one' to SampleHandler.name                                        // <1>
                 map '/two' to SampleHandler                                             // <2>
                 map '/three', GET to SampleHandler.name                                 // <3>
@@ -88,7 +88,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
     void 'generic handler'() {
         given:
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/generic' to GenericHandler
             })
         when:
@@ -102,7 +102,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
     void 'generic bound parent handler'() {
         given:
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/bound' to BoundParentHandler
             })
         when:
@@ -116,7 +116,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
     void 'no zero arg constructor handler'() {
         given:
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/no-zero-arg' to NoZeroArgConstructorHandler
             })
         when:
@@ -130,7 +130,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
     void 'private constructor handler'() {
         given:
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/failing' to FailingConstructorHandler
             })
         when:
@@ -144,7 +144,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
     void 'route not mapped'() {
         given:
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) { })
+            Gru gru = Gru.create(ApiGatewayProxy.create { })
         when:
             gru.reset().test {
                 get '/not-found'
@@ -157,7 +157,7 @@ class ApiGatewayConfigurationSpec extends Specification {
     void 'non-proxy handler'() {
         given:
             // tag::noproxy[]
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/five/{action}/{id}' to NonProxyHandler, {                         // <1>
                     pathParameters('action', 'id')                                      // <2>
                     queryStringParameters 'foo', 'bar'                                  // <3>
@@ -182,7 +182,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
     void 'proxy to non-existing class'() {
         given:
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/ten' to 'bing.bang.Bong'
             })
         when:
@@ -196,7 +196,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
     void 'proxy to streaming'() {
         given:
-            Gru gru = Gru.equip(ApiGatewayProxy.steal(this) {
+            Gru gru = Gru.create(ApiGatewayProxy.create {
                 map '/six' to StreamingHandler
             })
         when:

@@ -40,21 +40,40 @@ class Http extends AbstractClient {
     private GruHttpRequest request
     private GruHttpResponse response
 
-    static Http steal(Object unitTest) {
+    static Http create(Object unitTest) {
         return new Http(unitTest, null)
     }
 
-    static Http steal(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
+    static Http create(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
         return new Http(unitTest, configuration)
     }
 
+    static Http create(
+        @DelegatesTo(value = OkHttpClient.Builder, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType, options = 'okhttp3.OkHttpClient.Builder')
+            Closure<OkHttpClient.Builder> configuration
+    ) {
+        return new Http(configuration.getOwner(), ConsumerWithDelegate.create(configuration))
+    }
+
+    @Deprecated
+    static Http steal(Object unitTest) {
+        return create(unitTest)
+    }
+
+    @Deprecated
+    static Http steal(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
+        return create(unitTest, configuration)
+    }
+
+    @Deprecated
     static Http steal(
         Object unitTest,
         @DelegatesTo(value = OkHttpClient.Builder, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType, options = 'okhttp3.OkHttpClient.Builder')
             Closure<OkHttpClient.Builder> configuration
     ) {
-        return new Http(unitTest, ConsumerWithDelegate.create(configuration))
+        return create(configuration);
     }
 
     private Http(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
