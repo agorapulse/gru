@@ -3,8 +3,8 @@
 [.ribbon]
 image::ribbon.png[link={project-url}]
 
-Gru is HTTP interaction testing framework with out-of-box support for Grails, Spring MVC, API Gateway but it can be used with any
-HTTP server such as Micronaut embedded server.
+Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway but it can be used with any
+HTTP server framework.
 
 == Installation
 
@@ -23,12 +23,14 @@ dependencies {
     testCompile "com.agorapulse:gru-grails:{project-version}"                           // <2>
     testCompile "com.agorapulse:gru-spring:{project-version}"                           // <3>
     testCompile "com.agorapulse:gru-api-gateway:{project-version}"                      // <4>
+    testCompile "com.agorapulse:gru-micronaut:{project-version}"                        // <5>
 }
 ----
 <1> HTTP module for any HTTP backend such as Micronaut embedded server
 <2> Grails module to emulate HTTP interaction within Grails Unit tests
 <3> Spring module to emulate HTTP interaction using `MockMvc`
 <4> AWS API Gateway module for HTTP proxy lambdas
+<5> Micronaut module for running HTTP request against the embedded server
 
 [NOTE]
 ====
@@ -54,6 +56,53 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=1
 <1> `Gru` initialized with the specification object must be closed after each execution which can be done with @AutoCleanup annotation
 <2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
 <3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+
+=== Micronaut
+
+Micronaut plays well with `@MicronautTest` annotation. If you are using `@MicronautTest` you can simply inject
+`Gru` instance into your test.
+
+.Using @Inject with @MicronautTest
+[source,groovy]
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautSpec.groovy[lines=18..-1]
+----
+<1> Annotate your test with @MicronautTest`
+<2> Inject `Gru`
+
+Alternatively, you can let `Gru` to create default `ApplicationContext` for you.
+
+.Using Default Application Context
+[source,groovy]
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicronautSpec.groovy[lines=18..-1]
+----
+<1> Create a simple `Micronaut` client for `Gru`
+<2> Default application context is created and fields can be injected into the test
+
+If you construct the application context yourself then you need to point `Gru` to the field of type `ApplicationContext`.
+
+.Using a Custom Application Context
+[source,groovy]
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/ManualWithSimpleProviderMicronautSpec.groovy[lines=18..-1]
+----
+<1> Point `Gru` to field `context` holding the custom `ApplicationContext` instance
+
+NOTE: As an alternative, you can make your test class implement `io.micronaut.context.ApplicationContextProvider`.
+
+Gru can actually help you create the custom context:
+
+.Creating a Custom Application Context
+[source,groovy]
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutomaticMicronautSpec.groovy[lines=18..-1]
+----
+<1> Declare any field you want to reference from the context before `Gru` declaration
+<2> Customize the `ApplicationContextBuilder`
+<3> Customize the `ApplicationContext` itself, e.g. register mocks
+<4> Start the application and injects fields into the test automatically
+<5> The field can be automatically injected
 
 === Grails
 

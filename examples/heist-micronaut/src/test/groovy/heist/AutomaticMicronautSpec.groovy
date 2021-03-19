@@ -19,15 +19,22 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.micronaut.Micronaut
+import io.micronaut.context.env.Environment
 import spock.lang.AutoCleanup
 import spock.lang.Specification
 
+import javax.inject.Inject
+
 class AutomaticMicronautSpec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this))
+    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this))                           // <1>
+
+    @Inject Environment environment                                                     // <2>
 
     void 'test it works'() {
         expect:
+            'test' in environment.activeNames
+        and:
             gru.test {
                 get '/moons/earth/moon'
                 expect {

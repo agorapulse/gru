@@ -29,17 +29,17 @@ import javax.inject.Inject
 
 class AdvancedAutomaticMicronautSpec extends Specification {
 
-    MoonService moonService = Mock()
+    MoonService moonService = Mock()                                                    // <1>
 
     @AutoCleanup Gru gru = Gru.create(
         Micronaut.build(this) {
-            environments 'my-custom-env'
+            environments 'my-custom-env'                                                // <2>
         }.then {
-            registerSingleton(MoonService, moonService)
-        }.start(true)
+            registerSingleton(MoonService, moonService)                                 // <3>
+        }.start()                                                                       // <4>
     )
 
-    @Inject Environment environment
+    @Inject Environment environment                                                     // <5>
 
     void 'test it works'() {
         expect:

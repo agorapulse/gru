@@ -26,6 +26,11 @@ import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 public class MicronautGruStaticExtensions {
 
+    /**
+     * Creates new client builder and configures the {@link ApplicationContextBuilder}.
+     * @param configuration application context builder configuration
+     * @return new custom application context builder
+     */
     @SuppressWarnings("unused")
     public static Micronaut.MicronautApplicationBuilder build(
         Micronaut self,

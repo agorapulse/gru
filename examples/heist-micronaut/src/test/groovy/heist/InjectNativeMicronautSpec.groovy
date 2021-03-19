@@ -23,10 +23,10 @@ import spock.lang.Specification
 
 import javax.inject.Inject
 
-@MicronautTest
+@MicronautTest                                                                          // <1>
 class InjectNativeMicronautSpec extends Specification {
 
-    @Inject Gru gru
+    @Inject Gru gru                                                                     // <2>
 
     void 'test it works'() {
         expect:

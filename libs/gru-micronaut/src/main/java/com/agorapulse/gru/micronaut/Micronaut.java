@@ -38,35 +38,53 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+/**
+ * Client for Micronaut applications.
+ *
+ * This uses {@link Http} client to interact with {@link EmbeddedServer}.
+ */
 public class Micronaut implements Client {
 
+    /**
+     * {@link ApplicationContext} build helper.
+     */
     public static class MicronautApplicationBuilder {
         private final Object unitTest;
         private Consumer<ApplicationContextBuilder> contextBuilderConfiguration = b -> {};
         private Consumer<ApplicationContext> contextConfiguration = b -> {};
 
-        public MicronautApplicationBuilder(Object unitTest) {
+        MicronautApplicationBuilder(Object unitTest) {
             this.unitTest = unitTest;
         }
 
+        /**
+         * Customize the application context.
+         * @param contextConfiguration application context configuration
+         * @return self
+         */
         public MicronautApplicationBuilder doWithContext(Consumer<ApplicationContext> contextConfiguration) {
             this.contextConfiguration = this.contextConfiguration.andThen(contextConfiguration);
             return this;
         }
+
+
+        /**
+         * Customize the application context builder.
+         * @param contextBuilderConfiguration application context configuration
+         * @return self
+         */
         public MicronautApplicationBuilder doWithContextBuilder(Consumer<ApplicationContextBuilder> contextBuilderConfiguration) {
             this.contextBuilderConfiguration = this.contextBuilderConfiguration.andThen(contextBuilderConfiguration);
             return this;
         }
 
+        /**
+         * Starts the internal {@link ApplicationContext} and returns the client instance.
+         * @return the new client instance
+         */
         public Client start() {
-            return start(false);
-        }
-
-        public Client start(boolean inject) {
             SelfStartingContextProvider provider = new SelfStartingContextProvider(this);
-            if (inject) {
-                provider.getApplicationContext().inject(unitTest);
-            }
+            provider.getApplicationContext().inject(unitTest);
             return create(unitTest, provider);
         }
     }
@@ -86,7 +104,7 @@ public class Micronaut implements Client {
                 return context;
             }
 
-            ApplicationContextBuilder builder = ApplicationContext.build();
+            ApplicationContextBuilder builder = ApplicationContext.builder();
             micronautApplicationBuilder.contextBuilderConfiguration.accept(builder);
 
             context = builder.build();
@@ -110,10 +128,23 @@ public class Micronaut implements Client {
     private final ApplicationContextProvider contextProvider;
     private final Client delegate;
 
+    /**
+     * Starts building a client using a custom {@link ApplicationContext} for this test.
+     *
+     * @param unitTest the current test
+     * @return a builder for a client using a custom {@link ApplicationContext}
+     */
     public static MicronautApplicationBuilder build(Object unitTest) {
         return new MicronautApplicationBuilder(unitTest);
     }
 
+    /**
+     * Creates a new client either reusing the existing application context if the unit test
+     * implements {@link ApplicationContextProvider} or starting a new custom one.
+     *
+     * @param unitTest the current test
+     * @return a builder for a client using either existing or a custom {@link ApplicationContext}
+     */
     public static Client create(Object unitTest) {
         if (unitTest instanceof ApplicationContextProvider) {
             return new Micronaut((ApplicationContextProvider) unitTest, Http.create(unitTest));
@@ -122,10 +153,24 @@ public class Micronaut implements Client {
         return build(unitTest).start();
     }
 
+    /**
+     * Creates a lazy initialized client using the provided application context.
+     *
+     * @param unitTestProvider the current test provider
+     * @param provider the context provider
+     * @return a builder for a client using either existing or a custom {@link ApplicationContext}
+     */
     public static Client createLazy(Supplier<?> unitTestProvider, ApplicationContextProvider provider) {
         return new Micronaut(provider, LazyClient.create(() -> Http.create(unitTestProvider.get())));
     }
 
+    /**
+     * Creates a new client using the provided application context.
+     *
+     * @param unitTest the current test
+     * @param provider the context provider
+     * @return a builder for a client using either existing or a custom {@link ApplicationContext}
+     */
     public static Client create(Object unitTest, ApplicationContextProvider provider) {
         return new Micronaut(provider, Http.create(unitTest));
     }

@@ -26,6 +26,11 @@ import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 public class MicronautGruExtensions {
 
+    /**
+     * Configures the {@link ApplicationContext}.
+     * @param configuration application context configuration
+     * @return self
+     */
     public static Micronaut.MicronautApplicationBuilder then(
         Micronaut.MicronautApplicationBuilder self,
         @DelegatesTo(value = ApplicationContext.class, strategy = Closure.DELEGATE_FIRST)

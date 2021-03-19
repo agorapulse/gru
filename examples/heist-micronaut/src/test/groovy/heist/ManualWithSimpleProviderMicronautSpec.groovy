@@ -20,14 +20,13 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.micronaut.Micronaut
 import io.micronaut.context.ApplicationContext
-import io.micronaut.context.ApplicationContextProvider
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class ManualWithSimpleProviderMicronautSpec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this) { context })
+    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this) { context })               // <1>
 
     @AutoCleanup ApplicationContext context
     @AutoCleanup EmbeddedServer embeddedServer
