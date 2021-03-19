@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 0.9.0</span>
+<span id="revnumber">version 0.9.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -100,8 +100,9 @@ $(addBlockSwitches);
 <li><a href="#_setup">2. Setup</a>
 <ul class="sectlevel2">
 <li><a href="#_http">2.1. HTTP</a></li>
-<li><a href="#_grails">2.2. Grails</a></li>
-<li><a href="#_spring">2.3. Spring</a></li>
+<li><a href="#_micronaut">2.2. Micronaut</a></li>
+<li><a href="#_grails">2.3. Grails</a></li>
+<li><a href="#_spring">2.4. Spring</a></li>
 </ul>
 </li>
 <li><a href="#_common_interactions">3. Common Interactions</a>
@@ -143,8 +144,8 @@ $(addBlockSwitches);
 </div>
 </div>
 <div class="paragraph">
-<p>Gru is HTTP interaction testing framework with out-of-box support for Grails, Spring MVC, API Gateway but it can be used with any
-HTTP server such as Micronaut embedded server.</p>
+<p>Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway but it can be used with any
+HTTP server framework.</p>
 </div>
 </div>
 </div>
@@ -163,10 +164,11 @@ HTTP server such as Micronaut embedded server.</p>
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.9.0"                             <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.9.0"                           <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.9.0"                           <i class="conum" data-value="3"></i><b>(3)</b>
-    testCompile "com.agorapulse:gru-api-gateway:0.9.0"                      <i class="conum" data-value="4"></i><b>(4)</b>
+    testCompile "com.agorapulse:gru-http:0.9.1"                             <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.9.1"                           <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.9.1"                           <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-api-gateway:0.9.1"                      <i class="conum" data-value="4"></i><b>(4)</b>
+    testCompile "com.agorapulse:gru-micronaut:0.9.1"                        <i class="conum" data-value="5"></i><b>(5)</b>
 }</code></pre>
 </div>
 </div>
@@ -187,6 +189,10 @@ dependencies {
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>AWS API Gateway module for HTTP proxy lambdas</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Micronaut module for running HTTP request against the embedded server</td>
 </tr>
 </table>
 </div>
@@ -265,7 +271,242 @@ class HttpSpec extends Specification{
 </div>
 </div>
 <div class="sect2">
-<h3 id="_grails"><a class="anchor" href="#_grails"></a>2.2. Grails</h3>
+<h3 id="_micronaut"><a class="anchor" href="#_micronaut"></a>2.2. Micronaut</h3>
+<div class="paragraph">
+<p>Micronaut plays well with <code>@MicronautTest</code> annotation. If you are using <code>@MicronautTest</code> you can simply inject
+<code>Gru</code> instance into your test.</p>
+</div>
+<div class="listingblock">
+<div class="title">Using @Inject with @MicronautTest</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package heist
+
+import com.agorapulse.gru.Gru
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import spock.lang.Specification
+
+import javax.inject.Inject
+
+@MicronautTest                                                                          <i class="conum" data-value="1"></i><b>(1)</b>
+class InjectNativeMicronautSpec extends Specification {
+
+    @Inject Gru gru                                                                     <i class="conum" data-value="2"></i><b>(2)</b>
+
+    void 'test it works'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    json 'moon.json'
+                }
+            }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Annotate your test with @MicronautTest`</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inject <code>Gru</code></td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Alternatively, you can let <code>Gru</code> to create default <code>ApplicationContext</code> for you.</p>
+</div>
+<div class="listingblock">
+<div class="title">Using Default Application Context</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package heist
+
+import com.agorapulse.gru.Gru
+import com.agorapulse.gru.micronaut.Micronaut
+import io.micronaut.context.env.Environment
+import spock.lang.AutoCleanup
+import spock.lang.Specification
+
+import javax.inject.Inject
+
+class AutomaticMicronautSpec extends Specification {
+
+    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this))                           <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @Inject Environment environment                                                     <i class="conum" data-value="2"></i><b>(2)</b>
+
+    void 'test it works'() {
+        expect:
+            'test' in environment.activeNames
+        and:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    json 'moon.json'
+                }
+            }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create a simple <code>Micronaut</code> client for <code>Gru</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Default application context is created and fields can be injected into the test</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>If you construct the application context yourself then you need to point <code>Gru</code> to the field of type <code>ApplicationContext</code>.</p>
+</div>
+<div class="listingblock">
+<div class="title">Using a Custom Application Context</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package heist
+
+import com.agorapulse.gru.Gru
+import com.agorapulse.gru.micronaut.Micronaut
+import io.micronaut.context.ApplicationContext
+import io.micronaut.runtime.server.EmbeddedServer
+import spock.lang.AutoCleanup
+import spock.lang.Specification
+
+class ManualWithSimpleProviderMicronautSpec extends Specification {
+
+    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this) { context })               <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @AutoCleanup ApplicationContext context
+    @AutoCleanup EmbeddedServer embeddedServer
+
+    void setup() {
+        context = ApplicationContext.builder().build()
+        context.start()
+
+        embeddedServer = context.getBean(EmbeddedServer)
+        embeddedServer.start()
+    }
+
+    void 'test it works'() {
+        expect:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    json 'moon.json'
+                }
+            }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Point <code>Gru</code> to field <code>context</code> holding the custom <code>ApplicationContext</code> instance</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As an alternative, you can make your test class implement <code>io.micronaut.context.ApplicationContextProvider</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Gru can actually help you create the custom context:</p>
+</div>
+<div class="listingblock">
+<div class="title">Creating a Custom Application Context</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">package heist
+
+import com.agorapulse.gru.Gru
+import com.agorapulse.gru.micronaut.Micronaut
+import heist.micronaut.Moon
+import heist.micronaut.MoonService
+import io.micronaut.context.env.Environment
+import spock.lang.AutoCleanup
+import spock.lang.Specification
+
+import javax.inject.Inject
+
+class AdvancedAutomaticMicronautSpec extends Specification {
+
+    MoonService moonService = Mock()                                                    <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @AutoCleanup Gru gru = Gru.create(
+        Micronaut.build(this) {
+            environments 'my-custom-env'                                                <i class="conum" data-value="2"></i><b>(2)</b>
+        }.then {
+            registerSingleton(MoonService, moonService)                                 <i class="conum" data-value="3"></i><b>(3)</b>
+        }.start()                                                                       <i class="conum" data-value="4"></i><b>(4)</b>
+    )
+
+    @Inject Environment environment                                                     <i class="conum" data-value="5"></i><b>(5)</b>
+
+    void 'test it works'() {
+        expect:
+            'my-custom-env' in environment.activeNames
+        when:
+            gru.test {
+                get '/moons/earth/moon'
+                expect {
+                    json 'moon.json'
+                }
+            }
+        then:
+            gru.verify()
+
+            1 * moonService.get('earth', 'moon') &gt;&gt; new Moon('earth', 'moon')
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Declare any field you want to reference from the context before <code>Gru</code> declaration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Customize the <code>ApplicationContextBuilder</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Customize the <code>ApplicationContext</code> itself, e.g. register mocks</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Start the application and injects fields into the test automatically</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The field can be automatically injected</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_grails"><a class="anchor" href="#_grails"></a>2.3. Grails</h3>
 <div class="paragraph">
 <p>Gru for Grails tests controllers in context of other Grails artifacts such as url mappings or interceptors.
 Gru steals a lot from <a href="https://testing.grails.org/latest/guide/index.html">Grails Testing Support</a>.</p>
@@ -364,7 +605,7 @@ You can also call <code>gru.verify()</code> manually to fully leverage Spock&#82
 </div>
 </div>
 <div class="sect2">
-<h3 id="_spring"><a class="anchor" href="#_spring"></a>2.3. Spring</h3>
+<h3 id="_spring"><a class="anchor" href="#_spring"></a>2.4. Spring</h3>
 <div class="paragraph">
 <p>Gru for <a href="https://spring.io/">Spring</a> allows you to test your application with mocked HTTP requests. Under the hood
 <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html">MockMvc</a> is used.</p>
@@ -1791,8 +2032,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.9.0<br>
-Last updated 2021-03-18 12:06:40 UTC
+Version 0.9.1<br>
+Last updated 2021-03-19 09:14:25 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
