@@ -19,6 +19,8 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.micronaut.Micronaut
+import heist.micronaut.Moon
+import heist.micronaut.MoonService
 import io.micronaut.context.env.Environment
 import spock.lang.AutoCleanup
 import spock.lang.Specification

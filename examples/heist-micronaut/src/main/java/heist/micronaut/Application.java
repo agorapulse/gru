@@ -15,15 +15,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist;
+package heist.micronaut;
 
-import javax.inject.Singleton;
+import io.micronaut.runtime.Micronaut;
 
-@Singleton
-public class DefaultMoonService implements MoonService {
+public class Application {
 
-    @Override
-    public Moon get(String planet, String name) {
-        return new Moon(planet, name);
+    public static void main(String[] args) {
+        Micronaut.run(Application.class, args);
     }
 }

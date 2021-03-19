@@ -15,24 +15,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist;
+package heist.micronaut;
 
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.PathVariable;
+public interface MoonService {
 
-@Controller("/moons")
-class MoonController {
-
-    private final MoonService moonService;
-
-    public MoonController(MoonService moonService) {
-        this.moonService = moonService;
-    }
-
-    @Get("/{planet}/{moon}")
-    Moon sayHello(@PathVariable("planet") String planet, @PathVariable("moon") String moon) {
-        return moonService.get(planet, moon);
-    }
+    Moon get(String planet, String name);
 
 }
