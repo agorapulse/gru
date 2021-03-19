@@ -1,5 +1,6 @@
 .gradle
 **/build/
+**/target/
 **/out/
 **/.idea/
 **/*.iml
@@ -10,3 +11,13 @@ gradle-app.setting
 !gradle-wrapper.jar
 
 **.hprof
+
+Thumbs.db
+.DS_Store
+*.iml
+*.ipr
+*.iws
+.project
+.settings
+.classpath
+.factorypath

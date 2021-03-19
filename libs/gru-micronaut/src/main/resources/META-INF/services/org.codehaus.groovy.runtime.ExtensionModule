@@ -1,0 +1,4 @@
+moduleName = gru-micronaut
+moduleVersion = @VERSION@
+extensionClasses = com.agorapulse.gru.micronaut.MicronautGruExtensions
+staticExtensionClasses = com.agorapulse.gru.micronaut.MicronautGruStaticExtensions
