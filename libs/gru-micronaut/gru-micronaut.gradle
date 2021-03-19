@@ -1,0 +1,19 @@
+dependencies {
+    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautCompactVersion")
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-validation"
+
+    api project(':gru-http')
+
+    implementation 'org.codehaus.groovy:groovy'
+
+    implementation platform("io.micronaut:micronaut-bom:$micronautCompactVersion")
+    implementation("io.micronaut:micronaut-validation")
+    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut:micronaut-http-server")
+}
+
+java {
+    sourceCompatibility = JavaVersion.toVersion("1.8")
+    targetCompatibility = JavaVersion.toVersion("1.8")
+}
