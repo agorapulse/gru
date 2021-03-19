@@ -17,11 +17,15 @@
  */
 package heist.micronaut;
 
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.runtime.Micronaut;
 
 public class Application {
 
+    static ApplicationContext context;
+
     public static void main(String[] args) {
-        Micronaut.run(Application.class, args);
+        context = Micronaut.run(Application.class, args);
     }
+
 }
