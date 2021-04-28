@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 dependencies {
-    api 'space.jasan:groovy-closure-support:0.6.1'
+    api 'space.jasan:groovy-closure-support:0.6.3'
     api 'com.agorapulse.testing:fixt:0.2.1.1'
 
     api "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
