@@ -86,10 +86,13 @@ config {
     quality {
         checkstyle {
             toolVersion = '8.27'
+            maxErrors = 12
         }
 
         codenarc {
             toolVersion = '1.5'
+            maxPriority2Violations = 19
+            maxPriority3Violations = 91
         }
     }
 
