@@ -74,7 +74,7 @@ class GruHttpRequest implements Client.Request {
 
     @Override
     void setMultipart(MultipartDefinition definition) {
-        MultipartBody.Builder builder = new MultipartBody.Builder()
+        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM)
 
         definition.files.each { k, f ->
             builder.addFormDataPart(f.parameterName, f.filename, RequestBody.create(
