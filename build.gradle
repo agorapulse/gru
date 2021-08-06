@@ -17,15 +17,17 @@
  */
 plugins {
     id 'org.kordamp.gradle.groovy-project'
-    id 'org.kordamp.gradle.bintray'
     id 'org.kordamp.gradle.checkstyle'
     id 'org.kordamp.gradle.codenarc'
     id 'org.kordamp.gradle.coveralls'
+    id 'io.github.gradle-nexus.publish-plugin'
 }
 
-if (!project.hasProperty('bintrayUsername')) ext.bintrayUsername = '**UNDEFINED**'
-if (!project.hasProperty('bintrayApiKey')) ext.bintrayApiKey = '**UNDEFINED**'
-
+if (!project.hasProperty('ossrhUsername'))      ext.ossrhUsername       = System.getenv('SONATYPE_USERNAME') ?: '**UNDEFINED**'
+if (!project.hasProperty('ossrhPassword'))      ext.ossrhPassword       = System.getenv('SONATYPE_PASSWORD') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingKeyId'))       ext.signingKeyId        = System.getenv('SIGNING_KEY_ID') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingPassword'))    ext.signingPassword     = System.getenv('SIGNING_PASSWORD') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingSecretKey'))   ext.signingSecretKey    = System.getenv('SIGNING_SECRET_KEY_PATH') ? rootProject.file(System.getenv('SIGNING_SECRET_KEY_PATH')).text : '**UNDEFINED**'
 
 config {
     release = (rootProject.findProperty('release') ?: false).toBoolean()
@@ -70,30 +72,27 @@ config {
     }
 
     publishing {
-        signing = false
+        enabled = false
+        signing {
+            enabled =  true
+            keyId = signingKeyId
+            secretKey = signingSecretKey
+            password = signingPassword
+        }
         releasesRepository = 'localRelease'
         snapshotsRepository = 'localSnapshot'
-    }
-
-    bintray {
-        credentials {
-            username = bintrayUsername
-            password = bintrayApiKey
-        }
-        userOrg = 'agorapulse'
-        repo = 'libs'
-        name = rootProject.name
-        publish = true
-        githubRepo = slug
     }
 
     quality {
         checkstyle {
             toolVersion = '8.27'
+            maxErrors = 12
         }
 
         codenarc {
             toolVersion = '1.5'
+            maxPriority2Violations = 19
+            maxPriority3Violations = 91
         }
     }
 
@@ -111,6 +110,15 @@ config {
         }
     }
 
+}
+
+nexusPublishing {
+    repositories {
+        sonatype {
+            username = ossrhUsername
+            password = ossrhPassword
+        }
+    }
 }
 
 allprojects {
@@ -148,12 +156,6 @@ projects {
                 mavenCentral()
             }
 
-            config {
-                bintray {
-                    name = subproject.name
-                }
-            }
-
             tasks.withType(JavaCompile) {
                 options.encoding = "UTF-8"
                 options.compilerArgs.add('-parameters')
@@ -185,7 +187,7 @@ projects {
             }
 
             config {
-                bintray {
+                publishing {
                     enabled = true
                 }
             }
@@ -193,6 +195,16 @@ projects {
             dependencies {
                 testImplementation "org.spockframework:spock-core:$spockVersion", {
                     force = true
+                }
+            }
+        }
+
+        dir ('examples') {
+            config {
+                quality {
+                    codenarc {
+                        enabled = false
+                    }
                 }
             }
         }

@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 class AutomaticInjectMicronautSpec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.build(this).start(true))
+    @AutoCleanup Gru gru = Gru.create(Micronaut.build(this).start())
 
     @Inject Environment environment
 
