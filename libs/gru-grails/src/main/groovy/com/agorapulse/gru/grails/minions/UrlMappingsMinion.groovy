@@ -62,7 +62,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     @Override
     @SuppressWarnings('UnnecessaryCast')
     GruContext doBeforeRun(Grails grails, Squad squad, GruContext context) {
-        if (urlMappings.isEmpty() && grails.request.uri != null) {
+        if (urlMappings.empty && grails.request.uri != null) {
             try {
                 urlMappings = [getClass().classLoader.loadClass(DefaultTestDefinitionBuilder.UrlMappings)] as List<Class>
             } catch (ClassNotFoundException ignored) {
@@ -95,7 +95,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     GrailsControllerUrlMappings getUrlMappingsHolder(ControllerUnitTest unitTest) {
         initUrlMappingsArtifacts(unitTest)
         defineMappingsHolder(unitTest)
-        urlMappingsHolder = unitTest.applicationContext.getBean('grailsUrlMappingsHolder', GrailsControllerUrlMappings)
+        return urlMappingsHolder = unitTest.applicationContext.getBean('grailsUrlMappingsHolder', GrailsControllerUrlMappings)
     }
 
     final GrailsControllerClass getControllerClass(ControllerUnitTest unitTest) {
@@ -110,7 +110,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
             return action.method
         }
         UrlMappingInfo info = readMappingInfo(unitTest)
-        info.actionName ?: getControllerClass(unitTest).defaultAction
+        return info.actionName ?: getControllerClass(unitTest).defaultAction
     }
 
     /**
@@ -126,7 +126,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
             return GrailsNameUtils.getPropertyName(GrailsNameUtils.getLogicalName(controllerType, 'Controller'))
         }
         UrlMappingInfo info = readMappingInfo(unitTest)
-        info.controllerName
+        return info.controllerName
     }
 
     private void initUrlMappingsArtifacts(ControllerUnitTest unitTest) {
@@ -174,4 +174,5 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
 
         return urlMappingInfo = mappingMatched
     }
+
 }

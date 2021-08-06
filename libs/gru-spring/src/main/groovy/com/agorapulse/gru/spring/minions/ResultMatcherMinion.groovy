@@ -21,12 +21,15 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.minions.AbstractMinion
 import com.agorapulse.gru.spring.Spring
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 import org.springframework.test.web.servlet.MvcResult
 import org.springframework.test.web.servlet.ResultMatcher
 
 /**
  * Result matcher minion allows to append standard MockMvc result matchers inside the expect block.
  */
+@CompileStatic
 class ResultMatcherMinion extends AbstractMinion<Spring> {
 
     final int index = MODEL_MINION_INDEX + 1000
@@ -42,6 +45,7 @@ class ResultMatcherMinion extends AbstractMinion<Spring> {
     }
 
     @Override
+    @CompileDynamic
     @SuppressWarnings('Instanceof')
     protected void doVerify(Spring client, Squad squad, GruContext context) throws Throwable {
         if (!matchers) {

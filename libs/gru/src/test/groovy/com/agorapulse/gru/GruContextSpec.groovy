@@ -100,4 +100,5 @@ class GruContextSpec extends Specification {
             GruContext.result(RESULT).toString() == 'GruContext with result \'foo\''
             GruContext.resultAndError(RESULT, EXCEPTION).toString() == 'GruContext with result \'foo\' and error \'java.lang.RuntimeException: bar\''
     }
+
 }

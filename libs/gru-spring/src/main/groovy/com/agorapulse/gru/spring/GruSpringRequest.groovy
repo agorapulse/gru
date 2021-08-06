@@ -88,4 +88,5 @@ class GruSpringRequest implements Client.Request {
             cookie new javax.servlet.http.Cookie(c.name, c.value)
         }
     }
+
 }

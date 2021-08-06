@@ -17,9 +17,12 @@
  */
 package com.agorapulse.gru
 
+import groovy.transform.CompileStatic
+
 /**
  * Very simple testing client.
  */
+@CompileStatic
 class TestClient extends AbstractClient {
 
     final Client.Request request
@@ -36,6 +39,7 @@ class TestClient extends AbstractClient {
 
     @Override
     GruContext run(Squad squad, GruContext context) {
-        context
+        return context
     }
+
 }

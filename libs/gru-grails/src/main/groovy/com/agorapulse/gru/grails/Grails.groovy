@@ -28,11 +28,14 @@ import com.agorapulse.gru.grails.minions.jsonview.JsonViewSupport
 import com.agorapulse.gru.minions.Minion
 import grails.core.GrailsControllerClass
 import grails.testing.web.controllers.ControllerUnitTest
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 
 /**
  * Grails Gru client leverages Grails Testing Support library to allow REST-like testing within Grails unit test.
  * @param <U> type of the unit test being tested
  */
+@CompileStatic
 class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
 
     static <U extends ControllerUnitTest<?>> Grails<U> create(U unitTest) {
@@ -68,6 +71,7 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
     }
 
     @Override
+    @CompileDynamic
     GruContext run(Squad squad, GruContext context) {
         GrailsControllerClass controllerClass = squad.ask(UrlMappingsMinion) { getControllerClass(unitTest) }
 
@@ -84,16 +88,17 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
         }
 
         Object result = controllerClass.invoke(unitTest.controller, actionName)
-        context.withResult(result)
+        return context.withResult(result)
     }
 
     U getUnitTest() {
-        super.unitTest as U
+        return super.unitTest as U
     }
 
     @Override
+    @SuppressWarnings('UnnecessaryCast')
     List<Minion> getInitialSquad() {
-        List<Minion> minions = [new ControllerInitializationMinion(), new UrlMappingsMinion(), new GrailsHtmlMinion()]
+        List<Minion> minions = [new ControllerInitializationMinion(), new UrlMappingsMinion(), new GrailsHtmlMinion()] as List<Minion>
 
         if (JsonViewSupport.enabled) {
             minions << new JsonViewRendererMinion()
@@ -101,4 +106,5 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
 
         return minions
     }
+
 }

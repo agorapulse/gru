@@ -25,12 +25,16 @@ import com.agorapulse.gru.grails.minions.InterceptorsMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.grails.minions.UrlMappingsMinion
 import grails.testing.web.controllers.ControllerUnitTest
+import groovy.transform.CompileStatic
 import org.codehaus.groovy.runtime.MethodClosure
+
+@SuppressWarnings(['ClassStartsWithBlankLine', 'ClassEndsWithBlankLine'])
 
 // tag::header[]
 /**
  * Add convenient methods for Grails to test definition DSL.
  */
+@CompileStatic
 class GrailsGruExtensions {
 // end::header[]
 
@@ -71,7 +75,7 @@ class GrailsGruExtensions {
             throw new IllegalArgumentException('Closure must be method closure. Use controller.&methodname to get type safe method closure!')
         }
 
-        self.command(UrlMappingsMinion) {
+        return self.command(UrlMappingsMinion) {
             action = method as MethodClosure
         }
     }
@@ -84,7 +88,7 @@ class GrailsGruExtensions {
      * @return self
      */
     static ResponseDefinitionBuilder model(ResponseDefinitionBuilder self, Object aModel) { // <1>
-        self.command(ModelMinion) {                                                         // <2>
+        return self.command(ModelMinion) {                                                  // <2>
             model = aModel
         }
     }
@@ -96,7 +100,7 @@ class GrailsGruExtensions {
      * @return self
      */
     static ResponseDefinitionBuilder forward(ResponseDefinitionBuilder self, String url) {
-        self.command(ForwardMinion) {
+        return self.command(ForwardMinion) {
             forwardedUri = url
         }
     }

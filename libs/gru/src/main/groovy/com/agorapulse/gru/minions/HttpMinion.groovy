@@ -36,7 +36,7 @@ class HttpMinion extends AbstractMinion<Client> {
     GruContext doBeforeRun(Client client, Squad squad, GruContext context) {
         if (requestHeaders.size() > 0) {
             for (Map.Entry<String, Collection<String>> header : requestHeaders.entrySet()) {
-                Optional.ofNullable(header.getValue()).ifPresent {
+                Optional.ofNullable(header.value).ifPresent {
                     it.each {
                         client.request.addHeader(header.key, it)
                     }
@@ -52,7 +52,7 @@ class HttpMinion extends AbstractMinion<Client> {
         assert client.response.status == status
 
         for (Map.Entry<String, Collection<String>> header : responseHeaders.entrySet()) {
-            Optional.ofNullable(header.getValue()).ifPresent {
+            Optional.ofNullable(header.value).ifPresent {
                 it.each {
                     assert client.response.getHeaders(header.key).contains(it)
                 }
@@ -84,8 +84,8 @@ class HttpMinion extends AbstractMinion<Client> {
     final int index = HTTP_MINION_INDEX
 
     private int status = DEFAULT_STATUS
-    private final Map<String, Collection<String>> requestHeaders = new LinkedHashMap<>()
-    private final Map<String, Collection<String>> responseHeaders = new LinkedHashMap<>()
+    private final Map<String, Collection<String>> requestHeaders = [:]
+    private final Map<String, Collection<String>> responseHeaders = [:]
     private String redirectUri
 
 }

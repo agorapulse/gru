@@ -21,6 +21,8 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.minions.AbstractMinion
 import com.agorapulse.gru.spring.Spring
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 import groovy.transform.stc.ClosureParams
 import groovy.transform.stc.SimpleType
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder
@@ -31,6 +33,7 @@ import java.util.function.Consumer
 /**
  * Request builder minion allows to add more request customisation based on standard MockHttpServletRequestBuilder.
  */
+@CompileStatic
 class RequestBuilderMinion extends AbstractMinion<Spring> {
 
     final int index = PARAMETERS_MINION_INDEX + 1000
@@ -54,6 +57,7 @@ class RequestBuilderMinion extends AbstractMinion<Spring> {
     }
 
     @Override
+    @CompileDynamic
     protected GruContext doBeforeRun(Spring client, Squad squad, GruContext context) {
         for (Consumer<MockHttpServletRequestBuilder> step : steps) {
             client.request.addBuildStep step

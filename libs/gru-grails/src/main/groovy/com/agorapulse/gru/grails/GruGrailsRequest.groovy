@@ -21,12 +21,14 @@ import com.agorapulse.gru.Client
 import com.agorapulse.gru.MultipartDefinition
 import com.agorapulse.gru.cookie.Cookie
 import grails.testing.web.controllers.ControllerUnitTest
+import groovy.transform.CompileDynamic
 import org.grails.plugins.testing.GrailsMockHttpServletRequest
 import org.springframework.mock.web.MockMultipartFile
 
 /**
  * Wrapper around Grails mock request.
  */
+@CompileDynamic
 class GruGrailsRequest implements Client.Request {
 
     private final GrailsMockHttpServletRequest request
@@ -113,4 +115,5 @@ class GruGrailsRequest implements Client.Request {
     private void updateRequestUri() {
         unitTest.request.requestURI = "$baseUri$uri".replaceAll('/+', '/')
     }
+
 }

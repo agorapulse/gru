@@ -34,7 +34,7 @@ class HttpExtensions {
      * @return self with base uri configured
      */
     static <T extends Client> Gru<T> prepare(final Gru<T> gru, final String aBaseUri) {
-        gru.prepare {
+        return gru.prepare {
             baseUri aBaseUri
         }
     }

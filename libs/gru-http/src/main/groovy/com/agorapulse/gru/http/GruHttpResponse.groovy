@@ -40,7 +40,7 @@ class GruHttpResponse implements Client.Response {
         if (response.priorResponse()?.redirect) {
             return response.priorResponse().code()
         }
-        response.code()
+        return response.code()
     }
 
     @Override
@@ -57,4 +57,5 @@ class GruHttpResponse implements Client.Response {
     String getRedirectUrl() {
         return response.priorResponse()?.header('Location')
     }
+
 }

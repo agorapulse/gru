@@ -31,7 +31,9 @@ class AbstractMinionSpec extends Specification {
     void 'test type checking'() {
         given:
             AbstractMinion<MyClient> minion = new AbstractMinion<MyClient>(MyClient) {
+
                 int index
+
             }
             MyOtherClient mock = new MyOtherClient(this)
             Squad squad = new Squad()
@@ -62,7 +64,8 @@ class AbstractMinionSpec extends Specification {
         void reset() { }
 
         @Override
-        GruContext run(Squad squad, GruContext context) { GruContext.EMPTY }
+        GruContext run(Squad squad, GruContext context) { return GruContext.EMPTY }
+
     }
 
     private static class MyOtherClient extends AbstractClient {
@@ -78,7 +81,8 @@ class AbstractMinionSpec extends Specification {
         void reset() { }
 
         @Override
-        GruContext run(Squad squad, GruContext context) { GruContext.EMPTY }
+        GruContext run(Squad squad, GruContext context) { return GruContext.EMPTY }
+
     }
 
 }

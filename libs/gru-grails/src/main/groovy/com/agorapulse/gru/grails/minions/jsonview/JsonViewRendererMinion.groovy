@@ -25,7 +25,6 @@ import com.agorapulse.gru.minions.AbstractMinion
 import com.agorapulse.gru.minions.JsonMinion
 import grails.core.GrailsApplication
 import grails.plugin.json.view.JsonViewConfiguration
-import grails.plugin.json.view.JsonViewGrailsPlugin
 import grails.plugin.json.view.JsonViewTemplateEngine
 import grails.plugin.json.view.api.JsonView
 import grails.plugin.json.view.api.jsonapi.DefaultJsonApiIdRenderer
@@ -105,7 +104,7 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
                 jsonSmartViewResolver(JsonViewResolver, jsonTemplateEngine) {
                     templateResolver = bean(PluginAwareTemplateResolver, jsonViewConfiguration)
                 }
-                jsonViewResolver(GenericGroovyTemplateViewResolver, jsonSmartViewResolver )
+                jsonViewResolver(GenericGroovyTemplateViewResolver, jsonSmartViewResolver)
             }
         }
 

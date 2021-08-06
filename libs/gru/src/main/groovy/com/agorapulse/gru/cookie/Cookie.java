@@ -378,11 +378,11 @@ public final class Cookie {
     private static int dateCharacterOffset(String input, int pos, int limit, boolean invert) {
         for (int i = pos; i < limit; i++) {
             int c = input.charAt(i);
-            boolean dateCharacter = (c < ' ' && c != '\t') || (c >= '\u007f')
-                || (c >= '0' && c <= '9')
-                || (c >= 'a' && c <= 'z')
-                || (c >= 'A' && c <= 'Z')
-                || (c == ':');
+            boolean dateCharacter = c < ' ' && c != '\t' || c >= '\u007f'
+                || c >= '0' && c <= '9'
+                || c >= 'a' && c <= 'z'
+                || c >= 'A' && c <= 'Z'
+                || c == ':';
             if (dateCharacter == !invert) {
                 return i;
             }

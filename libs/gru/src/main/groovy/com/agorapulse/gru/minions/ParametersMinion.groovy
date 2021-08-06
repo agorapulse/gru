@@ -43,10 +43,11 @@ class ParametersMinion extends AbstractMinion<Client>  {
                 client.request.addParameter(key, value)
             }
         }
-        context
+        return context
     }
 
     void addParameters(Map<String, Object> params) {
         parameters.putAll(params)
     }
+
 }

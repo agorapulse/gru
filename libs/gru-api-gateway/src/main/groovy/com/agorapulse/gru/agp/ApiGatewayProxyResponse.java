@@ -44,7 +44,7 @@ class ApiGatewayProxyResponse implements Client.Response {
         if (response.containsKey("headers")) {
             Map<String, String> headers = (Map<String, String>) response.get("headers");
             headers.forEach((k, v) -> {
-                List<String> values = multiValueHeaders.computeIfAbsent(k, (key) -> new ArrayList<>());
+                List<String> values = multiValueHeaders.computeIfAbsent(k, key -> new ArrayList<>());
                 if (!values.contains(v)) {
                     values.add(v);
                 }

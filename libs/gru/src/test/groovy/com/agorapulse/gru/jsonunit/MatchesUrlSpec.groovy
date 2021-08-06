@@ -49,4 +49,5 @@ import spock.lang.Unroll
         then:
             description.toString() == 'a string which is valid URL'
     }
+
 }

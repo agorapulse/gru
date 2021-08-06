@@ -21,10 +21,12 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.grails.Grails
 import com.agorapulse.gru.minions.AbstractMinion
+import groovy.transform.CompileStatic
 
 /**
  * Minion responsible for verifying model returned from the controller action.
  */
+@CompileStatic
 class ForwardMinion extends AbstractMinion<Grails> {
 
     final int index = HTTP_MINION_INDEX + 1000
@@ -41,4 +43,5 @@ class ForwardMinion extends AbstractMinion<Grails> {
             assert forwardedUri == grails.unitTest.response.forwardedUrl
         }
     }
+
 }

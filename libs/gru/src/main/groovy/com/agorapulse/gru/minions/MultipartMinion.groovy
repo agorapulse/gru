@@ -54,4 +54,5 @@ class MultipartMinion extends AbstractMinion<Client> {
     void multipart(Consumer<MultipartDefinitionBuilder> definition) {
         this.multipartDefinition = definition
     }
+
 }

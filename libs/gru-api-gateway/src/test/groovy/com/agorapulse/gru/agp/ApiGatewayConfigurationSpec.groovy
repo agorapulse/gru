@@ -213,20 +213,26 @@ class ApiGatewayConfigurationSpec extends Specification {
 }
 
 class SampleHandler implements RequestHandler<Map, Map> {
+
     @Override Map handleRequest(Map input, Context context) {
         return [body: JsonOutput.toJson(input: input)]
     }
+
 }
 class NonProxyHandler implements RequestHandler<Map, Map> {
+
     @Override Map handleRequest(Map input, Context context) {
         return [input: input]
     }
+
 }
 
 class GenericHandler<I, O> implements RequestHandler<I, O> {
+
     @Override O handleRequest(I input, Context context) {
         throw new UnsupportedOperationException()
     }
+
 }
 
 class FailingConstructorHandler implements RequestHandler<Map, Map> {
@@ -238,23 +244,28 @@ class FailingConstructorHandler implements RequestHandler<Map, Map> {
     @Override Map handleRequest(Map input, Context context) {
         throw new UnsupportedOperationException()
     }
+
 }
 
 class BoundParentHandler extends GenericHandler<Map, Map> { }
 
 class NoZeroArgConstructorHandler  implements RequestHandler<Map, Map> {
 
+    @SuppressWarnings('UnusedMethodParameter')
     NoZeroArgConstructorHandler(String foo, String bar) { }
 
     @Override Map handleRequest(Map input, Context context) {
         throw new UnsupportedOperationException()
     }
+
 }
 
 class StreamingHandler implements RequestStreamHandler {
+
     @Override
     void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
         ObjectMapper mapper = new ObjectMapper()
         mapper.writer().writeValue(output, [body: [input: mapper.readValue(input, Map)]])
     }
+
 }

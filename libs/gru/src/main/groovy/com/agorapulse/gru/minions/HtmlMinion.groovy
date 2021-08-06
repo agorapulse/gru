@@ -56,9 +56,9 @@ class HtmlMinion extends AbstractContentMinion<Client> {
                 documentNodes.add(it as Node)
             }
         }
-        documentNodes.each {it.remove() }
+        documentNodes.each { it.remove() }
         document.outputSettings(new Document.OutputSettings().syntax(Document.OutputSettings.Syntax.xml).escapeMode(Entities.EscapeMode.xhtml))
-        document.outerHtml()
+        return document.outerHtml()
     }
 
     @SuppressWarnings('GStringExpressionWithinString')
@@ -72,6 +72,7 @@ class HtmlMinion extends AbstractContentMinion<Client> {
         .normalizeWhitespace()
         .withTest(expectedSource)
         .withDifferenceEvaluator(DifferenceEvaluators.chain(DifferenceEvaluators.Default, new DifferenceEvaluator() {
+
             @Override
             ComparisonResult evaluate(Comparison comparison, ComparisonResult outcome) {
                 if (outcome == ComparisonResult.DIFFERENT) {
@@ -81,6 +82,7 @@ class HtmlMinion extends AbstractContentMinion<Client> {
                 }
                 return outcome
             }
+
         }))
         .build()
 
@@ -89,7 +91,8 @@ class HtmlMinion extends AbstractContentMinion<Client> {
             log.info actual
             log.info 'EXPECTED:'
             log.info expected
-            throw new AssertionError((Object) "HTML files are different:\n\n ${diff.toString()}")
+            throw new AssertionError((Object) "HTML files are different:\n\n ${diff}")
         }
     }
+
 }

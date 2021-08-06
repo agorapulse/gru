@@ -89,7 +89,6 @@ class LazyClientSpec extends Specification {
             created == 1
 
             1 * mockClient.unitTest
-
     }
 
 }

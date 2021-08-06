@@ -47,7 +47,7 @@ class ApiGatewayProxyRequestSpec extends Specification {
             request.addParameter('offset', 5)
 
         then:
-            with (request) {
+            with(request) {
                 baseUri == BASE_URI
                 uri == PATH
                 method == METHOD

@@ -92,11 +92,11 @@ class JsonMinionSpec extends Specification {
     }
 
     private static String load(String name) {
-        JsonMinionSpec.getResourceAsStream(JsonMinionSpec.simpleName + '/' + name).text
+        return JsonMinionSpec.getResourceAsStream(JsonMinionSpec.simpleName + '/' + name).text
     }
 
     private static String escapeJsonUnitIgnore(String original) {
-        original.replaceAll(/\$\{json-unit/, '_json_unit')
+        return original.replaceAll(/\$\{json-unit/, '_json_unit')
     }
 
 }

@@ -79,4 +79,5 @@ class TestHttpResponse implements Response {
         result.status = status
         result.message = message
     }
+
 }

@@ -36,4 +36,5 @@ class StringContentSpec extends Specification {
         then:
             thrown(UnsupportedOperationException)
     }
+
 }

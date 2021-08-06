@@ -38,7 +38,7 @@ class GruSpringResponse implements Client.Response {
 
     @Override
     int getStatus() {
-        response.status
+        return response.status
     }
 
     @Override
@@ -79,4 +79,5 @@ class GruSpringResponse implements Client.Response {
                 .build()
         }
     }
+
 }

@@ -20,6 +20,8 @@ package com.agorapulse.gru.spring
 import com.agorapulse.gru.AbstractClient
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 import org.springframework.mock.web.MockMultipartFile
 import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.MvcResult
@@ -34,6 +36,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 /**
  * Gru implementation based on MockMvc.
  */
+@CompileStatic
 class Spring extends AbstractClient {
 
     @Deprecated
@@ -70,6 +73,7 @@ class Spring extends AbstractClient {
     }
 
     @Override
+    @CompileDynamic
     @SuppressWarnings('Instanceof')
     GruContext run(Squad squad, GruContext context) {
         MockMvc mockMvc
@@ -112,9 +116,10 @@ class Spring extends AbstractClient {
 
     @Override
     Object getUnitTest() {
-        super.unitTest
+        return super.unitTest
     }
     private URI getRequestURI() {
-        new URI("${request.baseUri ?: ''}${request.uri ?: ''}".replaceAll('/+', '/'))
+        return new URI("${request.baseUri ?: ''}${request.uri ?: ''}".replaceAll('/+', '/'))
     }
+
 }

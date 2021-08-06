@@ -53,7 +53,7 @@ class Http extends AbstractClient {
         @ClosureParams(value = SimpleType, options = 'okhttp3.OkHttpClient.Builder')
             Closure<OkHttpClient.Builder> configuration
     ) {
-        return new Http(configuration.getOwner(), ConsumerWithDelegate.create(configuration))
+        return new Http(configuration.owner, ConsumerWithDelegate.create(configuration))
     }
 
     @Deprecated
@@ -67,13 +67,14 @@ class Http extends AbstractClient {
     }
 
     @Deprecated
+    @SuppressWarnings('UnusedMethodParameter')
     static Http steal(
         Object unitTest,
         @DelegatesTo(value = OkHttpClient.Builder, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType, options = 'okhttp3.OkHttpClient.Builder')
             Closure<OkHttpClient.Builder> configuration
     ) {
-        return create(configuration);
+        return create(configuration)
     }
 
     private Http(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
@@ -108,7 +109,7 @@ class Http extends AbstractClient {
 
     @Override
     Object getUnitTest() {
-        super.unitTest
+        return super.unitTest
     }
 
     @Override
@@ -119,4 +120,5 @@ class Http extends AbstractClient {
 
         return context.withResult(response)
     }
+
 }

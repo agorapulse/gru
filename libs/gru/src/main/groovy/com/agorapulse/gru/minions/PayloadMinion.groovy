@@ -50,7 +50,7 @@ class PayloadMinion extends AbstractMinion<Client> {
             }
             client.request.setContent(contentType, inputStream.bytes)
         }
-        context
+        return context
     }
 
 }

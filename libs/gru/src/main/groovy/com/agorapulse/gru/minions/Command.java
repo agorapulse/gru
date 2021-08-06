@@ -25,7 +25,7 @@ public interface Command<M extends  Minion> {
     Command NOOP = minion -> { };
 
     static <M extends Minion> Command<M> create(Closure<M> closure) {
-        return (m) -> ConsumerWithDelegate.create(closure).accept(m);
+        return m -> ConsumerWithDelegate.create(closure).accept(m);
     }
 
     void execute(M minion);

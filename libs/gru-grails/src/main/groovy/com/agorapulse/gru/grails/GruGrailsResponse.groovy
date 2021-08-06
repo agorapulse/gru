@@ -19,11 +19,13 @@ package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.Client
 import com.agorapulse.gru.cookie.Cookie
+import groovy.transform.CompileStatic
 import org.grails.plugins.testing.GrailsMockHttpServletResponse
 
 /**
  * Wrapper around mock Grails response.
  */
+@CompileStatic
 class GruGrailsResponse implements Client.Response {
 
     final GrailsMockHttpServletResponse response
@@ -74,4 +76,5 @@ class GruGrailsResponse implements Client.Response {
                 .build()
         }
     }
+
 }

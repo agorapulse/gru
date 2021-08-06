@@ -123,6 +123,7 @@ class GruHttpRequest implements Client.Request {
             builder.method(method, body)
         }
 
-        builder.url(url.toString()).build()
+        return builder.url(url.toString()).build()
     }
+
 }

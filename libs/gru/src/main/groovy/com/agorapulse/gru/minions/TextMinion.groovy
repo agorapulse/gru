@@ -41,4 +41,5 @@ class TextMinion extends AbstractContentMinion<Client> {
     protected void similar(String actual, String expected) throws AssertionError {
         assert actual == expected
     }
+
 }

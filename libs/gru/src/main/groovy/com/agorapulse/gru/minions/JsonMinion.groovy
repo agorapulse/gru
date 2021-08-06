@@ -70,17 +70,17 @@ class JsonMinion extends AbstractContentMinion<Client> {
             }
             client.request.json = requestText
         }
-        context
+        return context
     }
 
     List mergeMapToList(List actual, Map expected) {
         // expect map is not single item of the list
-        mergeLists(actual, [expected])
+        return mergeLists(actual, [expected])
     }
 
     Map mergeListToMap(Map actual, List expected) {
         // expect list has moved to first entry of the map
-        mergeMaps(actual, [(actual.keySet().first()): expected])
+        return mergeMaps(actual, [(actual.keySet().first()): expected])
     }
 
     List mergeLists(List actual, List expected) {
@@ -149,7 +149,7 @@ class JsonMinion extends AbstractContentMinion<Client> {
             createdResources << responseContent.toString()
         }
 
-        mergedJson
+        return mergedJson
     }
 
     @SuppressWarnings('Instanceof')
@@ -194,4 +194,5 @@ class JsonMinion extends AbstractContentMinion<Client> {
         // primitive value and the expected value was not placeholder
         return actual
     }
+
 }

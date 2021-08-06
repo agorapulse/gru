@@ -17,9 +17,12 @@
  */
 package com.agorapulse.gru.grails.minions.jsonview
 
+import groovy.transform.CompileStatic
+
 /**
  * JsonViewGrailsPlugin class holder.
  */
+@CompileStatic
 @SuppressWarnings(['ClassForName', 'PublicMethodsBeforeNonPublicMethods'])
 class JsonViewSupport {
 
@@ -34,7 +37,7 @@ class JsonViewSupport {
     }
 
     static boolean isEnabled() {
-        JSON_VIEWS_PLUGIN_TYPE != null
+        return JSON_VIEWS_PLUGIN_TYPE != null
     }
 
 }

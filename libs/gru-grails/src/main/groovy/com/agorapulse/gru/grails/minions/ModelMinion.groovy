@@ -21,11 +21,13 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.grails.Grails
 import com.agorapulse.gru.minions.AbstractMinion
+import groovy.transform.CompileDynamic
 import org.springframework.web.servlet.ModelAndView
 
 /**
  * Minion responsible for verifying model returned from the controller action.
  */
+@CompileDynamic
 class ModelMinion extends AbstractMinion<Grails> {                                      // <1>
 
     final int index = MODEL_MINION_INDEX                                                // <2>
@@ -55,4 +57,5 @@ class ModelMinion extends AbstractMinion<Grails> {                              
             assert context.result == model
         }
     }
+
 }

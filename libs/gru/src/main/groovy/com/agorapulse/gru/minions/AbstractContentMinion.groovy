@@ -81,9 +81,9 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
 
     protected abstract void similar(String actual, String expected) throws AssertionError
 
-    protected String normalize(String input) { input }
+    protected String normalize(String input) { return input }
 
-    protected boolean isRewriteSupported() { false }
+    protected boolean isRewriteSupported() { return false }
 
     @SuppressWarnings(['ConfusingMethodName', 'UnusedMethodParameter'])
     protected String rewrite(Client client, String actualText, String expectedText) {
@@ -91,5 +91,6 @@ abstract class AbstractContentMinion<C extends Client> extends AbstractMinion<C>
     }
 
     @SuppressWarnings('UnusedMethodParameter')
-    protected String readResponseText(Client client, Squad squad, GruContext context) { client.response.text }
+    protected String readResponseText(Client client, Squad squad, GruContext context) { return client.response.text }
+
 }
