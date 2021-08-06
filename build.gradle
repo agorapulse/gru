@@ -83,18 +83,6 @@ config {
         snapshotsRepository = 'localSnapshot'
     }
 
-    bintray {
-        credentials {
-            username = bintrayUsername
-            password = bintrayApiKey
-        }
-        userOrg = 'agorapulse'
-        repo = 'libs'
-        name = rootProject.name
-        publish = true
-        githubRepo = slug
-    }
-
     quality {
         checkstyle {
             toolVersion = '8.27'
