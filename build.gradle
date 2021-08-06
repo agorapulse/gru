@@ -153,12 +153,6 @@ projects {
                 mavenCentral()
             }
 
-            config {
-                bintray {
-                    name = subproject.name
-                }
-            }
-
             tasks.withType(JavaCompile) {
                 options.encoding = "UTF-8"
                 options.compilerArgs.add('-parameters')
@@ -198,6 +192,16 @@ projects {
             dependencies {
                 testImplementation "org.spockframework:spock-core:$spockVersion", {
                     force = true
+                }
+            }
+        }
+
+        dir ('examples') {
+            config {
+                quality {
+                    codenarc {
+                        enabled = false
+                    }
                 }
             }
         }
