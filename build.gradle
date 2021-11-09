@@ -197,6 +197,10 @@ projects {
                     force = true
                 }
             }
+
+            tasks.withType(Test) {
+                useJUnitPlatform()
+            }
         }
 
         dir ('examples') {
