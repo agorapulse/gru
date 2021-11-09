@@ -17,71 +17,72 @@
  */
 package com.agorapulse.gru.cookie;
 
+import org.junit.jupiter.api.Test;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
-import org.junit.Test;
 
 import static java.util.Arrays.asList;
-import static org.junit.Assert.fail;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import static com.agorapulse.gru.cookie.Cookie.MAX_DATE;
 import static com.agorapulse.gru.cookie.Cookie.UTC;
+import static org.junit.jupiter.api.Assertions.fail;
 
 /**
  * Inspired by CookieTest from okhttp3.
  */
-public final class CookieTest {
+final class CookieTest {
 
     @Test
-    public void simpleCookie() throws Exception {
+    void simpleCookie() throws Exception {
         Cookie cookie = Cookie.parse("SID=31d4d96e407aad42");
         assertThat(cookie.toString()).isEqualTo("SID=31d4d96e407aad42; path=/");
     }
 
     @Test
-    public void noEqualsSign() throws Exception {
+    void noEqualsSign() throws Exception {
         assertThat(Cookie.parse("foo")).isNull();
         assertThat(Cookie.parse("foo; Path=/")).isNull();
     }
 
     @Test
-    public void emptyName() throws Exception {
+    void emptyName() throws Exception {
         assertThat(Cookie.parse("=b")).isNull();
         assertThat(Cookie.parse(" =b")).isNull();
         assertThat(Cookie.parse("\r\t \n=b")).isNull();
     }
 
     @Test
-    public void spaceInName() throws Exception {
+    void spaceInName() throws Exception {
         assertThat(Cookie.parse("a b=cd").getName()).isEqualTo("a b");
     }
 
     @Test
-    public void spaceInValue() throws Exception {
+    void spaceInValue() throws Exception {
         assertThat(Cookie.parse("ab=c d").getValue()).isEqualTo("c d");
     }
 
     @Test
-    public void trimLeadingAndTrailingWhitespaceFromName() throws Exception {
+    void trimLeadingAndTrailingWhitespaceFromName() throws Exception {
         assertThat(Cookie.parse(" a=b").getName()).isEqualTo("a");
         assertThat(Cookie.parse("a =b").getName()).isEqualTo("a");
         assertThat(Cookie.parse("\r\t \na\n\t \n=b").getName()).isEqualTo("a");
     }
 
     @Test
-    public void emptyValue() throws Exception {
+    void emptyValue() throws Exception {
         assertThat(Cookie.parse("a=").getValue()).isEqualTo("");
         assertThat(Cookie.parse("a= ").getValue()).isEqualTo("");
         assertThat(Cookie.parse("a=\r\t \n").getValue()).isEqualTo("");
     }
 
     @Test
-    public void trimLeadingAndTrailingWhitespaceFromValue() throws Exception {
+    void trimLeadingAndTrailingWhitespaceFromValue() throws Exception {
         assertThat(Cookie.parse("a= ").getValue()).isEqualTo("");
         assertThat(Cookie.parse("a= b").getValue()).isEqualTo("b");
         assertThat(Cookie.parse("a=b ").getValue()).isEqualTo("b");
@@ -89,7 +90,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void invalidCharacters() throws Exception {
+    void invalidCharacters() throws Exception {
         assertThat(Cookie.parse("a\u0000b=cd")).isNull();
         assertThat(Cookie.parse("ab=c\u0000d")).isNull();
         assertThat(Cookie.parse("a\u0001b=cd")).isNull();
@@ -107,7 +108,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void maxAge() throws Exception {
+    void maxAge() throws Exception {
         assertThat(parseCookie(50000L, "a=b; Max-Age=1").getExpiresAt())
             .isEqualTo(51000L);
         assertThat(parseCookie(50000L, "a=b; Max-Age=9223372036854724").getExpiresAt())
@@ -129,7 +130,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void maxAgeNonPositive() throws Exception {
+    void maxAgeNonPositive() throws Exception {
         assertThat(parseCookie(50000L, "a=b; Max-Age=-1").getExpiresAt())
             .isEqualTo(Long.MIN_VALUE);
         assertThat(parseCookie(50000L, "a=b; Max-Age=0").getExpiresAt())
@@ -143,7 +144,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void domainAndPath() throws Exception {
+    void domainAndPath() throws Exception {
         Cookie cookie = Cookie.parse("SID=31d4d96e407aad42; Path=/; Domain=.example.com");
         assertThat(cookie.getDomain()).isEqualTo("example.com");
         assertThat(cookie.getPath()).isEqualTo("/");
@@ -153,13 +154,13 @@ public final class CookieTest {
     }
 
     @Test
-    public void invalidDomain() throws Exception {
+    void invalidDomain() throws Exception {
         Cookie cookie = Cookie.parse("SID=31d4d96e407aad42; Path=/; Domain=example.com.");
         assertThat(cookie.getDomain()).isEqualTo(Cookie.DEFAULT_DOMAIN);
     }
 
     @Test
-    public void secureAndHttpOnly() throws Exception {
+    void secureAndHttpOnly() throws Exception {
         Cookie cookie = Cookie.parse("SID=31d4d96e407aad42; Path=/; Secure; HttpOnly");
         assertThat(cookie.getSecure()).isTrue();
         assertThat(cookie.getHttpOnly()).isTrue();
@@ -168,7 +169,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void expiresDate() throws Exception {
+    void expiresDate() throws Exception {
         assertThat(new Date(Cookie.parse("a=b; Expires=Thu, 01 Jan 1970 00:00:00 GMT")
             .getExpiresAt())).isEqualTo(date("1970-01-01T00:00:00.000+0000"));
         assertThat(new Date(Cookie.parse("a=b; Expires=Wed, 09 Jun 2021 10:18:14 GMT")
@@ -180,7 +181,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void awkwardDates() throws Exception {
+    void awkwardDates() throws Exception {
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Jan 70 00:00:00 GMT").getExpiresAt())
             .isEqualTo(0L);
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 January 1970 00:00:00 GMT").getExpiresAt())
@@ -204,7 +205,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void invalidYear() throws Exception {
+    void invalidYear() throws Exception {
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Jan 1600 00:00:00 GMT").getExpiresAt())
             .isEqualTo(MAX_DATE);
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Jan 19999 00:00:00 GMT").getExpiresAt())
@@ -214,7 +215,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void invalidMonth() throws Exception {
+    void invalidMonth() throws Exception {
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Foo 1970 00:00:00 GMT").getExpiresAt())
             .isEqualTo(MAX_DATE);
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Foocember 1970 00:00:00 GMT").getExpiresAt())
@@ -224,7 +225,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void invalidDayOfMonth() throws Exception {
+    void invalidDayOfMonth() throws Exception {
         assertThat(Cookie.parse("a=b; Expires=Thu, 32 Jan 1970 00:00:00 GMT").getExpiresAt())
             .isEqualTo(MAX_DATE);
         assertThat(Cookie.parse("a=b; Expires=Thu, Jan 1970 00:00:00 GMT").getExpiresAt())
@@ -232,43 +233,43 @@ public final class CookieTest {
     }
 
     @Test
-    public void invalidHour() throws Exception {
+    void invalidHour() throws Exception {
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Jan 1970 24:00:00 GMT").getExpiresAt())
             .isEqualTo(MAX_DATE);
     }
 
     @Test
-    public void invalidMinute() throws Exception {
+    void invalidMinute() throws Exception {
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Jan 1970 00:60:00 GMT").getExpiresAt())
             .isEqualTo(MAX_DATE);
     }
 
     @Test
-    public void invalidSecond() throws Exception {
+    void invalidSecond() throws Exception {
         assertThat(Cookie.parse("a=b; Expires=Thu, 01 Jan 1970 00:00:60 GMT").getExpiresAt())
             .isEqualTo(MAX_DATE);
     }
 
     @Test
-    public void hostOnly() throws Exception {
+    void hostOnly() throws Exception {
         assertThat(Cookie.parse("a=b").getHostOnly()).isTrue();
         assertThat(Cookie.parse("a=b; domain=example.com").getHostOnly()).isFalse();
     }
 
     @Test
-    public void httpOnly() throws Exception {
+    void httpOnly() throws Exception {
         assertThat(Cookie.parse("a=b").getHttpOnly()).isFalse();
         assertThat(Cookie.parse("a=b; HttpOnly").getHttpOnly()).isTrue();
     }
 
     @Test
-    public void secure() throws Exception {
+    void secure() throws Exception {
         assertThat(Cookie.parse("a=b").getSecure()).isFalse();
         assertThat(Cookie.parse("a=b; Secure").getSecure()).isTrue();
     }
 
     @Test
-    public void maxAgeTakesPrecedenceOverExpires() throws Exception {
+    void maxAgeTakesPrecedenceOverExpires() throws Exception {
         // Max-Age = 1, Expires = 2. In either order.
         assertThat(parseCookie(
             0L, "a=b; Max-Age=1; Expires=Thu, 01 Jan 1970 00:00:02 GMT").getExpiresAt()).isEqualTo(
@@ -289,7 +290,7 @@ public final class CookieTest {
      * If a cookie incorrectly defines multiple 'Max-Age' attributes, the last one defined wins.
      */
     @Test
-    public void lastMaxAgeWins() throws Exception {
+    void lastMaxAgeWins() throws Exception {
         assertThat(parseCookie(
             0L, "a=b; Max-Age=2; Max-Age=4; Max-Age=1; Max-Age=3").getExpiresAt()).isEqualTo(3000L);
     }
@@ -298,7 +299,7 @@ public final class CookieTest {
      * If a cookie incorrectly defines multiple 'Expires' attributes, the last one defined wins.
      */
     @Test
-    public void lastExpiresAtWins() throws Exception {
+    void lastExpiresAtWins() throws Exception {
         assertThat(parseCookie(0L, "a=b; "
             + "Expires=Thu, 01 Jan 1970 00:00:02 GMT; "
             + "Expires=Thu, 01 Jan 1970 00:00:04 GMT; "
@@ -307,7 +308,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void maxAgeOrExpiresMakesCookiePersistent() throws Exception {
+    void maxAgeOrExpiresMakesCookiePersistent() throws Exception {
         assertThat(parseCookie(0L, "a=b").getPersistent()).isFalse();
         assertThat(parseCookie(0L, "a=b; Max-Age=1").getPersistent()).isTrue();
         assertThat(parseCookie(0L, "a=b; Expires=Thu, 01 Jan 1970 00:00:01 GMT").getPersistent())
@@ -315,7 +316,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builder() throws Exception {
+    void builder() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -333,7 +334,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderNameValidation() throws Exception {
+    void builderNameValidation() throws Exception {
         try {
             new Cookie.Builder().name(null);
             fail();
@@ -349,7 +350,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderValueValidation() throws Exception {
+    void builderValueValidation() throws Exception {
         try {
             new Cookie.Builder().value(null);
             fail();
@@ -365,7 +366,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderClampsMaxDate() throws Exception {
+    void builderClampsMaxDate() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -377,7 +378,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderExpiresAt() throws Exception {
+    void builderExpiresAt() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -389,7 +390,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderClampsMinDate() throws Exception {
+    void builderClampsMinDate() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -400,7 +401,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderDomainValidation() throws Exception {
+    void builderDomainValidation() throws Exception {
         try {
             new Cookie.Builder().hostOnlyDomain(null);
             fail();
@@ -410,7 +411,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderDomain() throws Exception {
+    void builderDomain() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -421,7 +422,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderPath() throws Exception {
+    void builderPath() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -432,7 +433,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderPathValidation() throws Exception {
+    void builderPathValidation() throws Exception {
         try {
             new Cookie.Builder().path("foo");
             fail();
@@ -442,7 +443,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderSecure() throws Exception {
+    void builderSecure() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -453,7 +454,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderHttpOnly() throws Exception {
+    void builderHttpOnly() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -464,7 +465,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void builderIpv6() throws Exception {
+    void builderIpv6() throws Exception {
         Cookie cookie = new Cookie.Builder()
             .name("a")
             .value("b")
@@ -474,7 +475,7 @@ public final class CookieTest {
     }
 
     @Test
-    public void equalsAndHashCode() throws Exception {
+    void equalsAndHashCode() throws Exception {
         List<String> cookieStrings = asList(
             "a=b; Path=/c; Domain=example.com; Max-Age=5; Secure; HttpOnly",
             "a= ; Path=/c; Domain=example.com; Max-Age=5; Secure; HttpOnly",

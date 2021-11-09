@@ -17,8 +17,6 @@
  */
 package com.agorapulse.gru
 
-import org.junit.runner.Description
-import org.junit.runners.model.Statement
 import spock.lang.Specification
 
 /**
@@ -29,7 +27,6 @@ class GruSpec extends Specification {
     @SuppressWarnings('UnnecessaryGetter')
     void 'expectations are verified'() {
         given:
-            Description description = Description.createTestDescription(GruSpec, 'test is verified')
             Client.Request request = Mock(Client.Request)
             Client client = Mock(Client) {
                 getInitialSquad() >> []
