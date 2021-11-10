@@ -22,9 +22,8 @@ import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.TestClient
 import com.agorapulse.gru.content.FileContent
-import org.junit.Rule
-import org.junit.rules.TemporaryFolder
 import spock.lang.Specification
+import spock.lang.TempDir
 import spock.util.environment.RestoreSystemProperties
 
 import static com.agorapulse.gru.minions.AbstractContentMinion.SYSTEM_PROPERTY_REWRITE_RESOURCES
@@ -43,11 +42,11 @@ class JsonMinionSpec extends Specification {
     private static final String FILE_NAME_AFTER_REWRITE = 'rewritten.json'
     private static final String FIXTURES_ROOT = 'com/agorapulse/gru/minions/JsonMinionSpec/'
 
-    @Rule TemporaryFolder tmp = new TemporaryFolder()
+    @TempDir File tmp
 
     void 'request fixture file is created'() {
         given:
-            File testResourcesFolder = tmp.newFolder()
+            File testResourcesFolder = tmp
             System.setProperty(TEST_RESOURCES_FOLDER_PROPERTY_NAME, testResourcesFolder.canonicalPath)
             JsonMinion jsonMinion = new JsonMinion(requestJsonContent: FileContent.create(FILE_NAME))
             Client client = new TestClient(this, Mock(Client.Request), Mock(Client.Response))
@@ -62,7 +61,7 @@ class JsonMinionSpec extends Specification {
 
     void 'response file is rewritten'() {
         given:
-            File testResourcesFolder = tmp.newFolder()
+            File testResourcesFolder = tmp
 
             System.setProperty(TEST_RESOURCES_FOLDER_PROPERTY_NAME, testResourcesFolder.canonicalPath)
             System.setProperty(SYSTEM_PROPERTY_REWRITE_RESOURCES, true.toString())
