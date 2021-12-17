@@ -25,25 +25,33 @@
 <a class="jxr_linenumber" name="L17" href="#L17">17</a>  <em class="jxr_comment"> */</em>
 <a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">package</strong> heist.micronaut;
 <a class="jxr_linenumber" name="L19" href="#L19">19</a>  
-<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> io.micronaut.http.annotation.Controller;
-<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> io.micronaut.http.annotation.Get;
-<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> io.micronaut.http.annotation.PathVariable;
-<a class="jxr_linenumber" name="L23" href="#L23">23</a>  
-<a class="jxr_linenumber" name="L24" href="#L24">24</a>  @Controller(<span class="jxr_string">"/moons"</span>)
-<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">class</strong> <a name="MoonController" href="../../heist/micronaut/MoonController.html#MoonController">MoonController</a> {
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  <strong class="jxr_keyword">import</strong> io.micronaut.http.HttpResponse;
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <strong class="jxr_keyword">import</strong> io.micronaut.http.annotation.Controller;
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <strong class="jxr_keyword">import</strong> io.micronaut.http.annotation.Get;
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <strong class="jxr_keyword">import</strong> io.micronaut.http.annotation.PathVariable;
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">import</strong> java.net.URI;
 <a class="jxr_linenumber" name="L26" href="#L26">26</a>  
-<a class="jxr_linenumber" name="L27" href="#L27">27</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="MoonService" href="../../heist/micronaut/MoonService.html#MoonService">MoonService</a> moonService;
-<a class="jxr_linenumber" name="L28" href="#L28">28</a>  
-<a class="jxr_linenumber" name="L29" href="#L29">29</a>      <strong class="jxr_keyword">public</strong> <a name="MoonController" href="../../heist/micronaut/MoonController.html#MoonController">MoonController</a>(<a name="MoonService" href="../../heist/micronaut/MoonService.html#MoonService">MoonService</a> moonService) {
-<a class="jxr_linenumber" name="L30" href="#L30">30</a>          <strong class="jxr_keyword">this</strong>.moonService = moonService;
-<a class="jxr_linenumber" name="L31" href="#L31">31</a>      }
-<a class="jxr_linenumber" name="L32" href="#L32">32</a>  
-<a class="jxr_linenumber" name="L33" href="#L33">33</a>      @Get(<span class="jxr_string">"/{planet}/{moon}"</span>)
-<a class="jxr_linenumber" name="L34" href="#L34">34</a>      <a name="Moon" href="../../heist/micronaut/Moon.html#Moon">Moon</a> sayHello(@PathVariable(<span class="jxr_string">"planet"</span>) String planet, @PathVariable(<span class="jxr_string">"moon"</span>) String moon) {
-<a class="jxr_linenumber" name="L35" href="#L35">35</a>          <strong class="jxr_keyword">return</strong> moonService.get(planet, moon);
-<a class="jxr_linenumber" name="L36" href="#L36">36</a>      }
-<a class="jxr_linenumber" name="L37" href="#L37">37</a>  
-<a class="jxr_linenumber" name="L38" href="#L38">38</a>  }
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>  @Controller(<span class="jxr_string">"/moons"</span>)
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>  <strong class="jxr_keyword">class</strong> <a name="MoonController" href="../../heist/micronaut/MoonController.html#MoonController">MoonController</a> {
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">final</strong> <a name="MoonService" href="../../heist/micronaut/MoonService.html#MoonService">MoonService</a> moonService;
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>  
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>      <strong class="jxr_keyword">public</strong> <a name="MoonController" href="../../heist/micronaut/MoonController.html#MoonController">MoonController</a>(<a name="MoonService" href="../../heist/micronaut/MoonService.html#MoonService">MoonService</a> moonService) {
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>          <strong class="jxr_keyword">this</strong>.moonService = moonService;
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>      }
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>  
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>      @Get(<span class="jxr_string">"/{planet}/{moon}"</span>)
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>      <a name="Moon" href="../../heist/micronaut/Moon.html#Moon">Moon</a> sayHello(@PathVariable(<span class="jxr_string">"planet"</span>) String planet, @PathVariable(<span class="jxr_string">"moon"</span>) String moon) {
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>          <strong class="jxr_keyword">return</strong> moonService.get(planet, moon);
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      }
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>  
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>      @Get(<span class="jxr_string">"/the-big-cheese"</span>)
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>      HttpResponse&lt;?&gt; sayHello() {
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>          <strong class="jxr_keyword">return</strong> HttpResponse.redirect(URI.create(<span class="jxr_string">"/moons/earth/moon"</span>));
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>      }
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>  
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  }
 </pre>
 <hr/>
 <div id="footer"></div>
