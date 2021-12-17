@@ -63,6 +63,17 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
         return command(HttpMinion.class, minion -> minion.setStatus(aStatus));
     }
 
+    /**
+     * Sets a multiple possible status returned.
+     * Defaults to OK.
+     *
+     * @param statuses a possible statuses to be returned
+     * @return self
+     */
+    public DefaultResponseDefinitionBuilder statuses(final int... statuses) {
+        return command(HttpMinion.class, minion -> minion.setStatuses(statuses));
+    }
+
     public DefaultResponseDefinitionBuilder json(final Content content) {
         return command(JsonMinion.class, minion -> minion.setResponseContent(content));
     }
@@ -124,7 +135,7 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
     public DefaultResponseDefinitionBuilder redirect(final String uri) {
         return command(HttpMinion.class, minion -> {
             minion.setRedirectUri(uri);
-            minion.setStatus(FOUND);
+            minion.setStatuses(MOVED_PERMANENTLY, FOUND, TEMPORARY_REDIRECT, PERMANENT_REDIRECT);
         });
     }
 

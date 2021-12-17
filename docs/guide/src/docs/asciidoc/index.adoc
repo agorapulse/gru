@@ -285,6 +285,8 @@ Default status is `OK(200)` which is asserted within every test. See <<redirect>
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=stealWithShrinkRay,indent=0]
 ----
 
+TIP: If multiple statuses are possible then you can use `statuses(...)` method instead.
+
 ==== Response Headers
 You can specify expected response headers.
 

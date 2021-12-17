@@ -68,6 +68,16 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
     ResponseDefinitionBuilder status(int aStatus);
 
     /**
+     * Sets the acceptable statuses returned.
+     * Defaults to OK.
+     *
+     * @param statuses the acceptable statuses
+     * @return self
+     */
+    ResponseDefinitionBuilder statuses(int... statuses);
+
+
+    /**
      * Sets an expected JSON response from given file.
      * The file must reside in same package as the test in the directory with the same name as the test
      * e.g. src/test/resources/org/example/foo/MySpec.

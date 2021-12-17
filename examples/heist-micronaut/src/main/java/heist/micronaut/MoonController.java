@@ -17,9 +17,12 @@
  */
 package heist.micronaut;
 
+import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
+
+import java.net.URI;
 
 @Controller("/moons")
 class MoonController {
@@ -33,6 +36,11 @@ class MoonController {
     @Get("/{planet}/{moon}")
     Moon sayHello(@PathVariable("planet") String planet, @PathVariable("moon") String moon) {
         return moonService.get(planet, moon);
+    }
+
+    @Get("/the-big-cheese")
+    HttpResponse<?> sayHello() {
+        return HttpResponse.redirect(URI.create("/moons/earth/moon"));
     }
 
 }
