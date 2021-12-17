@@ -46,6 +46,17 @@ class ManualMicronautSpec extends Specification implements ApplicationContextPro
                 get '/moons/earth/moon'
                 expect {
                     json 'moon.json'
+                    statuses OK, CREATED
+                }
+            }
+    }
+
+    void 'can verify redirects'() {
+        expect:
+            gru.test {
+                get '/moons/the-big-cheese'
+                expect {
+                    redirect '/moons/earth/moon'
                 }
             }
     }

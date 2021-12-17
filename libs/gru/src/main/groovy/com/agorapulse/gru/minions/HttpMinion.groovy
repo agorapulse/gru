@@ -49,7 +49,7 @@ class HttpMinion extends AbstractMinion<Client> {
 
     @Override
     void doVerify(Client client, Squad squad, GruContext context) throws Throwable {
-        assert client.response.status == status
+        assert client.response.status in statuses
 
         for (Map.Entry<String, Collection<String>> header : responseHeaders.entrySet()) {
             Optional.ofNullable(header.getValue()).ifPresent {
@@ -65,7 +65,11 @@ class HttpMinion extends AbstractMinion<Client> {
     }
 
     void setStatus(int status) {
-        this.status = status
+        this.statuses = Collections.singleton(status)
+    }
+
+    void setStatuses(int... statuses) {
+        this.statuses = new TreeSet<>(statuses.toSet())
     }
 
     Map<String, Collection<String>> getRequestHeaders() {
@@ -83,7 +87,7 @@ class HttpMinion extends AbstractMinion<Client> {
     public static final int DEFAULT_STATUS = 200
     final int index = HTTP_MINION_INDEX
 
-    private int status = DEFAULT_STATUS
+    private Set<Integer> statuses = Collections.singleton(DEFAULT_STATUS);
     private final Map<String, Collection<String>> requestHeaders = new LinkedHashMap<>()
     private final Map<String, Collection<String>> responseHeaders = new LinkedHashMap<>()
     private String redirectUri
