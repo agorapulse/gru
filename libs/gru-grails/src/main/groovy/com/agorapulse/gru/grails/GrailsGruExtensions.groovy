@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,14 +25,20 @@ import com.agorapulse.gru.grails.minions.InterceptorsMinion
 import com.agorapulse.gru.grails.minions.ModelMinion
 import com.agorapulse.gru.grails.minions.UrlMappingsMinion
 import grails.testing.web.controllers.ControllerUnitTest
+import groovy.transform.CompileDynamic
 import org.codehaus.groovy.runtime.MethodClosure
 
 // tag::header[]
 /**
  * Add convenient methods for Grails to test definition DSL.
  */
+@CompileDynamic
 class GrailsGruExtensions {
 // end::header[]
+
+    static String getUrlMappings(TestDefinitionBuilder builder) {
+        return 'UrlMappings';
+    }
 
     /**
      * Include artifact by class reference.

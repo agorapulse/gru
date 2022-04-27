@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -38,7 +38,8 @@ class GrailsHtmlMinion extends HtmlMinion {
         String actualResponseText = client.response.text
 
         if (!actualResponseText && context.result instanceof Map) {
-            return grails.unitTest.render(view: squad.ask(UrlMappingsMinion) { getActionName(grails.unitTest) }, model: context.result as Map)
+            String actionName = squad.ask(UrlMappingsMinion) { UrlMappingsMinion url -> url.getActionName(grails.unitTest) }
+            return grails.unitTest.render(view: actionName, model: context.result as Map)
         }
         return actualResponseText
     }

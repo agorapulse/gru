@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -116,7 +116,7 @@ nexusPublishing {
     repositories {
         sonatype {
             nexusUrl = uri('https://s01.oss.sonatype.org/service/local/')
-            snapshotRepositoryUrl = uri('https://s01.oss.sonatype.org/content/repositories/snapshots/')        
+            snapshotRepositoryUrl = uri('https://s01.oss.sonatype.org/content/repositories/snapshots/')
             username = ossrhUsername
             password = ossrhPassword
         }
@@ -144,7 +144,7 @@ allprojects {
 subprojects {
     dependencies {
         codenarc "org.codenarc:CodeNarc:${config.quality.codenarc.toolVersion}"
-        codenarc "org.codehaus.groovy:groovy-templates"
+        codenarc "org.codehaus.groovy:groovy-templates:$groovyVersion"
     }
 }
 
@@ -165,15 +165,6 @@ projects {
 
             tasks.withType(GroovyCompile) {
                 groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
-            }
-
-            dependencies {
-                api platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
-                compile platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
-                implementation platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
-                compileOnly platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
-                testCompile platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
-                testImplementation platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
             }
         }
 

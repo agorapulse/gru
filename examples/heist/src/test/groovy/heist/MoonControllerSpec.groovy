@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -226,8 +226,8 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             gru.verify()
         then:
             GroovyAssertAwareMultipleFailureException ex = thrown(GroovyAssertAwareMultipleFailureException)
-            ex.message.contains('assert client.response.status == status')
-            ex.message.contains('assert actual == expected')
+            ex.message.contains('Status 200 is not expected. Expected status was 418')
+            ex.message.contains('The texts are not equal')
         when:
             assert !gru.verify()
         then:

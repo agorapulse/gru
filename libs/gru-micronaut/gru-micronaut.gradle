@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ dependencies {
 
     api project(':gru-http')
 
-    implementation 'org.codehaus.groovy:groovy'
+    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 
     implementation platform("io.micronaut:micronaut-bom:$micronautCompactVersion")
     implementation("io.micronaut:micronaut-validation")

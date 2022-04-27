@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,8 @@
  */
 dependencies {
     api project(':gru')
+    // must be api because of the configuration block in the Http constructor
     api "com.squareup.okhttp3:okhttp:${okHttpVersion}"
 
-    implementation 'org.codehaus.groovy:groovy'
+    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 }

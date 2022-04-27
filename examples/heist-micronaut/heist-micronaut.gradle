@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -44,6 +44,9 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
 
     testImplementation project(':gru-micronaut')
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
+    testImplementation 'io.micronaut.test:micronaut-test-junit5'
+    testImplementation 'org.junit.jupiter:junit-jupiter-engine'
 }
 
 

@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,6 @@
  */
 package com.agorapulse.gru.grails.minions
 
-import com.agorapulse.gru.DefaultTestDefinitionBuilder
 import com.agorapulse.gru.GruContext
 import com.agorapulse.gru.Squad
 import com.agorapulse.gru.grails.Grails
@@ -46,6 +45,8 @@ import static org.grails.web.servlet.mvc.GrailsWebRequest.ID_PARAMETER
 @CompileStatic
 class UrlMappingsMinion extends AbstractMinion<Grails> {
 
+    private static final String URL_MAPPINGS = "UrlMappings";
+
     final int index = URL_MAPPINGS_MINION_INDEX
 
     private UrlMappingInfo urlMappingInfo = null
@@ -64,7 +65,7 @@ class UrlMappingsMinion extends AbstractMinion<Grails> {
     GruContext doBeforeRun(Grails grails, Squad squad, GruContext context) {
         if (urlMappings.isEmpty() && grails.request.uri != null) {
             try {
-                urlMappings = [getClass().classLoader.loadClass(DefaultTestDefinitionBuilder.UrlMappings)] as List<Class>
+                urlMappings = [getClass().classLoader.loadClass(URL_MAPPINGS)] as List<Class>
             } catch (ClassNotFoundException ignored) {
                 return context.withError(new AssertionError(
                     (Object) 'URI for action is specified but UrlMappings is not defined nor default UrlMappings class exists!'

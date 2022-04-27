@@ -1,0 +1,3 @@
+moduleName = gru
+moduleVersion = @VERSION@
+extensionClasses = com.agorapulse.gru.groovy.GruExtensions

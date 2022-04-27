@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2021 Agorapulse.
+ * Copyright 2018-2022 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@
  */
 dependencies {
     api 'space.jasan:groovy-closure-support:0.6.3'
-    api 'com.agorapulse.testing:fixt:0.2.2'
+    api 'com.agorapulse.testing:fixt:0.2.3'
 
     api "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
     api group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
     api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
-    implementation 'org.codehaus.groovy:groovy'
-    implementation 'org.codehaus.groovy:groovy-json'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+
+    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 
     testImplementation "joda-time:joda-time:${jodaTimeVersion}"
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
     testImplementation 'org.assertj:assertj-core:3.11.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
 }
