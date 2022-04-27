@@ -19,16 +19,9 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.FromString;
-import groovy.transform.stc.SimpleType;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
-import space.jasan.support.groovy.closure.ConsumerWithDelegate;
-import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
 import java.util.List;
 import java.util.Map;
@@ -42,27 +35,15 @@ import java.util.function.Function;
 public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnitOptionsShortcuts, WithContentSupport {
 
     /**
-     * @see Squad#command(Class, Closure)
-     */
-    default <M extends Minion> ResponseDefinitionBuilder command(
-        Class<M> minionType,
-        @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = FromString.class, options = "M")
-            Closure command
-    ) {
-        return command(minionType, Command.create(command));
-    }
-
-    /**
-     * @see Squad#command(Class, Closure)
+     * @see Squad#command(Class, Command)
      */
     <M extends Minion> ResponseDefinitionBuilder command(Class<M> minionType, Command<M> command);
 
     /**
-     * Sets a expected status returned.
+     * Sets an expected status returned.
      * Defaults to OK.
      *
-     * @param aStatus a expected status returned
+     * @param aStatus an expected status returned
      * @return self
      */
     ResponseDefinitionBuilder status(int aStatus);
@@ -104,7 +85,7 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param map map to be converted to JSON
      * @return self
      */
-    default ResponseDefinitionBuilder json(Map map) {
+    default ResponseDefinitionBuilder json(Map<?, ?> map) {
         return json(inline(JsonUtils.convertToJson(map, "response").toString()));
     }
 
@@ -116,7 +97,7 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param list list to be converted to JSON
      * @return self
      */
-    default ResponseDefinitionBuilder json(List list) {
+    default ResponseDefinitionBuilder json(List<?> list) {
         return json(inline(JsonUtils.convertToJson(list, "response").toString()));
     }
 
@@ -164,20 +145,6 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    default ResponseDefinitionBuilder json(
-        @DelegatesTo(value = JsonFluentAssert.ConfigurableJsonFluentAssert.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "net.javacrumbs.jsonunit.fluent.JsonFluentAssert.ConfigurableJsonFluentAssert")
-            Closure<JsonFluentAssert.ConfigurableJsonFluentAssert> additionalConfiguration
-    ) {
-        return json(FunctionWithDelegate.create(additionalConfiguration));
-    }
-
-    /**
-     * Sets additional assertions and configuration for JsonFluentAssert instance which is testing the response.
-     *
-     * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
-     * @return self
-     */
     DefaultResponseDefinitionBuilder json(Function<JsonFluentAssert.ConfigurableJsonFluentAssert, JsonFluentAssert.ConfigurableJsonFluentAssert> additionalConfiguration);
 
     /**
@@ -207,19 +174,6 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @return self other JsonUnit options e.g. IGNORING_EXTRA_ARRAY_ITEMS
      */
     ResponseDefinitionBuilder json(String relativePath, Option option, Option... options);
-
-    /**
-     * Expect a cookie returned by the server.
-     * @param cookieDefinition definition of the cookie
-     * @return self
-     */
-    default ResponseDefinitionBuilder cookie(
-        @DelegatesTo(value = ResponseCookieDefinition.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseCookieDefinition")
-            Closure<ResponseCookieDefinition> cookieDefinition
-    ) {
-        return cookie(ConsumerWithDelegate.create(cookieDefinition));
-    }
 
     /**
      * Expect a cookie returned by the server.

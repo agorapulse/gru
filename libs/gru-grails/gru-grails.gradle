@@ -19,7 +19,7 @@ dependencies {
     api project(':gru')
     api "org.grails:grails-web-testing-support:${grailsTestingSupportVersion}"
 
-    implementation 'org.codehaus.groovy:groovy'
+    implementation "org.codehaus.groovy:groovy:$groovyVersion"
 
     compileOnly 'org.grails.plugins:views-json:2.0.4'
 }

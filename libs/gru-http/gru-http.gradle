@@ -19,5 +19,5 @@ dependencies {
     api project(':gru')
     api "com.squareup.okhttp3:okhttp:${okHttpVersion}"
 
-    implementation 'org.codehaus.groovy:groovy'
+    implementation "org.codehaus.groovy:groovy:$groovyVersion"
 }

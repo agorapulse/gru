@@ -22,7 +22,7 @@ dependencies {
 
     api project(':gru-http')
 
-    implementation 'org.codehaus.groovy:groovy'
+    implementation "org.codehaus.groovy:groovy:$groovyVersion"
 
     implementation platform("io.micronaut:micronaut-bom:$micronautCompactVersion")
     implementation("io.micronaut:micronaut-validation")

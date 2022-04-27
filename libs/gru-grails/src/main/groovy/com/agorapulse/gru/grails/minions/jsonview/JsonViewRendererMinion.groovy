@@ -132,13 +132,13 @@ class JsonViewRendererMinion extends AbstractMinion<Grails> {
     protected GruContext doAfterRun(Grails grails, Squad squad, GruContext context) {
         String actualResponseText = grails.response.text
 
-        if (!actualResponseText && context.result instanceof Map && squad.ask(JsonMinion) { responseContent }) {
-            String controllerName = squad.ask(UrlMappingsMinion) {
-                getControllerName(grails.unitTest)
+        if (!actualResponseText && context.result instanceof Map && squad.ask(JsonMinion) { JsonMinion minion -> minion.responseContent }) {
+            String controllerName = squad.ask(UrlMappingsMinion) { UrlMappingsMinion url ->
+                url.getControllerName(grails.unitTest)
             }
 
-            String actionName = squad.ask(UrlMappingsMinion) {
-                getActionName(grails.unitTest)
+            String actionName = squad.ask(UrlMappingsMinion) { UrlMappingsMinion minion ->
+                minion.getActionName(grails.unitTest)
             }
 
             JsonRenderResult result

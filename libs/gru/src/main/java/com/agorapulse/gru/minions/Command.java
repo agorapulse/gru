@@ -22,9 +22,14 @@ import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 public interface Command<M extends  Minion> {
 
-    Command NOOP = minion -> { };
+    Command<? extends Minion> NOOP = minion -> { };
 
-    static <M extends Minion> Command<M> create(Closure<M> closure) {
+    @SuppressWarnings("unchecked")
+    static <M extends Minion> Command<M> noop() {
+        return (Command<M>) NOOP;
+    }
+
+    static <M extends Minion> Command<M> create(Closure<?> closure) {
         return m -> ConsumerWithDelegate.create(closure).accept(m);
     }
 

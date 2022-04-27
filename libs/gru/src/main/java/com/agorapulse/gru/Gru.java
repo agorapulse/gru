@@ -20,11 +20,6 @@ package com.agorapulse.gru;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.HttpMinion;
 import com.agorapulse.gru.minions.Minion;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.SimpleType;
-import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -75,20 +70,6 @@ public class Gru<C extends Client> implements Closeable {
      * @param configuration configuration applied to every feature method
      * @return self
      */
-    public final Gru<C> prepare(
-        @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
-            Closure<TestDefinitionBuilder> configuration
-    ) {
-        return prepare(ConsumerWithDelegate.create(configuration));
-    }
-
-    /**
-     * Prepare every test with following configuration.
-     *
-     * @param configuration configuration applied to every feature method
-     * @return self
-     */
     public final Gru<C> prepare(Consumer<TestDefinitionBuilder> configuration
     ) {
         this.configurations.add(configuration);
@@ -130,22 +111,6 @@ public class Gru<C extends Client> implements Closeable {
      * @param expectation test definition
      * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
      */
-    public final Gru<C> test(
-        @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
-            Closure<TestDefinitionBuilder> expectation
-    ) {
-        return test(ConsumerWithDelegate.create(expectation));
-    }
-
-    /**
-     * Defines API test and runs the controller initialization and the action under test.
-     * <p>
-     * Use this method either in when or expect block.
-     *
-     * @param expectation test definition
-     * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
-     */
     public final Gru<C> test(Consumer<TestDefinitionBuilder> expectation) {
         definition = true;
 
@@ -155,7 +120,7 @@ public class Gru<C extends Client> implements Closeable {
             squad.add(minion);
         }
 
-        squad.command(HttpMinion.class, Command.NOOP);
+        squad.command(HttpMinion.class, Command.noop());
 
         for (Consumer<TestDefinitionBuilder> configuration : configurations) {
             configuration.accept(builder);
@@ -181,17 +146,6 @@ public class Gru<C extends Client> implements Closeable {
     }
 
     /**
-     * Allows to create feature method with only "expect" block by calling the verify method when this definition is
-     * automagically converted to boolean.
-     *
-     * @return true if all verifications are successful
-     * @throws AssertionError if any verification fails
-     */
-    public final boolean asBoolean() throws Throwable {
-        return verify();
-    }
-
-    /**
      * Verifies all expectations.
      *
      * @return true if all verifications are successful
@@ -199,6 +153,7 @@ public class Gru<C extends Client> implements Closeable {
      */
     public final boolean verify() throws Throwable {
         checkExpectationsPresent();
+
         if (verified) {
             return verificationResult;
         }
@@ -228,7 +183,7 @@ public class Gru<C extends Client> implements Closeable {
     /**
      * Reset the internal state. This is done by the rule automatically.
      *
-     * @param resetConfigurations also clear the configurations created using {@link #prepare(Closure)} method
+     * @param resetConfigurations also clear the configurations created using {@link #prepare(Consumer)} method
      */
     public Gru<C> reset(boolean resetConfigurations) {
         verified = false;

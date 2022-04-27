@@ -19,13 +19,7 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.FromString;
-import groovy.transform.stc.SimpleType;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
-import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.util.Collections;
 import java.util.List;
@@ -38,19 +32,7 @@ import java.util.function.Consumer;
 public interface RequestDefinitionBuilder extends WithContentSupport {
 
     /**
-     * @see Squad#command(Class, Closure)
-     */
-    default <M extends Minion> RequestDefinitionBuilder command(
-        @DelegatesTo.Target Class<M> minionType,
-        @DelegatesTo(genericTypeIndex = 0, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = FromString.class, options = "M")
-            Closure command
-    ) {
-        return command(minionType, Command.create(command));
-    }
-
-    /**
-     * @see Squad#command(Class, Closure)
+     * @see Squad#command(Class, Command)
      */
     <M extends Minion> RequestDefinitionBuilder command(Class<M> minionType, Command<M> command);
 
@@ -87,7 +69,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @param map map to be converted to JSON
      * @return self
      */
-    default RequestDefinitionBuilder json(Map map) {
+    default RequestDefinitionBuilder json(Map<?, ?> map) {
         return json(inline(JsonUtils.convertToJson(map, "request").toString()));
     }
 
@@ -99,7 +81,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @param list list to be converted to JSON
      * @return self
      */
-    default RequestDefinitionBuilder json(List list) {
+    default RequestDefinitionBuilder json(List<?> list) {
         return json(inline(JsonUtils.convertToJson(list, "request").toString()));
     }
 
@@ -150,16 +132,8 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
 
     RequestDefinitionBuilder upload(Consumer<MultipartDefinitionBuilder> definition);
 
-    default RequestDefinitionBuilder upload(
-        @DelegatesTo(value = MultipartDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.MultipartDefinitionBuilder")
-            Closure<MultipartDefinitionBuilder> definition
-    ) {
-        return upload(ConsumerWithDelegate.create(definition));
-    }
-
     /**
-     * Add a HTTP cookie to the action execution.
+     * Add an HTTP cookie to the action execution.
      * @param name name of the cookie
      * @param value value of the cookie
      * @return self
@@ -170,7 +144,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
 
 
     /**
-     * Add a HTTP cookies to the action execution.
+     * Add an HTTP cookies to the action execution.
      * @param cookies cookies to be added
      * @return self
      */

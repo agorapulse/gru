@@ -88,7 +88,7 @@ class InterceptorsMinion extends AbstractMinion<Grails> {
                 if (modelAndViewObject instanceof ModelAndView) {
                     modelAndView = (ModelAndView) modelAndViewObject
                 } else if (context.result instanceof Map) {
-                    String actionName = squad.ask(UrlMappingsMinion) { getActionName(grails.unitTest) }
+                    String actionName = squad.ask(UrlMappingsMinion) { UrlMappingsMinion url ->  url.getActionName(grails.unitTest) }
                     modelAndView =  new ModelAndView(actionName, new HashMap<String, Object>(context.result as Map))
                 } else if (context.result instanceof ModelAndView) {
                     modelAndView = context.result as ModelAndView

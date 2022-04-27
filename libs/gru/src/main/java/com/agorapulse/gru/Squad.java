@@ -20,14 +20,14 @@ package com.agorapulse.gru;
 import com.agorapulse.gru.exception.GroovyAssertAwareMultipleFailureException;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.FromString;
-import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
 import java.lang.reflect.Modifier;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.function.Function;
 
 /**
@@ -35,41 +35,25 @@ import java.util.function.Function;
  */
 public class Squad {
 
-    private Map<Class<? extends Minion>, Minion> minions = new LinkedHashMap<>();
-    private Set<Minion> sorted = new TreeSet<>(Minion.COMPARATOR);
+    private final Map<Class<? extends Minion>, Minion> minions = new LinkedHashMap<>();
+    private final Set<Minion> sorted = new TreeSet<>(Minion.COMPARATOR);
 
     /**
      * Adds a minion to the squad.
      * @param minion minion who should join the squad
      */
+    @SuppressWarnings("unchecked")
     public <M extends Minion> void add(M minion) {
         minions.put(minion.getClass(), minion);
 
-        Class sc = minion.getClass().getSuperclass();
+        Class<?> sc = minion.getClass().getSuperclass();
         while (sc != null && !Modifier.isAbstract(sc.getModifiers()) && !sc.equals(Minion.class)
         ) {
-            minions.put(sc, minion);
+            minions.put((Class<? extends Minion>) sc, minion);
             sc = sc.getSuperclass();
         }
 
         sorted.add(minion);
-    }
-
-    /**
-     * Command minion of given type.
-     *
-     * If the minion is not yet present in the squad it is instantiated using default constructor.
-     * @param minionType type of the minion being commanded
-     * @param aCommand closure executed within context of selected minion
-     */
-    @SuppressWarnings("unchecked")
-    public <M extends Minion> void command(
-        Class<M> minionType,
-        @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = FromString.class, options = "M")
-            Closure aCommand
-    ) {
-        command(minionType, Command.create(aCommand));
     }
 
     /**
@@ -83,6 +67,7 @@ public class Squad {
         command.execute(findOrCreateMinionByType(minionType));
     }
 
+    @SuppressWarnings("unchecked")
     private <M extends Minion> M findOrCreateMinionByType(Class<M> minionType) {
         M minion = (M) minions.get(minionType);
 
@@ -100,24 +85,10 @@ public class Squad {
     /**
      * Asks minion of given type for something.
      * @param minionType type of the minion being asked
-     * @param query closure executed within context of selected minion which returns the result of this method
-     * @return result returned from the query closure or null if minion of given type is not present in the squad
-     */
-    public <T, M extends Minion> T ask(
-        Class<M> minionType,
-        @DelegatesTo(type = "M", strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = FromString.class, options = "M")
-            Closure<T> query
-    ) {
-        return ask(minionType, FunctionWithDelegate.create(query));
-    }
-
-    /**
-     * Asks minion of given type for something.
-     * @param minionType type of the minion being asked
      * @param query function executed with the selected minion which returns the result of this method
      * @return result returned from the query closure or null if minion of given type is not present in the squad
      */
+    @SuppressWarnings("unchecked")
     public <T, M extends Minion> T ask(
         Class<M> minionType,
         Function<M, T> query

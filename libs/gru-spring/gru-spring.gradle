@@ -18,7 +18,7 @@
 dependencies {
     api project(':gru')
 
-    implementation 'org.codehaus.groovy:groovy'
+    implementation "org.codehaus.groovy:groovy:$groovyVersion"
 
     implementation group: 'org.spockframework', name: 'spock-spring', version: spockVersion
 

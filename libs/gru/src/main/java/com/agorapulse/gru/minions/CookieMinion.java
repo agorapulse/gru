@@ -52,7 +52,7 @@ public class CookieMinion extends AbstractMinion<Client> {
 
     @Override
     public int getIndex() {
-        return PARAMETERS_MINION_INDEX;
+        return COOKIES_MINION_INDEX;
     }
 
     public List<Cookie> getRequestCookies() {

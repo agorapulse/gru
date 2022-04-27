@@ -44,18 +44,13 @@ public interface Minion {
     // end::constants[]
 
     /**
-     * Comparator to compare miniorns by their index.
+     * Comparator to compare minions by their index.
      */
-    Comparator<Minion> COMPARATOR = new Comparator<Minion>() {
-        @Override
-        public int compare(Minion o1, Minion o2) {
-            return Integer.compare(o1.getIndex(), o2.getIndex());
-        }
-    };
+    Comparator<Minion> COMPARATOR = Comparator.comparingInt(Minion::getIndex);
 
     // tag::methods[]
     /**
-     * @return index of the minion to so they they handle the test in given order
+     * @return index of the minion to, so they handle the test in given order
      */
     int getIndex();
 

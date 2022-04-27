@@ -91,8 +91,7 @@ public class HtmlMinion extends AbstractContentMinion<Client> {
     }
 
     public final int getIndex() {
-        return index;
+        return HTML_MINION_INDEX;
     }
 
-    private final int index = HTML_MINION_INDEX;
 }

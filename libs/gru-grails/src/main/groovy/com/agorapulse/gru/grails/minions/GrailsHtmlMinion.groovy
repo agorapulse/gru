@@ -38,7 +38,8 @@ class GrailsHtmlMinion extends HtmlMinion {
         String actualResponseText = client.response.text
 
         if (!actualResponseText && context.result instanceof Map) {
-            return grails.unitTest.render(view: squad.ask(UrlMappingsMinion) { getActionName(grails.unitTest) }, model: context.result as Map)
+            String actionName = squad.ask(UrlMappingsMinion) { UrlMappingsMinion url -> url.getActionName(grails.unitTest) }
+            return grails.unitTest.render(view: actionName, model: context.result as Map)
         }
         return actualResponseText
     }
