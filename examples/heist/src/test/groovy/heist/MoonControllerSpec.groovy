@@ -226,8 +226,8 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             gru.verify()
         then:
             GroovyAssertAwareMultipleFailureException ex = thrown(GroovyAssertAwareMultipleFailureException)
-            ex.message.contains('assert client.response.status == status')
-            ex.message.contains('assert actual == expected')
+            ex.message.contains('Status 200 is not expected. Expected statuses are 418)')
+            ex.message.contains('The texts are not equal')
         when:
             assert !gru.verify()
         then:

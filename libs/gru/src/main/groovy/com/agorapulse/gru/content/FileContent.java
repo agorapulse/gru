@@ -53,6 +53,6 @@ public class FileContent implements Content {
 
     @Override
     public String toString() {
-        return "file " + fileName;
+        return "file content: " + fileName;
     }
 }

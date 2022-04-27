@@ -23,11 +23,12 @@ dependencies {
     api group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
     api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+
     implementation 'org.codehaus.groovy:groovy'
     implementation 'org.codehaus.groovy:groovy-json'
 
     testImplementation "joda-time:joda-time:${jodaTimeVersion}"
-    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
     testImplementation 'org.assertj:assertj-core:3.11.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
 }

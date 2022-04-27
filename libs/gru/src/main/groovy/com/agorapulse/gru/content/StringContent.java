@@ -49,4 +49,9 @@ public class StringContent implements Content {
     public void save(Client client, InputStream stream) {
         throw new UnsupportedOperationException("Saving is not supported for StringContent");
     }
+
+    @Override
+    public String toString() {
+        return "string content: " + content;
+    }
 }
