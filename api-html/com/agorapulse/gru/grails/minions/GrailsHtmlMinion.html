@@ -32,7 +32,7 @@ GrailsHtmlMinion.groovy
 <a name="1"><font color="#808080">01</font>&nbsp;</a><font color="#008000">/*</font><br />
 <a name="2"><font color="#808080">02</font>&nbsp;</a><font color="#ffffff">&nbsp;</font><font color="#008000">*&nbsp;SPDX-License-Identifier:&nbsp;Apache-2.0</font><br />
 <a name="3"><font color="#808080">03</font>&nbsp;</a><font color="#ffffff">&nbsp;</font><font color="#008000">*</font><br />
-<a name="4"><font color="#808080">04</font>&nbsp;</a><font color="#ffffff">&nbsp;</font><font color="#008000">*&nbsp;Copyright&nbsp;2018-2021&nbsp;Agorapulse.</font><br />
+<a name="4"><font color="#808080">04</font>&nbsp;</a><font color="#ffffff">&nbsp;</font><font color="#008000">*&nbsp;Copyright&nbsp;2018-2022&nbsp;Agorapulse.</font><br />
 <a name="5"><font color="#808080">05</font>&nbsp;</a><font color="#ffffff">&nbsp;</font><font color="#008000">*</font><br />
 <a name="6"><font color="#808080">06</font>&nbsp;</a><font color="#ffffff">&nbsp;</font><font color="#008000">*&nbsp;Licensed&nbsp;under&nbsp;the&nbsp;Apache&nbsp;License,&nbsp;Version&nbsp;2.0&nbsp;(the&nbsp;&#34;License&#34;);</font><br />
 <a name="7"><font color="#808080">07</font>&nbsp;</a><font color="#ffffff">&nbsp;</font><font color="#008000">*&nbsp;you&nbsp;may&nbsp;not&nbsp;use&nbsp;this&nbsp;file&nbsp;except&nbsp;in&nbsp;compliance&nbsp;with&nbsp;the&nbsp;License.</font><br />
@@ -69,12 +69,13 @@ GrailsHtmlMinion.groovy
 <a name="38"><font color="#808080">38</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">String&nbsp;actualResponseText&nbsp;=&nbsp;client.response.text</font><br />
 <a name="39"><font color="#808080">39</font>&nbsp;</a><font color="#ffffff"></font><br />
 <a name="40"><font color="#808080">40</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000c0"><b>if&nbsp;</b></font><font color="#000000">(</font><font color="#000000">!actualResponseText&nbsp;&amp;&amp;&nbsp;context.result&nbsp;</font><font color="#0000c0"><b>instanceof&nbsp;</b></font><font color="#000000">Map</font><font color="#000000">)&nbsp;{</font><br />
-<a name="41"><font color="#808080">41</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000c0"><b>return&nbsp;</b></font><font color="#000000">grails.unitTest.render</font><font color="#000000">(</font><font color="#000000">view:&nbsp;squad.ask</font><font color="#000000">(</font><font color="#000000">UrlMappingsMinion</font><font color="#000000">)&nbsp;{&nbsp;</font><font color="#000000">getActionName</font><font color="#000000">(</font><font color="#000000">grails.unitTest</font><font color="#000000">)&nbsp;}</font><font color="#000000">,&nbsp;model:&nbsp;context.result&nbsp;as&nbsp;Map</font><font color="#000000">)</font><br />
-<a name="42"><font color="#808080">42</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
-<a name="43"><font color="#808080">43</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000c0"><b>return&nbsp;</b></font><font color="#000000">actualResponseText</font><br />
-<a name="44"><font color="#808080">44</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
-<a name="45"><font color="#808080">45</font>&nbsp;</a><font color="#ffffff"></font><br />
-<a name="46"><font color="#808080">46</font>&nbsp;</a><font color="#000000">}</font></code>
+<a name="41"><font color="#808080">41</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">String&nbsp;actionName&nbsp;=&nbsp;squad.ask</font><font color="#000000">(</font><font color="#000000">UrlMappingsMinion</font><font color="#000000">)&nbsp;{&nbsp;</font><font color="#000000">UrlMappingsMinion&nbsp;url&nbsp;-&gt;&nbsp;url.getActionName</font><font color="#000000">(</font><font color="#000000">grails.unitTest</font><font color="#000000">)&nbsp;}</font><br />
+<a name="42"><font color="#808080">42</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000c0"><b>return&nbsp;</b></font><font color="#000000">grails.unitTest.render</font><font color="#000000">(</font><font color="#000000">view:&nbsp;actionName,&nbsp;model:&nbsp;context.result&nbsp;as&nbsp;Map</font><font color="#000000">)</font><br />
+<a name="43"><font color="#808080">43</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<a name="44"><font color="#808080">44</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#0000c0"><b>return&nbsp;</b></font><font color="#000000">actualResponseText</font><br />
+<a name="45"><font color="#808080">45</font>&nbsp;</a><font color="#ffffff">&nbsp;&nbsp;&nbsp;&nbsp;</font><font color="#000000">}</font><br />
+<a name="46"><font color="#808080">46</font>&nbsp;</a><font color="#ffffff"></font><br />
+<a name="47"><font color="#808080">47</font>&nbsp;</a><font color="#000000">}</font></code>
     
    </td>
   <!-- end source code -->

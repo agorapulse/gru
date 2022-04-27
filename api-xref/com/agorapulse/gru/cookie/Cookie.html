@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * SPDX-License-Identifier: Apache-2.0</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2018-2021 Agorapulse.</em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright 2018-2022 Agorapulse.</em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Licensed under the Apache License, Version 2.0 (the "License");</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * you may not use this file except in compliance with the License.</em>
@@ -286,7 +286,7 @@
 <a class="jxr_linenumber" name="L278" href="#L278">278</a>         <strong class="jxr_keyword">if</strong> (deltaSeconds == Long.MIN_VALUE) {
 <a class="jxr_linenumber" name="L279" href="#L279">279</a>             expiresAt = Long.MIN_VALUE;
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>         } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (deltaSeconds != -1L) {
-<a class="jxr_linenumber" name="L281" href="#L281">281</a>             <strong class="jxr_keyword">long</strong> deltaMilliseconds = deltaSeconds &lt;= (Long.MAX_VALUE / 1000)
+<a class="jxr_linenumber" name="L281" href="#L281">281</a>             <strong class="jxr_keyword">long</strong> deltaMilliseconds = deltaSeconds &lt;= Long.MAX_VALUE / 1000
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>                 ? deltaSeconds * 1000
 <a class="jxr_linenumber" name="L283" href="#L283">283</a>                 : Long.MAX_VALUE;
 <a class="jxr_linenumber" name="L284" href="#L284">284</a>             expiresAt = currentTimeMillis + deltaMilliseconds;
@@ -386,11 +386,11 @@
 <a class="jxr_linenumber" name="L378" href="#L378">378</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">int</strong> dateCharacterOffset(String input, <strong class="jxr_keyword">int</strong> pos, <strong class="jxr_keyword">int</strong> limit, <strong class="jxr_keyword">boolean</strong> invert) {
 <a class="jxr_linenumber" name="L379" href="#L379">379</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = pos; i &lt; limit; i++) {
 <a class="jxr_linenumber" name="L380" href="#L380">380</a>             <strong class="jxr_keyword">int</strong> c = input.charAt(i);
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>             <strong class="jxr_keyword">boolean</strong> dateCharacter = (c &lt; ' ' &amp;&amp; c != '\t') || (c &gt;= '\u007f')
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>                 || (c &gt;= '0' &amp;&amp; c &lt;= '9')
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>                 || (c &gt;= 'a' &amp;&amp; c &lt;= 'z')
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>                 || (c &gt;= 'A' &amp;&amp; c &lt;= 'Z')
-<a class="jxr_linenumber" name="L385" href="#L385">385</a>                 || (c == ':');
+<a class="jxr_linenumber" name="L381" href="#L381">381</a>             <strong class="jxr_keyword">boolean</strong> dateCharacter = c &lt; ' ' &amp;&amp; c != '\t' || c &gt;= '\u007f'
+<a class="jxr_linenumber" name="L382" href="#L382">382</a>                 || c &gt;= '0' &amp;&amp; c &lt;= '9'
+<a class="jxr_linenumber" name="L383" href="#L383">383</a>                 || c &gt;= 'a' &amp;&amp; c &lt;= 'z'
+<a class="jxr_linenumber" name="L384" href="#L384">384</a>                 || c &gt;= 'A' &amp;&amp; c &lt;= 'Z'
+<a class="jxr_linenumber" name="L385" href="#L385">385</a>                 || c == ':';
 <a class="jxr_linenumber" name="L386" href="#L386">386</a>             <strong class="jxr_keyword">if</strong> (dateCharacter == !invert) {
 <a class="jxr_linenumber" name="L387" href="#L387">387</a>                 <strong class="jxr_keyword">return</strong> i;
 <a class="jxr_linenumber" name="L388" href="#L388">388</a>             }
@@ -715,7 +715,7 @@
 <a class="jxr_linenumber" name="L707" href="#L707">707</a>         hash = 31 * hash + value.hashCode();
 <a class="jxr_linenumber" name="L708" href="#L708">708</a>         hash = 31 * hash + domain.hashCode();
 <a class="jxr_linenumber" name="L709" href="#L709">709</a>         hash = 31 * hash + path.hashCode();
-<a class="jxr_linenumber" name="L710" href="#L710">710</a>         hash = 31 * hash + (<strong class="jxr_keyword">int</strong>) (expiresAt ^ (expiresAt &gt;&gt;&gt; 32));
+<a class="jxr_linenumber" name="L710" href="#L710">710</a>         hash = 31 * hash + (<strong class="jxr_keyword">int</strong>) (expiresAt ^ expiresAt &gt;&gt;&gt; 32);
 <a class="jxr_linenumber" name="L711" href="#L711">711</a>         hash = 31 * hash + (secure ? 0 : 1);
 <a class="jxr_linenumber" name="L712" href="#L712">712</a>         hash = 31 * hash + (httpOnly ? 0 : 1);
 <a class="jxr_linenumber" name="L713" href="#L713">713</a>         hash = 31 * hash + (persistent ? 0 : 1);

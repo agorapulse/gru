@@ -5,6 +5,8 @@ com.agorapulse.gru.content
 com.agorapulse.gru.cookie
 com.agorapulse.gru.exception
 com.agorapulse.gru.grails.minions
+com.agorapulse.gru.groovy
+com.agorapulse.gru.http
 com.agorapulse.gru.jsonunit
 com.agorapulse.gru.micronaut
 com.agorapulse.gru.minions

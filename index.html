@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 0.9.5</span>
+<span id="revnumber">version 0.10.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -164,11 +164,11 @@ HTTP server framework.</p>
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.9.5"                             <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.9.5"                           <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.9.5"                           <i class="conum" data-value="3"></i><b>(3)</b>
-    testCompile "com.agorapulse:gru-api-gateway:0.9.5"                      <i class="conum" data-value="4"></i><b>(4)</b>
-    testCompile "com.agorapulse:gru-micronaut:0.9.5"                        <i class="conum" data-value="5"></i><b>(5)</b>
+    testCompile "com.agorapulse:gru-http:0.10.0"                             <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:0.10.0"                           <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:0.10.0"                           <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-api-gateway:0.10.0"                      <i class="conum" data-value="4"></i><b>(4)</b>
+    testCompile "com.agorapulse:gru-micronaut:0.10.0"                        <i class="conum" data-value="5"></i><b>(5)</b>
 }</code></pre>
 </div>
 </div>
@@ -1816,7 +1816,7 @@ requires several methods to be implemented to intercept the test flow.</p>
 <div class="title">Minion</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">/**
- * @return index of the minion to so they they handle the test in given order
+ * @return index of the minion to, so they handle the test in given order
  */
 int getIndex();
 
@@ -1963,6 +1963,7 @@ method. As our minion is enhancing the request definition, we simply add new ext
 <pre class="prettyprint highlight"><code data-lang="groovy">/**
  * Add convenient methods for Grails to test definition DSL.
  */
+@CompileDynamic
 class GrailsGruExtensions {
 
     // ...
@@ -2044,8 +2045,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.9.5<br>
-Last updated 2021-12-17 14:38:56 UTC
+Version 0.10.0<br>
+Last updated 2022-04-27 10:18:47 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
