@@ -22,18 +22,27 @@ import com.agorapulse.gru.agp.ignore.Safe;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.SimpleType;
-import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.lang.reflect.TypeVariable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,32 +70,32 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             String className = parts[0];
             String methodName = parts[1];
 
-            Class clazz = Class.forName(className);
+            Class<?> clazz = Class.forName(className);
 
             if (RequestStreamHandler.class.isAssignableFrom(clazz)) {
-                return handleRequestStreamHandler(request, clazz);
+                return handleRequestStreamHandler(request, (Class<? extends RequestStreamHandler>) clazz);
             }
 
             Method method = Arrays.stream(clazz.getMethods())
                 .filter(m -> m.getGenericParameterTypes().length == 2 && Context.class.equals(m.getGenericParameterTypes()[1]))
-                .min(comparing((Method m) -> distanceToObject(m.getParameterTypes()[0])).reversed())
+                .max(comparing((Method m) -> distanceToObject(m.getParameterTypes()[0])))
                 .orElseThrow(() -> new IllegalArgumentException("Cannot find method " + methodName + " in " + className + " matching the signature contract"));
 
             Type firstParameterType = method.getGenericParameterTypes()[0];
 
-            Class firstParameter = null;
+            Class<?> firstParameter = null;
 
             if (firstParameterType instanceof Class) {
-                firstParameter = (Class) firstParameterType;
+                firstParameter = (Class<?>) firstParameterType;
             } else if (firstParameterType instanceof TypeVariable) {
-                TypeVariable variable = (TypeVariable) firstParameterType;
+                TypeVariable<?> variable = (TypeVariable<?>) firstParameterType;
                 int indexOfTypeVariable = Arrays.asList(clazz.getSuperclass().getTypeParameters()).indexOf(variable);
                 if (indexOfTypeVariable >= 0) {
                     Type genericSuperclass = clazz.getGenericSuperclass();
                     if (genericSuperclass instanceof ParameterizedType) {
                         Type actualTypeArgument = ((ParameterizedType) genericSuperclass).getActualTypeArguments()[indexOfTypeVariable];
                         if (actualTypeArgument instanceof Class) {
-                            firstParameter = (Class) actualTypeArgument;
+                            firstParameter = (Class<?>) actualTypeArgument;
                         }
                     }
                 }
@@ -182,9 +191,9 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
     }
 
     public static class MappingConfiguration {
-        private Set<String> queryStringParameters = new LinkedHashSet<>();
-        private Set<String> pathParameters = new LinkedHashSet<>();
-        private Map<Integer, ResponseMappingConfiguration> responses = new LinkedHashMap<>();
+        private final Set<String> queryStringParameters = new LinkedHashSet<>();
+        private final Set<String> pathParameters = new LinkedHashSet<>();
+        private final Map<Integer, ResponseMappingConfiguration> responses = new LinkedHashMap<>();
 
 
         public MappingConfiguration queryStringParameters(String first, String... rest) {
@@ -201,15 +210,6 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
                 pathParameters.addAll(Arrays.asList(rest));
             }
             return this;
-        }
-
-        public MappingConfiguration response(
-            int number,
-            @DelegatesTo(value = ResponseMappingConfiguration.class, strategy = Closure.DELEGATE_FIRST)
-            @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration.ResponseMappingConfiguration")
-            Closure<ResponseMappingConfiguration> configuration
-        ) {
-            return response(number, ConsumerWithDelegate.create(configuration));
         }
 
         public MappingConfiguration response(int number, Consumer<ResponseMappingConfiguration> configuration) {
@@ -232,7 +232,7 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
 
     public static class ResponseMappingConfiguration {
 
-        private Map<String, String> headers = new LinkedHashMap<>();
+        private final Map<String, String> headers = new LinkedHashMap<>();
 
         private static ResponseMappingConfiguration from(Consumer<ResponseMappingConfiguration> configuration) {
             ResponseMappingConfiguration response = new ResponseMappingConfiguration();
@@ -240,8 +240,8 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             return response;
         }
 
-        public ResponseMappingConfiguration headers(Map<String, Object> additionlHeaders) {
-            additionlHeaders.forEach((key, value) -> headers.put(key, String.valueOf(value)));
+        public ResponseMappingConfiguration headers(Map<String, Object> additionalHeaders) {
+            additionalHeaders.forEach((key, value) -> headers.put(key, String.valueOf(value)));
             return this;
         }
 
@@ -272,20 +272,11 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             this.methods = new LinkedHashSet<>(methods);
         }
 
-        public Mapping to(Class handler) {
+        public Mapping to(Class<?> handler) {
             return to(handler.getName());
         }
 
-        public Mapping to(
-            Class handler,
-            @DelegatesTo(value = MappingConfiguration.class, strategy = Closure.DELEGATE_FIRST)
-            @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration.MappingConfiguration")
-            Closure<MappingConfiguration> configuration
-        ) {
-            return to(handler, ConsumerWithDelegate.create(configuration));
-        }
-
-        public Mapping to(Class handler, Consumer<MappingConfiguration> configuration) {
+        public Mapping to(Class<?> handler, Consumer<MappingConfiguration> configuration) {
             return to(handler.getName(), configuration);
         }
 
@@ -294,17 +285,15 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             }, true);
         }
 
-        public Mapping to(
-            String handler,
-            @DelegatesTo(value = MappingConfiguration.class, strategy = Closure.DELEGATE_FIRST)
-            @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration.MappingConfiguration")
-            Closure<MappingConfiguration> configuration
-        ) {
-            return to(handler, ConsumerWithDelegate.create(configuration), true);
-        }
-
         public Mapping to(String handler, Consumer<MappingConfiguration> configuration) {
             return to(handler, configuration, false);
+        }
+
+        public Mapping to(String handler, Consumer<MappingConfiguration> configuration, boolean proxied) {
+            Mapping mapping = new Mapping(this, handler.contains("::") ? handler : (handler + "::handleRequest"), proxied);
+            Optional.ofNullable(configuration).ifPresent(mapping::configure);
+            self.mappings.add(mapping);
+            return mapping;
         }
 
         boolean matches(String method, String url) {
@@ -329,7 +318,7 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
 
         private Pattern createPatternForUrlMapping(String url) {
             if (url.contains("{")) {
-                return Pattern.compile(url.replaceAll("\\{([^\\}]+)\\}", "(?<$1>.*?)"));
+                return Pattern.compile(url.replaceAll("\\{([^}]+)}", "(?<$1>.*?)"));
             }
             return Pattern.compile(Pattern.quote(url));
         }
@@ -337,20 +326,13 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         private Set<String> createNamedParametersNames(String url) {
             if (url.contains("{")) {
                 Set<String> ret = new LinkedHashSet<>();
-                Matcher matcher = Pattern.compile("\\{([^\\}]+)\\}").matcher(url);
+                Matcher matcher = Pattern.compile("\\{([^}]+)}").matcher(url);
                 while (matcher.find()) {
                     ret.add(matcher.group(1));
                 }
                 return ret;
             }
             return Collections.emptySet();
-        }
-
-        private Mapping to(String handler, Consumer<MappingConfiguration> configuration, boolean proxied) {
-            Mapping mapping = new Mapping(this, handler.contains("::") ? handler : (handler + "::handleRequest"), proxied);
-            Optional.ofNullable(configuration).ifPresent(mapping::configure);
-            self.mappings.add(mapping);
-            return mapping;
         }
     }
 

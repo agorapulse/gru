@@ -22,7 +22,6 @@ import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 import com.amazonaws.services.lambda.runtime.RequestStreamHandler
 import com.fasterxml.jackson.databind.ObjectMapper
-import groovy.json.JsonOutput
 import spock.lang.Specification
 
 import java.lang.reflect.InvocationTargetException
@@ -214,7 +213,7 @@ class ApiGatewayConfigurationSpec extends Specification {
 
 class SampleHandler implements RequestHandler<Map, Map> {
     @Override Map handleRequest(Map input, Context context) {
-        return [body: JsonOutput.toJson(input: input)]
+        return [body: new ObjectMapper().writeValueAsString(input: input)]
     }
 }
 class NonProxyHandler implements RequestHandler<Map, Map> {

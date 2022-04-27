@@ -18,43 +18,52 @@
 package com.agorapulse.gru.agp;
 
 import com.agorapulse.gru.Client;
-import groovy.json.JsonOutput;
-import groovy.json.JsonSlurper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import java.util.*;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 class ApiGatewayProxyResponse implements Client.Response {
 
     private String text;
-    private Map<String, List<String>> multiValueHeaders;
-    private int status;
+    private final Map<String, List<String>> multiValueHeaders;
+    private final int status;
 
     // TODO: base64 encoded
 
     @SuppressWarnings("unchecked")
     ApiGatewayProxyResponse(String responseText) {
-        Map response = (Map) new JsonSlurper().parseText(responseText);
-        Object body = response.get("body");
-        if (body != null) {
-            this.text = body instanceof String ? body.toString() : JsonOutput.toJson(body);
-        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            Map<String, Object> response = mapper.readValue(responseText, mapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class));
+            Object body = response.get("body");
+            if (body != null) {
+                this.text = body instanceof String ? body.toString() : mapper.writeValueAsString(body);
+            }
 
-        multiValueHeaders = (Map<String, List<String>>) response.getOrDefault("multiValueHeaders", new LinkedHashMap<>());
+            multiValueHeaders = (Map<String, List<String>>) response.getOrDefault("multiValueHeaders", new LinkedHashMap<>());
 
-        if (response.containsKey("headers")) {
-            Map<String, String> headers = (Map<String, String>) response.get("headers");
-            headers.forEach((k, v) -> {
-                List<String> values = multiValueHeaders.computeIfAbsent(k, (key) -> new ArrayList<>());
-                if (!values.contains(v)) {
-                    values.add(v);
-                }
-            });
-        }
+            if (response.containsKey("headers")) {
+                Map<String, String> headers = (Map<String, String>) response.get("headers");
+                headers.forEach((k, v) -> {
+                    List<String> values = multiValueHeaders.computeIfAbsent(k, (key) -> new ArrayList<>());
+                    if (!values.contains(v)) {
+                        values.add(v);
+                    }
+                });
+            }
 
-        if (response.get("statusCode") == null) {
-            this.status = 200;
-        } else {
-            this.status = ((Number)response.get("statusCode")).intValue();
+            if (response.get("statusCode") == null) {
+                this.status = 200;
+            } else {
+                this.status = ((Number)response.get("statusCode")).intValue();
+            }
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
         }
     }
 

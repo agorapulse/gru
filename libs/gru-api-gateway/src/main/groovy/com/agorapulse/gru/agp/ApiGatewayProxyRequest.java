@@ -19,9 +19,10 @@ package com.agorapulse.gru.agp;
 
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.MultipartDefinition;
-import groovy.json.JsonOutput;
-import groovy.json.JsonSlurper;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -35,7 +36,7 @@ class ApiGatewayProxyRequest implements Client.Request {
     private Map<String, String> queryStringParameters;
     private Map<String, String> pathParameters;
 
-    private MockContext context = new MockContext();
+    private final MockContext context = new MockContext();
 
     // TODO: stage variables
     // TODO: request context
@@ -155,7 +156,11 @@ class ApiGatewayProxyRequest implements Client.Request {
             output.put("pathParameters", pathParameters);
         }
 
-        return JsonOutput.toJson(output);
+        try {
+            return new ObjectMapper().writeValueAsString(output);
+        } catch (JsonProcessingException e) {
+            throw new IllegalArgumentException("Cannot write object as JSON: " + output, e);
+        }
     }
 
     public String toJson(ApiGatewayConfiguration.MappingConfiguration configuration) {
@@ -169,10 +174,16 @@ class ApiGatewayProxyRequest implements Client.Request {
             configuration.getQueryStringParameters().forEach(parameter -> output.put(parameter, queryStringParameters.get(parameter)));
         }
 
-        if (body != null) {
-            output.putAll((Map) new JsonSlurper().parseText(body));
-        }
+        try {
+            ObjectMapper mapper = new ObjectMapper();
 
-        return JsonOutput.toJson(output);
+            if (body != null) {
+                output.putAll(mapper.readValue(body, mapper.getTypeFactory().constructMapType(Map.class, String.class, Object.class)));
+            }
+
+            return mapper.writeValueAsString(output);
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 }

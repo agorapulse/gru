@@ -21,11 +21,6 @@ import com.agorapulse.gru.AbstractClient;
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.GruContext;
 import com.agorapulse.gru.Squad;
-import groovy.lang.Closure;
-import groovy.lang.DelegatesTo;
-import groovy.transform.stc.ClosureParams;
-import groovy.transform.stc.FromString;
-import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -39,27 +34,10 @@ public class ApiGatewayProxy extends AbstractClient {
         return create(unitTest, configuration);
     }
 
-    @Deprecated
-    public static ApiGatewayProxy steal(Object unitTest,
-                                        @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ApiGatewayConfiguration.class)
-                                        @ClosureParams(value = FromString.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration")
-                                        Closure<ApiGatewayConfiguration.Mapping> configuration
-    ) {
-        return create(configuration);
-    }
-
     public static ApiGatewayProxy create(Object unitTest, Consumer<ApiGatewayConfiguration> configuration) {
         ApiGatewayConfiguration apiGatewayConfiguration = new ApiGatewayConfiguration();
         configuration.accept(apiGatewayConfiguration);
         return new ApiGatewayProxy(unitTest, apiGatewayConfiguration);
-    }
-
-    public static ApiGatewayProxy create(
-                                        @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ApiGatewayConfiguration.class)
-                                        @ClosureParams(value = FromString.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration")
-                                            Closure<ApiGatewayConfiguration.Mapping> configuration
-    ) {
-        return create(configuration.getOwner(), ConsumerWithDelegate.create(configuration));
     }
 
     private final ApiGatewayConfiguration configuration;

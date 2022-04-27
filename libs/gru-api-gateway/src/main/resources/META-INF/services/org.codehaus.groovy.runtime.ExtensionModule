@@ -1,0 +1,4 @@
+moduleName = gru-api-gateway
+moduleVersion = @VERSION@
+extensionClasses = com.agorapulse.gru.agp.groovy.ApiGatewayProxyExtensions
+staticExtensionClasses = com.agorapulse.gru.agp.groovy.ApiGatewayProxyStaticExtensions
