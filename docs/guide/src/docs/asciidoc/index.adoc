@@ -594,7 +594,7 @@ requires several methods to be implemented to intercept the test flow.
 .Minion
 [source,java]
 ----
-include::{root-dir}/libs/gru/src/main/groovy/com/agorapulse/gru/minions/Minion.java[tag=methods,indent=0]
+include::{root-dir}/libs/gru/src/main/java/com/agorapulse/gru/minions/Minion.java[tag=methods,indent=0]
 ----
 
 `Client` represents the current client such as `Http` or `Grails`.
