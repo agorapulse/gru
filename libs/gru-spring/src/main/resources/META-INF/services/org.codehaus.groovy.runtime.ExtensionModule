@@ -1,3 +1,3 @@
 moduleName = gru-spring
 moduleVersion = @VERSION@
-extensionClasses = com.agorapulse.gru.spring.GruSpringExtensions
+extensionClasses = com.agorapulse.gru.spring.groovy.GruSpringExtensions

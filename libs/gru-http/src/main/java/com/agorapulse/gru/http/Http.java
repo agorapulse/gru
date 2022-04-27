@@ -85,11 +85,6 @@ public class Http extends AbstractClient {
     }
 
     @Override
-    public Object getUnitTest() {
-        return super.getUnitTest();
-    }
-
-    @Override
     public GruContext run(Squad squad, GruContext context) {
         try {
             okhttp3.Response response = httpClient.newCall(request.buildOkHttpRequest()).execute();

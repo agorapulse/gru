@@ -15,14 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-dependencies {
-    api project(':gru')
+package com.agorapulse.gru.spring;
 
-    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+import org.springframework.test.web.servlet.MockMvc;
 
-    // implementation group: 'org.spockframework', name: 'spock-spring', version: spockVersion
+public interface HasMockMvc {
 
-    compileOnly group: 'org.springframework', name: 'spring-webmvc', version: springVersion
-    compileOnly group: 'org.springframework', name: 'spring-test', version: springVersion
-    compileOnly group: 'javax.servlet', name: 'javax.servlet-api', version: '3.0.1'
+    MockMvc getMockMvc();
+
 }
