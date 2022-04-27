@@ -76,6 +76,18 @@ public class Gru<C extends Client> implements Closeable {
         return this;
     }
 
+
+    /**
+     * Prepare tests with given base URI.
+     *
+     * @param baseUri the base URI for the test calls
+     * @return self
+     */
+    public final Gru<C> prepare(String baseUri) {
+        this.configurations.add(c -> c.baseUri(baseUri));
+        return this;
+    }
+
     /**
      * Adds minion to the squad for current test.
      *

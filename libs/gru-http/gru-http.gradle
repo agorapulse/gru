@@ -17,7 +17,7 @@
  */
 dependencies {
     api project(':gru')
-    api "com.squareup.okhttp3:okhttp:${okHttpVersion}"
+    implementation "com.squareup.okhttp3:okhttp:${okHttpVersion}"
 
-    implementation "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 }
