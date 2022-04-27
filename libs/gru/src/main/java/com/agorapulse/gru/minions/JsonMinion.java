@@ -56,7 +56,7 @@ public class JsonMinion extends AbstractContentMinion<Client> {
     public GruContext doBeforeRun(Client client, Squad squad, GruContext context) {
         if (requestJsonContent != null) {
             final InputStream is = requestJsonContent.load(client);
-            String requestText = (is == null ? null : ContentUtils.getText(is));
+            String requestText = is == null ? null : ContentUtils.getText(is);
             if (requestText == null && requestJsonContent.isSaveSupported()) {
                 try {
                     requestJsonContent.save(client, new ByteArrayInputStream("{\n\n}".getBytes()));

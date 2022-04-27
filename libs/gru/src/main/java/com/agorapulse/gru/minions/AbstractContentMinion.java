@@ -51,14 +51,14 @@ public abstract class AbstractContentMinion<C extends Client> extends AbstractMi
     public final void doVerify(Client client, Squad squad, GruContext context) throws Throwable {
         if (responseContent != null) {
             final InputStream is = responseContent.load(client);
-            String expectedResponseText = (is == null ? null : ContentUtils.getText(is));
+            String expectedResponseText = is == null ? null : ContentUtils.getText(is);
             String responseText = readResponseText(client, squad, context);
 
             if (expectedResponseText == null && responseText != null) {
                 expectedResponseText = responseText;
                 if (responseContent.isSaveSupported()) {
                     responseContent.save(client, new ByteArrayInputStream(normalize(expectedResponseText).getBytes()));
-                    System.err.println(("Content is missing for " + getResponseContent() + ". New file was created with content:\n" + expectedResponseText));
+                    System.err.println("Content is missing for " + getResponseContent() + ". New file was created with content:\n" + expectedResponseText);
                     createdResources.add(responseContent);
                 }
             }

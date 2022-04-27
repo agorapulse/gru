@@ -74,7 +74,7 @@ public class HttpMinion extends AbstractMinion<Client> {
 
         if (redirectUri != null) {
             String actualRedirectUrl = client.getResponse().getRedirectUrl();
-            if (!redirectUri.equals(actualRedirectUrl) && !redirectUri.equals(client.getRequest().getBaseUri() + redirectUri)) {
+            if (!(actualRedirectUrl.equals(redirectUri) || actualRedirectUrl.equals(client.getRequest().getBaseUri() + redirectUri))) {
                 throw new AssertionError("Unexpected redirect URL " + actualRedirectUrl + ". Expected URL " + redirectUri);
             }
         }

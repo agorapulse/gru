@@ -278,7 +278,7 @@ public final class Cookie {
         if (deltaSeconds == Long.MIN_VALUE) {
             expiresAt = Long.MIN_VALUE;
         } else if (deltaSeconds != -1L) {
-            long deltaMilliseconds = deltaSeconds <= (Long.MAX_VALUE / 1000)
+            long deltaMilliseconds = deltaSeconds <= Long.MAX_VALUE / 1000
                 ? deltaSeconds * 1000
                 : Long.MAX_VALUE;
             expiresAt = currentTimeMillis + deltaMilliseconds;
@@ -378,11 +378,11 @@ public final class Cookie {
     private static int dateCharacterOffset(String input, int pos, int limit, boolean invert) {
         for (int i = pos; i < limit; i++) {
             int c = input.charAt(i);
-            boolean dateCharacter = (c < ' ' && c != '\t') || (c >= '\u007f')
-                || (c >= '0' && c <= '9')
-                || (c >= 'a' && c <= 'z')
-                || (c >= 'A' && c <= 'Z')
-                || (c == ':');
+            boolean dateCharacter = c < ' ' && c != '\t' || c >= '\u007f'
+                || c >= '0' && c <= '9'
+                || c >= 'a' && c <= 'z'
+                || c >= 'A' && c <= 'Z'
+                || c == ':';
             if (dateCharacter == !invert) {
                 return i;
             }
@@ -707,7 +707,7 @@ public final class Cookie {
         hash = 31 * hash + value.hashCode();
         hash = 31 * hash + domain.hashCode();
         hash = 31 * hash + path.hashCode();
-        hash = 31 * hash + (int) (expiresAt ^ (expiresAt >>> 32));
+        hash = 31 * hash + (int) (expiresAt ^ expiresAt >>> 32);
         hash = 31 * hash + (secure ? 0 : 1);
         hash = 31 * hash + (httpOnly ? 0 : 1);
         hash = 31 * hash + (persistent ? 0 : 1);
