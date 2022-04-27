@@ -18,23 +18,17 @@
 package heist;
 
 import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.micronaut.Micronaut;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import org.junit.jupiter.api.Test;
+import com.agorapulse.gru.http.Http;
+import org.junit.Test;
 
-import javax.inject.Inject;
+public class HttpTest {
 
-@MicronautTest                                                                          // <1>
-public class InjectNativeMicronautTest {
-
-    @Inject Gru<Micronaut> gru;                                                         // <2>
+    Gru<Http> gru = Gru.create(Http.create(this))                                       // <1>
+                        .prepare("https://despicableme.fandom.com");                    // <2>
 
     @Test
-    public void testGet() throws Throwable {
-        gru.verify(test -> test
-            .get("/moons/earth/moon")
-            .expect(response -> response.json("moon.json"))
-        );
+    public void testGetWiki() throws Throwable {
+        gru.verify(test -> test.get("/wiki/Felonius_Gru"));                             // <3>
     }
 
 }

@@ -17,24 +17,48 @@
  */
 package heist;
 
+import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.micronaut.Micronaut;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import io.micronaut.context.ApplicationContext;
+import io.micronaut.runtime.server.EmbeddedServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+class ManualWithSimpleProviderMicronautTest {
 
-@MicronautTest                                                                          // <1>
-public class InjectNativeMicronautTest {
+    private Gru<Client> gru = Gru.create(Micronaut.create(this, this::getContext));     // <1>
 
-    @Inject Gru<Micronaut> gru;                                                         // <2>
+    private ApplicationContext context;
+    private EmbeddedServer embeddedServer;
+
+    @BeforeEach
+    public void setup() {
+        context = ApplicationContext.builder().build();
+        context.start();
+
+        embeddedServer = context.getBean(EmbeddedServer.class);
+        embeddedServer.start();
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        embeddedServer.close();
+        context.close();
+    }
+
 
     @Test
-    public void testGet() throws Throwable {
+    public void testMoon() throws Throwable {
         gru.verify(test -> test
             .get("/moons/earth/moon")
             .expect(response -> response.json("moon.json"))
         );
+    }
+
+    private ApplicationContext getContext() {
+        return context;
     }
 
 }

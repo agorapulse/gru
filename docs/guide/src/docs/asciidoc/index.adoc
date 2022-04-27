@@ -32,24 +32,23 @@ dependencies {
 <4> AWS API Gateway module for HTTP proxy lambdas
 <5> Micronaut module for running HTTP request against the embedded server
 
-[NOTE]
-====
-If you are testing JSON responses, underlying library link:https://github.com/lukas-krecan/JsonUnit#maven-dependency[JsonUnit]
-requires one of following libraries on the classpath: Jackson 1.x, Jackson 2.x, Gson, JSONObject or Moshi. If you don't have
-any of these on classpath, also add for example Jackson 2 dependency:
-```
-testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
-```
-====
-
 == Setup
 
 === HTTP
 Gru can be used to test any HTTP endpoint, including Micronaut applications running on embedded server or
 Grails application running within integration tests.
 
-.Minimal HTTP Usage
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Minimal HTTP Usage (Java)
+----
+include::{root-dir}/examples/heist/src/test/groovy/heist/HttpTest.java[lines=18..-1]
+----
+<1> `Gru` initialized with the specification object
+<2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
+<3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Minimal HTTP Usage (groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=18..-1]
 ----
@@ -62,18 +61,34 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=1
 Micronaut plays well with `@MicronautTest` annotation. If you are using `@MicronautTest` you can simply inject
 `Gru` instance into your test.
 
-.Using @Inject with @MicronautTest
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Using @Inject with @MicronautTest (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautTest.java[lines=18..-1]
+----
+<1> Annotate your test with `@MicronautTest`
+<2> Inject `Gru`
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Using @Inject with @MicronautTest (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautSpec.groovy[lines=18..-1]
 ----
-<1> Annotate your test with @MicronautTest`
+<1> Annotate your test with `@MicronautTest`
 <2> Inject `Gru`
 
 Alternatively, you can let `Gru` to create default `ApplicationContext` for you.
 
-.Using Default Application Context
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Using Default Application Context (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicronautTest.java[lines=18..-1]
+----
+<1> Create a simple `Micronaut` client for `Gru`
+<2> Default application context is created and fields can be injected into the test
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Using Default Application Context (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicronautSpec.groovy[lines=18..-1]
 ----
@@ -82,8 +97,15 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicr
 
 If you construct the application context yourself then you need to point `Gru` to the field of type `ApplicationContext`.
 
-.Using a Custom Application Context
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Using a Custom Application Context (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/ManualWithSimpleProviderMicronautTest.java[lines=18..-1]
+----
+<1> Point `Gru` to field `context` holding the custom `ApplicationContext` instance
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Using a Custom Application Context (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/ManualWithSimpleProviderMicronautSpec.groovy[lines=18..-1]
 ----
@@ -93,8 +115,19 @@ NOTE: As an alternative, you can make your test class implement `io.micronaut.co
 
 Gru can actually help you create the custom context:
 
-.Creating a Custom Application Context
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Creating a Custom Application Context (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutomaticMicronautTest.java[lines=18..-1]
+----
+<1> Declare any field you want to reference from the context before `Gru` declaration
+<2> Customize the `ApplicationContextBuilder`
+<3> Customize the `ApplicationContext` itself, e.g. register mocks
+<4> Start the application and injects fields into the test automatically
+<5> The field can be automatically injected
+
+.Creating a Custom Application Context (Groovy)
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutomaticMicronautSpec.groovy[lines=18..-1]
 ----
