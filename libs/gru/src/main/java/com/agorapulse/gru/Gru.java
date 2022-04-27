@@ -116,6 +116,18 @@ public class Gru<C extends Client> implements Closeable {
     }
 
     /**
+     * Defines and verifies API test and runs the controller initialization and the action under test.
+     * <p>
+     *
+     * @param expectation test definition
+     */
+    public final void verify(Consumer<TestDefinitionBuilder> expectation) throws Throwable {
+        try (Gru<C> self = test(expectation)) {
+            self.verify();
+        }
+    }
+
+    /**
      * Defines API test and runs the controller initialization and the action under test.
      * <p>
      * Use this method either in when or expect block.

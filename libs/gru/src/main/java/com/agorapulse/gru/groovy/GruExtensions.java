@@ -65,6 +65,20 @@ public class GruExtensions {
     }
 
     /**
+     * Defines and verifies API test and runs the controller initialization and the action under test.
+     *
+     * @param expectation test definition
+     */
+    public static <C extends Client> void verify(
+        Gru<C> self,
+        @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
+        Closure<TestDefinitionBuilder> expectation
+    ) throws Throwable {
+        self.verify(ConsumerWithDelegate.create(expectation));
+    }
+
+    /**
      * Allows to create feature method with only "expect" block by calling the verify method when this definition is
      * automagically converted to boolean.
      *

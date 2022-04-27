@@ -59,7 +59,11 @@ public class HttpMinion extends AbstractMinion<Client> {
     public void doVerify(Client client, Squad squad, GruContext context) {
         int status = client.getResponse().getStatus();
         if (!statuses.contains(status)) {
-            throw new AssertionError("Status " + status + " is not expected. Expected statuses are " + statuses.stream().map(Object::toString).collect(Collectors.joining(", ")));
+            if (statuses.size() > 1) {
+                throw new AssertionError("Status " + status + " is not expected. Expected statuses were " + statuses.stream().map(Object::toString).collect(Collectors.joining(", ")) + ".");
+            } else {
+                throw new AssertionError("Status " + status + " is not expected. Expected status was " + statuses.iterator().next() + ".");
+            }
         }
 
         for (Map.Entry<String, Collection<String>> header : responseHeaders.entrySet()) {
