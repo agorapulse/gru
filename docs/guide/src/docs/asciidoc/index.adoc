@@ -172,8 +172,18 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/SplitSpec.groovy[tag=wh
 Gru for link:https://spring.io/[Spring] allows you to test your application with mocked HTTP requests. Under the hood
 link:https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html[MockMvc] is used.
 
-.Minimal Spring Usage
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Minimal Spring Usage (Java)
+----
+include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/BasicTest.java[lines=18..-1]
+----
+<1> Use `@WebMvcTest` to properly setup Spring MVC test
+<2> Field with type `MockMvc` must exist and must not be `null` during the test execution (implement `HasMockMvc` interface for faster execution)
+<3> Initiate `Gru` with `Spring` client
+<4> Issue mock `GET` request to `/moon/earth/moon` and expect it returns `OK(200)` response
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Minimal Spring Usage (Groovy)
 ----
 include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/BasicSpec.groovy[lines=18..-1]
 ----
@@ -182,9 +192,11 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 <3> Initiate `Gru` with `Spring` client
 <4> Issue mock `GET` request to `/moon/earth/moon` and expect it returns `OK(200)` response
 
+
+
 [WARNING]
 ====
-Spock version at least `1.1` must be used when executing Spring tests. For example link:https://projects.spring.io/spring-boot/[Spring Boot]
+For Groovy tests, Spock version at least `1.1` must be used when executing Spring tests. For example link:https://projects.spring.io/spring-boot/[Spring Boot]
 overrides the default transitive dependency back to `1.0` so you need to explicity declare Spock version in your build file:
 
 [source,groovy]
@@ -211,9 +223,14 @@ declared in default package. See <<minimal-grails-usage>> for reference.
 
 You can specify additional URL parameters
 
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Additional URL Parameters (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=stealWithShrinkRay,indent=0]
+----
 
-.Additional URL Parameters
-[source,groovy]
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Additional URL Parameters (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=stealWithShrinkRay,indent=0]
 ----
@@ -222,8 +239,14 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 
 You can specify additional HTTP headers sent with the request.
 
-.Request Headers
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Request Headers (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=secretMoon,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Request Headers (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=secretMoon,indent=0]
 ----
@@ -233,19 +256,25 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 
 You can use JSON payload from file.
 
-.JSON Payload
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.JSON Payload (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=newMoon,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Payload (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=newMoon,indent=0]
 ----
 
 [TIP]
-You can also define json as map or list e.g. `json(foo: 'bar')`. Both are serialized to JSON using a JSON integration on the classpath.
+You can also define json as map or list e.g. `json(Collections.singletonMap("foo", "bar"))` in Java or  `json(foo: 'bar')` in Groovy. Both are serialized to JSON using a JSON integration on the classpath.
 
 [NOTE]
 JSON files are loaded relatively to directory having the same name as the current specification and it is placed
 in the same directory corresponding the package of the the current specification. For example if your specification name
-is `org.example.ExampleSpec` then `createNewMoonResponse.json` file's path should be `org/example/ExampleSpec/createNewMoonResponse.json`.
+is `org.example.ExampleSpec` then `createNewMoonResponse.json` file's path should be `org/example/ExampleSpec/createNewMoonResponse.json`. See https://agorapulse.github.io/testing-libraries/#_fixt[Fixt] for more details.
 
 [TIP]
 Fixture JSON files are created automatically if missing. Empty object (`{}`) is created for missing request JSON file and JSON file
@@ -258,8 +287,14 @@ in `src/test/resources` relatively to the working directory. See the following e
 
 You can use generic payload from file.
 
-.Generic Payload
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Generic Payload (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=newMoonGeneric,indent=0]
+----
+
 [source,groovy]
+.Generic Payload (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=newMoonGeneric,indent=0]
 ----
@@ -279,8 +314,14 @@ in `src/test/resources` relatively to the working directory.
 
 You can emulate multipart file uploads.
 
-.File Upload
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Generic Payload (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=fileUpload,indent=0]
+----
+
 [source,groovy]
+.File Upload (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=fileUpload,indent=0]
 ----
@@ -292,10 +333,16 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 [[cookies,File Upload]]
 ==== Cookies
 
-You can emulate cookies send by the browser or set by the server.
+You can emulate cookies send by the browser or verify they have been set by the server response.
 
-.File Upload
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Cookies (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=cookies,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Cookies (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=cookies,indent=0]
 ----
@@ -312,8 +359,14 @@ Response expectation are defined using `expect` method within `test` definition.
 You can specify expected response status code. Constants for HTTP status codes are available within the `expect` closure call.
 Default status is `OK(200)` which is asserted within every test. See <<redirect>> for exception.
 
-.Status Code
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Status Code (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=stealWithShrinkRay,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Status Code (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=stealWithShrinkRay,indent=0]
 ----
@@ -323,8 +376,14 @@ TIP: If multiple statuses are possible then you can use `statuses(...)` method i
 ==== Response Headers
 You can specify expected response headers.
 
-.Response Headers
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Response Headers (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=jsonHeaders,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Response Headers (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=jsonHeaders,indent=0]
 ----

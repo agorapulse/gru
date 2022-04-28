@@ -149,4 +149,8 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @return self
      */
     RequestDefinitionBuilder cookies(Map<String, String> cookies);
+
+    default RequestDefinitionBuilder header(String name, String value) {
+        return headers(Collections.singletonMap(name, value));
+    }
 }

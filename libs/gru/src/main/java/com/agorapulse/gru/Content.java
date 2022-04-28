@@ -17,6 +17,9 @@
  */
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.content.FileContent;
+import com.agorapulse.gru.content.StringContent;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,6 +27,14 @@ import java.io.InputStream;
  * Opaque content wrapper.
  */
 public interface Content {
+
+    static Content inline(String content) {
+        return StringContent.create(content);
+    }
+
+    static Content file(String content) {
+        return FileContent.create(content);
+    }
 
     /**
      * Loads a content.

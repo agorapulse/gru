@@ -17,12 +17,18 @@
  */
 package heist.micronaut;
 
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.annotation.Controller;
+import io.micronaut.http.annotation.Delete;
 import io.micronaut.http.annotation.Get;
 import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.annotation.Post;
+import io.micronaut.http.annotation.QueryValue;
+import io.micronaut.http.cookie.Cookie;
 
 import java.net.URI;
+import java.util.stream.Collectors;
 
 @Controller("/moons")
 class MoonController {
@@ -41,6 +47,31 @@ class MoonController {
     @Get("/the-big-cheese")
     HttpResponse<?> sayHello() {
         return HttpResponse.redirect(URI.create("/moons/earth/moon"));
+    }
+
+    @Delete("/{planet}/{moon}")
+    HttpResponse<?> steal(String planet, String moon, @QueryValue String with) {
+        if ("shrink-ray".equals(with)) {
+            return HttpResponse.noContent();
+        }
+        return HttpResponse.badRequest();
+    }
+
+    @Post("/{planet}")
+    HttpResponse<?> create(String planet, String name) {
+        return HttpResponse.ok(new Moon(name, planet));
+    }
+
+    @Get("/cookie")
+    HttpResponse<?> cookie(HttpRequest<?> request) {
+        return HttpResponse.ok(request.getCookies().getAll().stream().collect(Collectors.toMap(Cookie::getName, Cookie::getValue)));
+    }
+
+    @Get("/setCookie")
+    HttpResponse<?> setCookie() {
+        return HttpResponse.ok("OK")
+                .cookie(Cookie.of("chocolate", "rules"))
+                .cookie(Cookie.of("coffee", "lover").domain("localhost").secure(true));
     }
 
 }
