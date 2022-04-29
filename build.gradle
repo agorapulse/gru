@@ -197,6 +197,7 @@ projects {
         }
 
         dir ('examples') {
+            groovydoc.onlyIf { false }
             config {
                 quality {
                     codenarc {
