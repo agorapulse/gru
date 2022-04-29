@@ -295,7 +295,7 @@ You can use generic payload from file.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=newMoonGeneric,indent=0]
 ----
 
-[source,groovy]
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Generic Payload (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=newMoonGeneric,indent=0]
@@ -322,7 +322,7 @@ You can emulate multipart file uploads.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=fileUpload,indent=0]
 ----
 
-[source,groovy]
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .File Upload (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=fileUpload,indent=0]
@@ -400,7 +400,7 @@ You can specify expected redirection URI. For redirection, default status code i
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=redirect,indent=0]
 ----
 
-[source,groovy]
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Redirection (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=redirect,indent=0]
@@ -670,7 +670,7 @@ You can configure additional request steps within `request` method closure defin
 within `expect` block to add additional `ResultMatcher`. Both methods are aliased to `and` method within their
 blocks so you can write the assertions in more fluent way.
 
-[source, groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
 .MockMVC Builders (Java)
 ----
 include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerTest.java[tag=mockmvc,ident=0]
@@ -681,7 +681,7 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 <4>> Check the content encoding using the `content()` method that is statically imported from
 link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
 
-[source, groovy]
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .MockMVC Builders (Groovy)
 ----
 include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerSpec.groovy[tag=mockmvc,ident=0]
@@ -724,7 +724,7 @@ with Gru. First of all you need to tell Gru which handlers are responsible for p
 .API Gateway Lambda Proxy Configuration
 [source,groovy]
 ----
-include::{root-dir}/libs/gru-api-gateway/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=simple]
+include::{root-dir}/libs/gru-api-gateway/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=simple,indent=0]
 ----
 <1> You can specify the name of the handler by class name with optional method name after double colon `::`
 <2> You can specify the handler by class reference
@@ -735,7 +735,7 @@ You can also test handlers which do not uses the proxy integration
 .API Gateway Lambda Configuration (without Proxy)
 [source,groovy]
 ----
-include::{root-dir}/libs/gru-api-gateway/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=noproxy]
+include::{root-dir}/libs/gru-api-gateway/src/test/groovy/com/agorapulse/gru/agp/ApiGatewayConfigurationSpec.groovy[tag=noproxy,indent=0]
 ----
 <1> The main difference is that you specify the request and response mapping
 <2> You can specify which path parameters are being extracted into the function input object
