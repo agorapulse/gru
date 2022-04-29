@@ -30,7 +30,7 @@ public class GruIntegrationTestConfiguration {
 
     @Bean(destroyMethod = "close")
     @Scope("prototype")
-    public static Gru<Http> gru(@Value("${local.server.port}") int serverPort, InjectionPoint injectionPoint) {
+    public static Gru gru(@Value("${local.server.port}") int serverPort, InjectionPoint injectionPoint) {
         return Gru.create(Http.create(injectionPoint.getMember().getDeclaringClass())).prepare("http://localhost:" + serverPort);
     }
 

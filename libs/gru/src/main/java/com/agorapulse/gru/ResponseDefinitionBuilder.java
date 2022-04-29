@@ -188,12 +188,12 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
     ResponseDefinitionBuilder cookie(Consumer<ResponseCookieDefinition> cookieDefinition);
 
     default ResponseDefinitionBuilder cookies(Map<String, String> cookies) {
-        cookies.forEach((name, value) -> cookie((c) -> c.name(name).value(value)));
+        cookies.forEach((name, value) -> cookie(c -> c.name(name).value(value)));
         return this;
     }
 
     default ResponseDefinitionBuilder cookie(String name, String value) {
-        cookie((c) -> c.name(name).value(value));
+        cookie(c -> c.name(name).value(value));
         return this;
     }
 }

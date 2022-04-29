@@ -26,7 +26,7 @@ import spock.lang.Specification
 @WebMvcTest
 class MoonController4Spec extends Specification {
 
-    @AutoCleanup Gru<Spring> gru = Gru.create(Spring.create(this))
+    @AutoCleanup Gru gru = Gru.create(Spring.create(this))
 
     void 'there is no mockmvc'() {
         when:

@@ -29,7 +29,7 @@ class BasicTest {
 
     @Autowired MockMvc mvc;                                                             // <2>
 
-    Gru<Spring> gru = Gru.create(Spring.create(this));                                  // <3>
+    Gru gru = Gru.create(Spring.create(this));                                          // <3>
 
     @Test
     void testMoon() throws Throwable {

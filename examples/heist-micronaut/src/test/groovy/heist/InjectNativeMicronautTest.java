@@ -27,7 +27,7 @@ import javax.inject.Inject;
 @MicronautTest                                                                          // <1>
 public class InjectNativeMicronautTest {
 
-    @Inject Gru<Micronaut> gru;                                                         // <2>
+    @Inject Gru gru;                                                                    // <2>
 
     @Test
     public void testGet() throws Throwable {

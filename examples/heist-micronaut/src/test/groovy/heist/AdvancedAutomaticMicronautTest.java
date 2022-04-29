@@ -35,7 +35,7 @@ public class AdvancedAutomaticMicronautTest {
 
     private MoonService moonService = mock(MoonService.class);                          // <1>
 
-    private Gru<Client> gru = Gru.create(
+    private Gru gru = Gru.create(
         Micronaut.build(this)
             .doWithContextBuilder(b ->
                 b.environments("my-custom-env")                                         // <2>

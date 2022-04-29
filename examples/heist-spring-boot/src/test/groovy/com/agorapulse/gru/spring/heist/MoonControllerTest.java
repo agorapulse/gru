@@ -37,7 +37,7 @@ class MoonControllerTest {
     @Autowired
     private MockMvc mvc;
 
-    private Gru<Spring> gru = Gru.create(Spring.create(this));
+    private Gru gru = Gru.create(Spring.create(this));
 
     // tag::mockmvc[]
     @Test

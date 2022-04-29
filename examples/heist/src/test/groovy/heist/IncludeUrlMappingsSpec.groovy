@@ -25,7 +25,7 @@ import spock.lang.Specification
 
 class IncludeUrlMappingsSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru<Grails<IncludeUrlMappingsSpec>> gru = Gru.create(Grails.create(this)).prepare {
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
         include ApiUrlMappings                                                          // <1>
     }
 

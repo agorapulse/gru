@@ -28,7 +28,7 @@ import spock.lang.Specification
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)             // <1>
 class MoonControllerIntegrationSpec extends Specification {
 
-    @Autowired Gru<Http> gru                                                            // <2>
+    @Autowired Gru gru                                                                  // <2>
 
     void 'render json'() {                                                              // <3>
         expect:

@@ -37,7 +37,7 @@ import spock.lang.Specification
  */
 class MoonControllerSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru<Grails<MoonControllerSpec>> gru = Gru.create(Grails.create(this)).prepare {
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
         include UrlMappings
     }
 

@@ -693,7 +693,7 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
 
 === Integration Tests
-You use `Http` client to verify controller within `@Integration` test. Once `gru-spring-integration-test` is on the classpath then you can inject `Gru<Http>` bean into your tests.
+You use `Http` client to verify controller within `@Integration` test. Once `gru-spring-integration-test` is on the classpath then you can inject `Gru` bean into your tests.
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
 .Integration Setup (Java)
@@ -701,7 +701,7 @@ You use `Http` client to verify controller within `@Integration` test. Once `gru
 include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerIntegrationTest.java[lines=18..-1]
 ----
 <1> Run integration test using the random port
-<2> Inject `Gru<Http>` into your tests
+<2> Inject `Gru` into your tests
 <3> Test the application
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
@@ -710,7 +710,7 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerIntegrationSpec.groovy[lines=18..-1]
 ----
 <1> Run integration test using the random port
-<2> Inject `Gru<Http>` into your tests
+<2> Inject `Gru` into your tests
 <3> Test the application
 
 == AWS API Gateway

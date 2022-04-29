@@ -33,7 +33,7 @@ import static com.agorapulse.gru.HttpStatusShortcuts.NO_CONTENT;
 public class MoonControllerTest {
 
     @Inject
-    Gru<Client> gru;
+    Gru gru;
 
     // tag::stealWithShrinkRay[]
     @Test

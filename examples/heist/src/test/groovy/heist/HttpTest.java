@@ -23,7 +23,7 @@ import org.junit.Test;
 
 public class HttpTest {
 
-    Gru<Http> gru = Gru.create(Http.create(this))                                       // <1>
+    Gru gru = Gru.create(Http.create(this))                                             // <1>
                         .prepare("https://despicableme.fandom.com");                    // <2>
 
     @Test

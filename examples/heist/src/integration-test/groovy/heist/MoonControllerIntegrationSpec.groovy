@@ -34,7 +34,7 @@ class MoonControllerIntegrationSpec extends Specification {
     @Value('${local.server.port}')
     Integer serverPort                                                                      // <1>
 
-    @AutoCleanup Gru<Http> gru = Gru.create(Http.create(this))                              // <2>
+    @AutoCleanup Gru gru = Gru.create(Http.create(this))                                    // <2>
 
     void setup() {
         final String serverUrl = "http://localhost:${serverPort}"                           // <3>

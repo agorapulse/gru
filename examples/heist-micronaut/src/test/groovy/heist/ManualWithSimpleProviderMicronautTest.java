@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 
 class ManualWithSimpleProviderMicronautTest {
 
-    private Gru<Client> gru = Gru.create(Micronaut.create(this, this::getContext));     // <1>
+    private Gru gru = Gru.create(Micronaut.create(this, this::getContext));             // <1>
 
     private ApplicationContext context;
     private EmbeddedServer embeddedServer;

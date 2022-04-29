@@ -26,7 +26,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)             // <1>
 public class MoonControllerIntegrationTest {
 
-    @Autowired private Gru<Http> gru;                                                   // <2>
+    @Autowired private Gru gru;                                                         // <2>
 
     @Test
     public void renderJson() throws Throwable {                                         // <3>

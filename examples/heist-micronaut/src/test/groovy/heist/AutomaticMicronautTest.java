@@ -17,7 +17,6 @@
  */
 package heist;
 
-import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.micronaut.Micronaut;
 import io.micronaut.context.env.Environment;
@@ -30,7 +29,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AutomaticMicronautTest {
 
-    Gru<Client> gru = Gru.create(Micronaut.create(this));                               // <1>
+    Gru gru = Gru.create(Micronaut.create(this));                                       // <1>
 
     @Inject Environment environment;                                                    // <2>
 

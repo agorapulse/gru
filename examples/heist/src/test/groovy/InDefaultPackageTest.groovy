@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit
 
 class InDefaultPackageTest extends Specification {
 
-    @AutoCleanup Gru<Http> gru = Gru.create(Http.create {
+    @AutoCleanup Gru gru = Gru.create(Http.create {
         readTimeout(10, TimeUnit.SECONDS)
     }).prepare('https://despicableme.fandom.com')
 
