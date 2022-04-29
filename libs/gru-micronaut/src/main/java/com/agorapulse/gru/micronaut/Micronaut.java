@@ -229,6 +229,11 @@ public class Micronaut implements Client {
         return delegate.getUnitTest();
     }
 
+    @Override
+    public Class<?> getUnitTestClass() {
+        return delegate.getUnitTestClass();
+    }
+
     private static void assertProviderIfPossible(Object unitTest) {
         if (unitTest == null || unitTest instanceof ApplicationContextProvider) {
             return;

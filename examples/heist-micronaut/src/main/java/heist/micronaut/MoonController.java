@@ -17,12 +17,16 @@
  */
 package heist.micronaut;
 
+import io.micronaut.http.HttpRequest;
 import io.micronaut.http.HttpResponse;
-import io.micronaut.http.annotation.Controller;
-import io.micronaut.http.annotation.Get;
-import io.micronaut.http.annotation.PathVariable;
+import io.micronaut.http.MediaType;
+import io.micronaut.http.annotation.*;
+import io.micronaut.http.cookie.Cookie;
 
 import java.net.URI;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller("/moons")
 class MoonController {
@@ -33,14 +37,60 @@ class MoonController {
         this.moonService = moonService;
     }
 
+    @Get("/{planet}")
+    public List<Moon> getMoons(@PathVariable("planet") String planet) {
+        return Arrays.asList(moonService.get(planet, "moon"), moonService.get(planet, "mir"));
+    }
+
+
     @Get("/{planet}/{moon}")
-    Moon sayHello(@PathVariable("planet") String planet, @PathVariable("moon") String moon) {
-        return moonService.get(planet, moon);
+    public HttpResponse<Moon> sayHello(@PathVariable("planet") String planet, @PathVariable("moon") String moon) {
+        if ("-".equals(planet)) {
+            return HttpResponse.redirect(URI.create("/moons/earth/moon"));
+        }
+        return HttpResponse.ok(moonService.get(planet, moon));
+    }
+
+    @Get("/{planet}/{moon}/info")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String info(@PathVariable("planet") String planet, @PathVariable("moon") String moon) {
+        return moon + " goes around " + planet;
+    }
+
+    @Get("/{planet}/{moon}/html")
+    @Produces(MediaType.TEXT_HTML)
+    public String html(@PathVariable("planet") String planet, @PathVariable("moon") String moon) {
+        return "<html><body>" + moon + " goes around " + planet + "</body></html>";
     }
 
     @Get("/the-big-cheese")
-    HttpResponse<?> sayHello() {
+    public HttpResponse<?> sayHello() {
         return HttpResponse.redirect(URI.create("/moons/earth/moon"));
+    }
+
+    @Delete("/{planet}/{moon}")
+    public HttpResponse<?> steal(String planet, String moon, @QueryValue String with) {
+        if ("shrink-ray".equals(with)) {
+            return HttpResponse.noContent();
+        }
+        return HttpResponse.badRequest();
+    }
+
+    @Post("/{planet}")
+    public HttpResponse<?> create(String planet, String name) {
+        return HttpResponse.ok(new Moon(name, planet));
+    }
+
+    @Get("/cookie")
+    public HttpResponse<?> cookie(HttpRequest<?> request) {
+        return HttpResponse.ok(request.getCookies().getAll().stream().collect(Collectors.toMap(Cookie::getName, Cookie::getValue)));
+    }
+
+    @Get("/setCookie")
+    public HttpResponse<?> setCookie() {
+        return HttpResponse.ok("OK")
+                .cookie(Cookie.of("chocolate", "rules"))
+                .cookie(Cookie.of("coffee", "lover").domain("localhost").secure(true));
     }
 
 }

@@ -26,7 +26,7 @@ import spock.lang.Specification
 class SplitSpec extends Specification
     implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru<Grails<SplitSpec>> gru = Gru.create(Grails.create(this)).prepare {
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
         include UrlMappings
     }
 

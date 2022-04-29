@@ -24,7 +24,7 @@ import spock.lang.Specification
 
 class HttpSpec extends Specification{
 
-    @AutoCleanup Gru<Http> gru = Gru.create(Http.create(this))                          // <1>
+    @AutoCleanup Gru gru = Gru.create(Http.create(this))                                // <1>
                                     .prepare('https://despicableme.fandom.com')         // <2>
 
     void 'despicable me'() {

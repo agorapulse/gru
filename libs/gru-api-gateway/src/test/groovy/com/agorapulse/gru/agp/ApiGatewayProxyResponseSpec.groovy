@@ -17,7 +17,8 @@
  */
 package com.agorapulse.gru.agp
 
-import groovy.json.JsonOutput
+import com.fasterxml.jackson.databind.ObjectMapper
+import spock.lang.Shared
 import spock.lang.Specification
 
 /**
@@ -29,10 +30,12 @@ class ApiGatewayProxyResponseSpec extends Specification {
     public static final int STATUS = 201
     public static final String REDIRECT_URL = 'http://www.example.com'
 
+    @Shared ObjectMapper mapper = new ObjectMapper()
+
     void 'response parsed properly'() {
         when:
             ApiGatewayProxyResponse response = new ApiGatewayProxyResponse(
-                JsonOutput.toJson(
+                mapper.writeValueAsString(
                     body: BODY,
                     headers: [foo: 'bar'],
                     statusCode: STATUS
@@ -49,7 +52,7 @@ class ApiGatewayProxyResponseSpec extends Specification {
     void 'understands redirect'() {
         when:
             ApiGatewayProxyResponse response = new ApiGatewayProxyResponse(
-                JsonOutput.toJson(
+                mapper.writeValueAsString(
                     headers: [Location: REDIRECT_URL],
                     statusCode: 301
                 )

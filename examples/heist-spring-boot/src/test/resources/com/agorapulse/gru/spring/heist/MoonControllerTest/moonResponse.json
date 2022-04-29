@@ -1,0 +1,5 @@
+{
+  "name": "Moon",
+  "planet": "Earth",
+  "created": "${json-unit.matches:isoDate}"
+}

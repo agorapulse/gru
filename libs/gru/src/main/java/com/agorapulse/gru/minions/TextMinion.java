@@ -37,7 +37,7 @@ public class TextMinion extends AbstractContentMinion<Client> {
     protected void similar(String actual, String expected) throws AssertionError {
         if (!Objects.equals(actual, expected)) {
             throw new AssertionError("The texts are not equal:\n\nExpected:\n" + expected + "\n\nActual:\n" + actual);
-        };
+        }
     }
 
     public final int getIndex() {

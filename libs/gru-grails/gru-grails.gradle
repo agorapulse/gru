@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 dependencies {
+    api platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
     api project(':gru')
     api "org.grails:grails-web-testing-support:${grailsTestingSupportVersion}"
 

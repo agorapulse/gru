@@ -23,6 +23,7 @@ import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -155,6 +156,10 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      */
     ResponseDefinitionBuilder headers(Map<String, String> additionalHeaders);
 
+    default ResponseDefinitionBuilder header(String name, String value) {
+        return headers(Collections.singletonMap(name, value));
+    }
+
     /**
      * Sets the expected redirection URI.
      *
@@ -183,7 +188,12 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
     ResponseDefinitionBuilder cookie(Consumer<ResponseCookieDefinition> cookieDefinition);
 
     default ResponseDefinitionBuilder cookies(Map<String, String> cookies) {
-        cookies.forEach((name, value) -> cookie((c) -> c.name(name).value(value)));
+        cookies.forEach((name, value) -> cookie(c -> c.name(name).value(value)));
+        return this;
+    }
+
+    default ResponseDefinitionBuilder cookie(String name, String value) {
+        cookie(c -> c.name(name).value(value));
         return this;
     }
 }

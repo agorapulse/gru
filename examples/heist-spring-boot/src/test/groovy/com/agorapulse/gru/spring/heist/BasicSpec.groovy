@@ -30,7 +30,7 @@ class BasicSpec extends Specification {
 
     @Autowired MockMvc mvc                                                              // <2>
 
-    @AutoCleanup Gru<Spring> gru = Gru.create(Spring.create(this))                      // <3>
+    @AutoCleanup Gru gru = Gru.create(Spring.create(this))                              // <3>
 
     void 'look at the moon'() {
         expect:

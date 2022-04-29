@@ -38,8 +38,16 @@ public class Http extends AbstractClient {
         return new Http(unitTest, null);
     }
 
+    public static Http create(Class<?> unitTestClass) {
+        return new Http(unitTestClass, null);
+    }
+
     public static Http create(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
         return new Http(unitTest, configuration);
+    }
+
+    public static Http create(Class<?> unitTestClass, Consumer<OkHttpClient.Builder> configuration) {
+        return new Http(unitTestClass, configuration);
     }
 
     @Deprecated
@@ -54,6 +62,18 @@ public class Http extends AbstractClient {
 
     private Http(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
         super(unitTest);
+        request = new GruHttpRequest();
+
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        if (configuration != null) {
+            configuration.accept(builder);
+        }
+
+        httpClient = builder.build();
+    }
+
+    private Http(Class<?> unitTestClass, Consumer<OkHttpClient.Builder> configuration) {
+        super(unitTestClass);
         request = new GruHttpRequest();
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
@@ -82,11 +102,6 @@ public class Http extends AbstractClient {
     public void reset() {
         request = new GruHttpRequest();
         response = null;
-    }
-
-    @Override
-    public Object getUnitTest() {
-        return super.getUnitTest();
     }
 
     @Override

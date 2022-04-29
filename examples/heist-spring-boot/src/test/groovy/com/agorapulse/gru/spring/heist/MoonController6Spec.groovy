@@ -32,7 +32,7 @@ class MoonController6Spec extends Specification {
 
     @Autowired MockMvc whatever
 
-    @AutoCleanup Gru<Spring> gru = Gru.create(Spring.create(this))
+    @AutoCleanup Gru gru = Gru.create(Spring.create(this))
 
     void 'using content'() {
         expect:

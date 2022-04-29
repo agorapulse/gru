@@ -33,7 +33,7 @@ class MoonController5Spec extends Specification {
 
     @Autowired MockMvc mvc
 
-    @AutoCleanup Gru<Spring> gru = Gru.create(Spring.create(this))
+    @AutoCleanup Gru gru = Gru.create(Spring.create(this))
                                       .engage(new ResultMatcherMinion())
                                       .engage(new NastyMinion())
 

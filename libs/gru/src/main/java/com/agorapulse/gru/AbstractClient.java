@@ -28,7 +28,15 @@ public abstract class AbstractClient implements Client {
 
     protected AbstractClient(Object unitTest) {
         this.unitTest = unitTest;
-        this.fixt = Fixt.create(unitTest.getClass());
+        this.unitTestClass = unitTest == null ? null : unitTest.getClass();
+        this.fixt = Fixt.create(unitTestClass);
+        this.fixt.mkdirs();
+    }
+
+    protected AbstractClient(Class<?> unitTestClass) {
+        this.unitTest = null;
+        this.unitTestClass = unitTestClass;
+        this.fixt = Fixt.create(unitTestClass);
         this.fixt.mkdirs();
     }
 
@@ -60,10 +68,17 @@ public abstract class AbstractClient implements Client {
     }
 
     @Override
+    public Class<?> getUnitTestClass() {
+        return unitTestClass;
+    }
+
+    @Override
     public String toString() {
         return getCurrentDescription();
     }
 
-    protected final Object unitTest;
     protected final Fixt fixt;
+    private final Object unitTest;
+    private final Class<?> unitTestClass;
+
 }

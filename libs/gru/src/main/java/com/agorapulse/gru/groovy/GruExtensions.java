@@ -37,8 +37,8 @@ public class GruExtensions {
      * @param configuration configuration applied to every feature method
      * @return self
      */
-    public static <C extends Client> Gru<C> prepare(
-        Gru<C> self,
+    public static <C extends Client> Gru prepare(
+        Gru self,
         @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
         Closure<TestDefinitionBuilder> configuration
@@ -55,8 +55,8 @@ public class GruExtensions {
      * @param expectation test definition
      * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
      */
-    public static <C extends Client> Gru<C> test(
-        Gru<C> self,
+    public static Gru test(
+        Gru self,
         @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
         Closure<TestDefinitionBuilder> expectation
@@ -69,8 +69,8 @@ public class GruExtensions {
      *
      * @param expectation test definition
      */
-    public static <C extends Client> void verify(
-        Gru<C> self,
+    public static void verify(
+        Gru self,
         @DelegatesTo(value = TestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
         Closure<TestDefinitionBuilder> expectation
@@ -85,7 +85,7 @@ public class GruExtensions {
      * @return true if all verifications are successful
      * @throws AssertionError if any verification fails
      */
-    public static <C extends Client> boolean asBoolean(Gru<C> self) throws Throwable {
+    public static boolean asBoolean(Gru self) throws Throwable {
         return self.verify();
     }
 

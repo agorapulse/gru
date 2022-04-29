@@ -29,22 +29,20 @@ import java.util.function.Consumer;
 /**
  * Gru steals the controller's unit test to verify controller's actions in context.
  * <p>
- * Must be use as JUnit's <code>@Rule</code>.
- *
- * @param <C> type of the client
  */
-public class Gru<C extends Client> implements Closeable {
+public class Gru implements Closeable {
+
     /**
      * Steals the unit test for himself.
      * <p>
-     * Typical usage is <code>@Rule Gru gru = Gru.create(this)</code>
+     * Typical usage is <code>Gru gru = Gru.create(this)</code>
      *
      * @param client unit test being stolen
      * @return new Gru instance stealing current unit test
      * @deprecated use {@link #create(Client)} instead
      */
     @Deprecated
-    public static <C extends Client> Gru<C> equip(C client) {
+    public static Gru equip(Client client) {
         return create(client);
     }
 
@@ -56,11 +54,11 @@ public class Gru<C extends Client> implements Closeable {
      * @param client unit test
      * @return new Gru instance using the current unit test
      */
-    public static <C extends Client> Gru<C> create(C client) {
-        return new Gru<>(client);
+    public static Gru create(Client client) {
+        return new Gru(client);
     }
 
-    private Gru(C client) {
+    private Gru(Client client) {
         this.client = client;
     }
 
@@ -70,7 +68,7 @@ public class Gru<C extends Client> implements Closeable {
      * @param configuration configuration applied to every feature method
      * @return self
      */
-    public final Gru<C> prepare(Consumer<TestDefinitionBuilder> configuration
+    public final Gru prepare(Consumer<TestDefinitionBuilder> configuration
     ) {
         this.configurations.add(configuration);
         return this;
@@ -83,7 +81,7 @@ public class Gru<C extends Client> implements Closeable {
      * @param baseUri the base URI for the test calls
      * @return self
      */
-    public final Gru<C> prepare(String baseUri) {
+    public final Gru prepare(String baseUri) {
         this.configurations.add(c -> c.baseUri(baseUri));
         return this;
     }
@@ -94,7 +92,7 @@ public class Gru<C extends Client> implements Closeable {
      * @param minion minion to be added to the squad
      * @return self
      */
-    public final Gru<C> engage(Minion minion) {
+    public final Gru engage(Minion minion) {
         this.squad.add(minion);
         return this;
     }
@@ -122,7 +120,7 @@ public class Gru<C extends Client> implements Closeable {
      * @param expectation test definition
      */
     public final void verify(Consumer<TestDefinitionBuilder> expectation) throws Throwable {
-        try (Gru<C> self = test(expectation)) {
+        try (Gru self = test(expectation)) {
             self.verify();
         }
     }
@@ -135,7 +133,7 @@ public class Gru<C extends Client> implements Closeable {
      * @param expectation test definition
      * @return self, note that when Groovy Truth is evaluated, <code>verify</code> method is called automatically
      */
-    public final Gru<C> test(Consumer<TestDefinitionBuilder> expectation) {
+    public final Gru test(Consumer<TestDefinitionBuilder> expectation) {
         definition = true;
 
         DefaultTestDefinitionBuilder builder = new DefaultTestDefinitionBuilder(client, this.squad);
@@ -200,7 +198,7 @@ public class Gru<C extends Client> implements Closeable {
     /**
      * Reset the internal state. This is done by the rule automatically.
      */
-    public Gru<C> reset() {
+    public Gru reset() {
         return reset(true);
     }
 
@@ -209,7 +207,7 @@ public class Gru<C extends Client> implements Closeable {
      *
      * @param resetConfigurations also clear the configurations created using {@link #prepare(Consumer)} method
      */
-    public Gru<C> reset(boolean resetConfigurations) {
+    public Gru reset(boolean resetConfigurations) {
         verified = false;
         verificationResult = false;
         definition = false;
@@ -224,7 +222,7 @@ public class Gru<C extends Client> implements Closeable {
         return this;
     }
 
-    private final C client;
+    private final Client client;
     /**
      * Additional configurations to be applied to every feature method.
      */

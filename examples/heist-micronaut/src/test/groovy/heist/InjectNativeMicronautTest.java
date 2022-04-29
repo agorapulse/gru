@@ -21,17 +21,16 @@ import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.micronaut.Micronaut;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
-import spock.lang.Specification;
 
 import javax.inject.Inject;
 
-@MicronautTest                                                                       // <1>
-class InjectNativeMicronautTest extends Specification {
+@MicronautTest                                                                          // <1>
+public class InjectNativeMicronautTest {
 
-    @Inject Gru<Micronaut> gru;                                                                     // <2>
+    @Inject Gru gru;                                                                    // <2>
 
     @Test
-    void testGet() throws Throwable {
+    public void testGet() throws Throwable {
         gru.verify(test -> test
             .get("/moons/earth/moon")
             .expect(response -> response.json("moon.json"))

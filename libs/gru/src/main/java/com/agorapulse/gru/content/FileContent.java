@@ -48,7 +48,7 @@ public class FileContent implements Content {
 
     @Override
     public void save(Client client, InputStream stream) throws IOException {
-        Fixt.create(client.getUnitTest().getClass()).writeStream(fileName, stream);
+        Fixt.create(client.getUnitTestClass()).writeStream(fileName, stream);
     }
 
     @Override

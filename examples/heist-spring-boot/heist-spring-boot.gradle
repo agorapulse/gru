@@ -39,7 +39,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
 
     testCompile(project(':gru-spring'))
-    testCompile(project(':gru-http'))
+    testCompile(project(':gru-spring-integration-testing'))
     testCompile("org.spockframework:spock-spring:$spockVersion")
     testCompile("org.spockframework:spock-core:$spockVersion")
 }

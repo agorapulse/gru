@@ -18,9 +18,9 @@
 dependencies {
     api project(':gru')
 
-    implementation "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 
-    implementation group: 'org.spockframework', name: 'spock-spring', version: spockVersion
+    // implementation group: 'org.spockframework', name: 'spock-spring', version: spockVersion
 
     compileOnly group: 'org.springframework', name: 'spring-webmvc', version: springVersion
     compileOnly group: 'org.springframework', name: 'spring-test', version: springVersion

@@ -25,7 +25,7 @@ import spock.lang.Specification
 
 class IncludeInterceptorSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru<Grails<IncludeInterceptorSpec>> gru = Gru.create(Grails.create(this)).prepare {
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
         include ApiUrlMappings
         include VectorInterceptor, true                                                 // <1>
     }

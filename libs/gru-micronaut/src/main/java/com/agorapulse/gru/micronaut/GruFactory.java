@@ -38,7 +38,7 @@ public class GruFactory {
     @Singleton
     @Bean(preDestroy = "close")
     @SuppressWarnings({"rawtypes"})
-    Gru<Client> gru(ApplicationContext context) {
+    Gru gru(ApplicationContext context) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
         return Gru.create(Micronaut.createLazy(() -> context.getBean(testClass), () -> context));
     }

@@ -25,7 +25,7 @@ import spock.lang.Specification
 
 class UseNoMappingSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru<Grails<UseNoMappingSpec>> gru = Gru.create(Grails.create(this))
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this))
 
     void 'look at the moon'() {
         when:
