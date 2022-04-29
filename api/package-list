@@ -1,5 +1,6 @@
 com.agorapulse.gru
 com.agorapulse.gru.agp
+com.agorapulse.gru.agp.groovy
 com.agorapulse.gru.agp.ignore
 com.agorapulse.gru.content
 com.agorapulse.gru.cookie
@@ -10,5 +11,9 @@ com.agorapulse.gru.http
 com.agorapulse.gru.jsonunit
 com.agorapulse.gru.micronaut
 com.agorapulse.gru.minions
+com.agorapulse.gru.spring
+com.agorapulse.gru.spring.groovy
+com.agorapulse.gru.spring.itest
+com.agorapulse.gru.spring.minions
 heist
 heist.micronaut

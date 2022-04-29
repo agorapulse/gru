@@ -87,14 +87,18 @@
 <a class="jxr_linenumber" name="L79" href="#L79">79</a>          <strong class="jxr_keyword">return</strong> ensureClient().getUnitTest();
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
-<a class="jxr_linenumber" name="L82" href="#L82">82</a>  
-<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">private</strong> <a name="Client" href="../../../com/agorapulse/gru/Client.html#Client">Client</a> ensureClient() {
-<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">if</strong> (client == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>              client = clientSupplier.get();
-<a class="jxr_linenumber" name="L86" href="#L86">86</a>          }
-<a class="jxr_linenumber" name="L87" href="#L87">87</a>          <strong class="jxr_keyword">return</strong> client;
-<a class="jxr_linenumber" name="L88" href="#L88">88</a>      }
-<a class="jxr_linenumber" name="L89" href="#L89">89</a>  }
+<a class="jxr_linenumber" name="L82" href="#L82">82</a>      @Override
+<a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getUnitTestClass() {
+<a class="jxr_linenumber" name="L84" href="#L84">84</a>          <strong class="jxr_keyword">return</strong> ensureClient().getUnitTestClass();
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>      }
+<a class="jxr_linenumber" name="L86" href="#L86">86</a>  
+<a class="jxr_linenumber" name="L87" href="#L87">87</a>      <strong class="jxr_keyword">private</strong> <a name="Client" href="../../../com/agorapulse/gru/Client.html#Client">Client</a> ensureClient() {
+<a class="jxr_linenumber" name="L88" href="#L88">88</a>          <strong class="jxr_keyword">if</strong> (client == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L89" href="#L89">89</a>              client = clientSupplier.get();
+<a class="jxr_linenumber" name="L90" href="#L90">90</a>          }
+<a class="jxr_linenumber" name="L91" href="#L91">91</a>          <strong class="jxr_keyword">return</strong> client;
+<a class="jxr_linenumber" name="L92" href="#L92">92</a>      }
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>  }
 </pre>
 <hr/>
 <div id="footer"></div>

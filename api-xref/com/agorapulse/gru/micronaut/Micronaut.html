@@ -237,38 +237,43 @@
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>         <strong class="jxr_keyword">return</strong> delegate.getUnitTest();
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>     }
 <a class="jxr_linenumber" name="L231" href="#L231">231</a> 
-<a class="jxr_linenumber" name="L232" href="#L232">232</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> assertProviderIfPossible(Object unitTest) {
-<a class="jxr_linenumber" name="L233" href="#L233">233</a>         <strong class="jxr_keyword">if</strong> (unitTest == <strong class="jxr_keyword">null</strong> || unitTest instanceof ApplicationContextProvider) {
-<a class="jxr_linenumber" name="L234" href="#L234">234</a>             <strong class="jxr_keyword">return</strong>;
-<a class="jxr_linenumber" name="L235" href="#L235">235</a>         }
+<a class="jxr_linenumber" name="L232" href="#L232">232</a>     @Override
+<a class="jxr_linenumber" name="L233" href="#L233">233</a>     <strong class="jxr_keyword">public</strong> Class&lt;?&gt; getUnitTestClass() {
+<a class="jxr_linenumber" name="L234" href="#L234">234</a>         <strong class="jxr_keyword">return</strong> delegate.getUnitTestClass();
+<a class="jxr_linenumber" name="L235" href="#L235">235</a>     }
 <a class="jxr_linenumber" name="L236" href="#L236">236</a> 
-<a class="jxr_linenumber" name="L237" href="#L237">237</a>         <strong class="jxr_keyword">if</strong> (Arrays.stream(unitTest.getClass().getAnnotations()).anyMatch(a -&gt; a.getClass().getSimpleName().equals(<span class="jxr_string">"MicronautTest"</span>))) {
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
-<a class="jxr_linenumber" name="L239" href="#L239">239</a>                 <span class="jxr_string">"Specification "</span>
-<a class="jxr_linenumber" name="L240" href="#L240">240</a>                     + unitTest.getClass().getName()
-<a class="jxr_linenumber" name="L241" href="#L241">241</a>                     + <span class="jxr_string">" must either implement "</span>
-<a class="jxr_linenumber" name="L242" href="#L242">242</a>                     + ApplicationContextProvider.<strong class="jxr_keyword">class</strong>.getName()
-<a class="jxr_linenumber" name="L243" href="#L243">243</a>                     + <span class="jxr_string">" or use inject the instance using @Inject Gru gru"</span>
-<a class="jxr_linenumber" name="L244" href="#L244">244</a>             );
-<a class="jxr_linenumber" name="L245" href="#L245">245</a>         }
-<a class="jxr_linenumber" name="L246" href="#L246">246</a> 
-<a class="jxr_linenumber" name="L247" href="#L247">247</a>         Optional&lt;Field&gt; contextField = Arrays.stream(unitTest.getClass().getFields()).filter(f -&gt; ApplicationContext.<strong class="jxr_keyword">class</strong>.isAssignableFrom(f.getType())).findFirst();
-<a class="jxr_linenumber" name="L248" href="#L248">248</a>         <strong class="jxr_keyword">if</strong> (contextField.isPresent()) {
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
-<a class="jxr_linenumber" name="L250" href="#L250">250</a>                 <span class="jxr_string">"Specification "</span>
-<a class="jxr_linenumber" name="L251" href="#L251">251</a>                     + unitTest.getClass().getName()
-<a class="jxr_linenumber" name="L252" href="#L252">252</a>                     + <span class="jxr_string">" must either implement "</span>
-<a class="jxr_linenumber" name="L253" href="#L253">253</a>                     + ApplicationContextProvider.<strong class="jxr_keyword">class</strong>.getName()
-<a class="jxr_linenumber" name="L254" href="#L254">254</a>                     + <span class="jxr_string">" returning value of field "</span>
-<a class="jxr_linenumber" name="L255" href="#L255">255</a>                     + contextField.get().getName()
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>                     + <span class="jxr_string">" or use Micronaut.create(this) { "</span>
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>                     + contextField.get().getName()
-<a class="jxr_linenumber" name="L258" href="#L258">258</a>                     + <span class="jxr_string">" } instead of Micronaut.create(this)"</span>
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>             );
-<a class="jxr_linenumber" name="L260" href="#L260">260</a>         }
-<a class="jxr_linenumber" name="L261" href="#L261">261</a>     }
-<a class="jxr_linenumber" name="L262" href="#L262">262</a> 
-<a class="jxr_linenumber" name="L263" href="#L263">263</a> }
+<a class="jxr_linenumber" name="L237" href="#L237">237</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">void</strong> assertProviderIfPossible(Object unitTest) {
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         <strong class="jxr_keyword">if</strong> (unitTest == <strong class="jxr_keyword">null</strong> || unitTest instanceof ApplicationContextProvider) {
+<a class="jxr_linenumber" name="L239" href="#L239">239</a>             <strong class="jxr_keyword">return</strong>;
+<a class="jxr_linenumber" name="L240" href="#L240">240</a>         }
+<a class="jxr_linenumber" name="L241" href="#L241">241</a> 
+<a class="jxr_linenumber" name="L242" href="#L242">242</a>         <strong class="jxr_keyword">if</strong> (Arrays.stream(unitTest.getClass().getAnnotations()).anyMatch(a -&gt; a.getClass().getSimpleName().equals(<span class="jxr_string">"MicronautTest"</span>))) {
+<a class="jxr_linenumber" name="L243" href="#L243">243</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
+<a class="jxr_linenumber" name="L244" href="#L244">244</a>                 <span class="jxr_string">"Specification "</span>
+<a class="jxr_linenumber" name="L245" href="#L245">245</a>                     + unitTest.getClass().getName()
+<a class="jxr_linenumber" name="L246" href="#L246">246</a>                     + <span class="jxr_string">" must either implement "</span>
+<a class="jxr_linenumber" name="L247" href="#L247">247</a>                     + ApplicationContextProvider.<strong class="jxr_keyword">class</strong>.getName()
+<a class="jxr_linenumber" name="L248" href="#L248">248</a>                     + <span class="jxr_string">" or use inject the instance using @Inject Gru gru"</span>
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>             );
+<a class="jxr_linenumber" name="L250" href="#L250">250</a>         }
+<a class="jxr_linenumber" name="L251" href="#L251">251</a> 
+<a class="jxr_linenumber" name="L252" href="#L252">252</a>         Optional&lt;Field&gt; contextField = Arrays.stream(unitTest.getClass().getFields()).filter(f -&gt; ApplicationContext.<strong class="jxr_keyword">class</strong>.isAssignableFrom(f.getType())).findFirst();
+<a class="jxr_linenumber" name="L253" href="#L253">253</a>         <strong class="jxr_keyword">if</strong> (contextField.isPresent()) {
+<a class="jxr_linenumber" name="L254" href="#L254">254</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalArgumentException(
+<a class="jxr_linenumber" name="L255" href="#L255">255</a>                 <span class="jxr_string">"Specification "</span>
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>                     + unitTest.getClass().getName()
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>                     + <span class="jxr_string">" must either implement "</span>
+<a class="jxr_linenumber" name="L258" href="#L258">258</a>                     + ApplicationContextProvider.<strong class="jxr_keyword">class</strong>.getName()
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>                     + <span class="jxr_string">" returning value of field "</span>
+<a class="jxr_linenumber" name="L260" href="#L260">260</a>                     + contextField.get().getName()
+<a class="jxr_linenumber" name="L261" href="#L261">261</a>                     + <span class="jxr_string">" or use Micronaut.create(this) { "</span>
+<a class="jxr_linenumber" name="L262" href="#L262">262</a>                     + contextField.get().getName()
+<a class="jxr_linenumber" name="L263" href="#L263">263</a>                     + <span class="jxr_string">" } instead of Micronaut.create(this)"</span>
+<a class="jxr_linenumber" name="L264" href="#L264">264</a>             );
+<a class="jxr_linenumber" name="L265" href="#L265">265</a>         }
+<a class="jxr_linenumber" name="L266" href="#L266">266</a>     }
+<a class="jxr_linenumber" name="L267" href="#L267">267</a> 
+<a class="jxr_linenumber" name="L268" href="#L268">268</a> }
 </pre>
 <hr/>
 <div id="footer"></div>

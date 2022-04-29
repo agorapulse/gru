@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 0.10.0</span>
+<span id="revnumber">version 1.0.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -164,11 +164,12 @@ HTTP server framework.</p>
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:0.10.0"                             <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:0.10.0"                           <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:0.10.0"                           <i class="conum" data-value="3"></i><b>(3)</b>
-    testCompile "com.agorapulse:gru-api-gateway:0.10.0"                      <i class="conum" data-value="4"></i><b>(4)</b>
-    testCompile "com.agorapulse:gru-micronaut:0.10.0"                        <i class="conum" data-value="5"></i><b>(5)</b>
+    testCompile "com.agorapulse:gru-http:1.0.0"                             <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:1.0.0"                           <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:1.0.0"                           <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-spring-integration-testing:1.0.0"       <i class="conum" data-value="4"></i><b>(4)</b>
+    testCompile "com.agorapulse:gru-api-gateway:1.0.0"                      <i class="conum" data-value="5"></i><b>(5)</b>
+    testCompile "com.agorapulse:gru-micronaut:1.0.0"                        <i class="conum" data-value="6"></i><b>(6)</b>
 }</code></pre>
 </div>
 </div>
@@ -188,32 +189,15 @@ dependencies {
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>AWS API Gateway module for HTTP proxy lambdas</td>
+<td>Spring module for real HTTP calls in integration tests</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Micronaut module for running HTTP request against the embedded server</td>
+<td>AWS API Gateway module for HTTP proxy lambdas</td>
 </tr>
-</table>
-</div>
-<div class="admonitionblock note">
-<table>
 <tr>
-<td class="icon">
-<i class="fa icon-note" title="Note"></i>
-</td>
-<td class="content">
-<div class="paragraph">
-<p>If you are testing JSON responses, underlying library <a href="https://github.com/lukas-krecan/JsonUnit#maven-dependency">JsonUnit</a>
-requires one of following libraries on the classpath: Jackson 1.x, Jackson 2.x, Gson, JSONObject or Moshi. If you don&#8217;t have
-any of these on classpath, also add for example Jackson 2 dependency:</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="prettyprint highlight"><code>testCompile 'com.fasterxml.jackson.core:jackson-databind:2.9.6'</code></pre>
-</div>
-</div>
-</td>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>Micronaut module for running HTTP request against the embedded server</td>
 </tr>
 </table>
 </div>
@@ -228,8 +212,46 @@ any of these on classpath, also add for example Jackson 2 dependency:</p>
 <p>Gru can be used to test any HTTP endpoint, including Micronaut applications running on embedded server or
 Grails application running within integration tests.</p>
 </div>
-<div class="listingblock">
-<div class="title">Minimal HTTP Usage</div>
+<div class="listingblock primary">
+<div class="title">Minimal HTTP Usage (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package heist;
+
+import com.agorapulse.gru.Gru;
+import com.agorapulse.gru.http.Http;
+import org.junit.Test;
+
+public class HttpTest {
+
+    Gru gru = Gru.create(Http.create(this))                                             <i class="conum" data-value="1"></i><b>(1)</b>
+                        .prepare("https://despicableme.fandom.com");                    <i class="conum" data-value="2"></i><b>(2)</b>
+
+    @Test
+    public void testGetWiki() throws Throwable {
+        gru.verify(test -&gt; test.get("/wiki/Felonius_Gru"));                             <i class="conum" data-value="3"></i><b>(3)</b>
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td><code>Gru</code> initialized with the specification object</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Set the base URL <code><a href="http://despicableme.wikia.com" class="bare">http://despicableme.wikia.com</a></code> for HTTP calls</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Execute HTTP GET request on <code>/wiki/Felonius_Gru</code> URI and verify it is accessible and returns <code>OK(200)</code> status code.</td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Minimal HTTP Usage (groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">package heist
 
@@ -240,7 +262,7 @@ import spock.lang.Specification
 
 class HttpSpec extends Specification{
 
-    @AutoCleanup Gru&lt;Http&gt; gru = Gru.create(Http.create(this))                          <i class="conum" data-value="1"></i><b>(1)</b>
+    @AutoCleanup Gru gru = Gru.create(Http.create(this))                                <i class="conum" data-value="1"></i><b>(1)</b>
                                     .prepare('https://despicableme.fandom.com')         <i class="conum" data-value="2"></i><b>(2)</b>
 
     void 'despicable me'() {
@@ -276,8 +298,48 @@ class HttpSpec extends Specification{
 <p>Micronaut plays well with <code>@MicronautTest</code> annotation. If you are using <code>@MicronautTest</code> you can simply inject
 <code>Gru</code> instance into your test.</p>
 </div>
-<div class="listingblock">
-<div class="title">Using @Inject with @MicronautTest</div>
+<div class="listingblock primary">
+<div class="title">Using @Inject with @MicronautTest (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package heist;
+
+import com.agorapulse.gru.Gru;
+import com.agorapulse.gru.micronaut.Micronaut;
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.Test;
+
+import javax.inject.Inject;
+
+@MicronautTest                                                                          <i class="conum" data-value="1"></i><b>(1)</b>
+public class InjectNativeMicronautTest {
+
+    @Inject Gru gru;                                                                    <i class="conum" data-value="2"></i><b>(2)</b>
+
+    @Test
+    public void testGet() throws Throwable {
+        gru.verify(test -&gt; test
+            .get("/moons/earth/moon")
+            .expect(response -&gt; response.json("moon.json"))
+        );
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Annotate your test with <code>@MicronautTest</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inject <code>Gru</code></td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Using @Inject with @MicronautTest (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">package heist
 
@@ -309,7 +371,7 @@ class InjectNativeMicronautSpec extends Specification {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>Annotate your test with @MicronautTest`</td>
+<td>Annotate your test with <code>@MicronautTest</code></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -320,8 +382,55 @@ class InjectNativeMicronautSpec extends Specification {
 <div class="paragraph">
 <p>Alternatively, you can let <code>Gru</code> to create default <code>ApplicationContext</code> for you.</p>
 </div>
-<div class="listingblock">
-<div class="title">Using Default Application Context</div>
+<div class="listingblock primary">
+<div class="title">Using Default Application Context (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package heist;
+
+import com.agorapulse.gru.Gru;
+import com.agorapulse.gru.micronaut.Micronaut;
+import io.micronaut.context.env.Environment;
+import org.junit.jupiter.api.Test;
+
+import javax.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+public class AutomaticMicronautTest {
+
+    Gru gru = Gru.create(Micronaut.create(this));                                       <i class="conum" data-value="1"></i><b>(1)</b>
+
+    @Inject Environment environment;                                                    <i class="conum" data-value="2"></i><b>(2)</b>
+
+    @Test
+    public void testAutomaticContext() throws Throwable {
+        assertNotNull(environment);
+        assertTrue(environment.getActiveNames().contains("test"));
+
+        gru.verify(test -&gt; test
+            .get("/moons/earth/moon")
+            .expect(response -&gt; response.json("moon.json"))
+        );
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Create a simple <code>Micronaut</code> client for <code>Gru</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Default application context is created and fields can be injected into the test</td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Using Default Application Context (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">package heist
 
@@ -369,8 +478,68 @@ class AutomaticMicronautSpec extends Specification {
 <div class="paragraph">
 <p>If you construct the application context yourself then you need to point <code>Gru</code> to the field of type <code>ApplicationContext</code>.</p>
 </div>
-<div class="listingblock">
-<div class="title">Using a Custom Application Context</div>
+<div class="listingblock primary">
+<div class="title">Using a Custom Application Context (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package heist;
+
+import com.agorapulse.gru.Client;
+import com.agorapulse.gru.Gru;
+import com.agorapulse.gru.micronaut.Micronaut;
+import io.micronaut.context.ApplicationContext;
+import io.micronaut.runtime.server.EmbeddedServer;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+class ManualWithSimpleProviderMicronautTest {
+
+    private Gru gru = Gru.create(Micronaut.create(this, this::getContext));             <i class="conum" data-value="1"></i><b>(1)</b>
+
+    private ApplicationContext context;
+    private EmbeddedServer embeddedServer;
+
+    @BeforeEach
+    public void setup() {
+        context = ApplicationContext.builder().build();
+        context.start();
+
+        embeddedServer = context.getBean(EmbeddedServer.class);
+        embeddedServer.start();
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        embeddedServer.close();
+        context.close();
+    }
+
+
+    @Test
+    public void testMoon() throws Throwable {
+        gru.verify(test -&gt; test
+            .get("/moons/earth/moon")
+            .expect(response -&gt; response.json("moon.json"))
+        );
+    }
+
+    private ApplicationContext getContext() {
+        return context;
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Point <code>Gru</code> to field <code>context</code> holding the custom <code>ApplicationContext</code> instance</td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Using a Custom Application Context (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">package heist
 
@@ -432,8 +601,87 @@ As an alternative, you can make your test class implement <code>io.micronaut.con
 <div class="paragraph">
 <p>Gru can actually help you create the custom context:</p>
 </div>
-<div class="listingblock">
-<div class="title">Creating a Custom Application Context</div>
+<div class="listingblock primary">
+<div class="title">Creating a Custom Application Context (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package heist;
+
+import com.agorapulse.gru.Client;
+import com.agorapulse.gru.Gru;
+import com.agorapulse.gru.micronaut.Micronaut;
+import heist.micronaut.Moon;
+import heist.micronaut.MoonService;
+import io.micronaut.context.env.Environment;
+import org.junit.jupiter.api.Test;
+
+import javax.inject.Inject;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.*;
+
+public class AdvancedAutomaticMicronautTest {
+
+    private MoonService moonService = mock(MoonService.class);                          <i class="conum" data-value="1"></i><b>(1)</b>
+
+    private Gru gru = Gru.create(
+        Micronaut.build(this)
+            .doWithContextBuilder(b -&gt;
+                b.environments("my-custom-env")                                         <i class="conum" data-value="2"></i><b>(2)</b>
+            ).doWithContext(c -&gt;
+                c.registerSingleton(MoonService.class, moonService)                     <i class="conum" data-value="3"></i><b>(3)</b>
+            ).start()                                                                   <i class="conum" data-value="4"></i><b>(4)</b>
+    );
+
+    @Inject
+    private Environment environment;                                                    <i class="conum" data-value="5"></i><b>(5)</b>
+
+    @Test
+    public void testMoon() throws Throwable {
+        assertNotNull(environment);
+
+        assertTrue(environment.getActiveNames().contains("test"));
+        assertTrue(environment.getActiveNames().contains("my-custom-env"));
+
+        when(moonService.get("earth", "moon")).thenReturn(new Moon("earth", "moon"));
+
+        gru.verify(test -&gt; test
+            .get("/moons/earth/moon")
+            .expect(response -&gt; response.json("moon.json"))
+        );
+
+        verify(moonService, times(1)).get("earth", "moon");
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Declare any field you want to reference from the context before <code>Gru</code> declaration</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Customize the <code>ApplicationContextBuilder</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Customize the <code>ApplicationContext</code> itself, e.g. register mocks</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Start the application and injects fields into the test automatically</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>The field can be automatically injected</td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Creating a Custom Application Context (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">package heist
 
@@ -524,7 +772,7 @@ import spock.lang.Specification
 
 class BasicSpec extends Specification implements ControllerUnitTest&lt;MoonController&gt; {   <i class="conum" data-value="1"></i><b>(1)</b>
 
-    @AutoCleanup Gru&lt;Grails&lt;BasicSpec&gt;&gt; gru = Gru.create(Grails.create(this)).prepare { <i class="conum" data-value="2"></i><b>(2)</b>
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {                    <i class="conum" data-value="2"></i><b>(2)</b>
         include UrlMappings                                                             <i class="conum" data-value="3"></i><b>(3)</b>
     }
 
@@ -610,8 +858,54 @@ You can also call <code>gru.verify()</code> manually to fully leverage Spock&#82
 <p>Gru for <a href="https://spring.io/">Spring</a> allows you to test your application with mocked HTTP requests. Under the hood
 <a href="https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/test/web/servlet/MockMvc.html">MockMvc</a> is used.</p>
 </div>
-<div class="listingblock">
-<div class="title">Minimal Spring Usage</div>
+<div class="listingblock primary">
+<div class="title">Minimal Spring Usage (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package com.agorapulse.gru.spring.heist;
+
+import com.agorapulse.gru.Gru;
+import com.agorapulse.gru.spring.Spring;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.web.servlet.MockMvc;
+
+@WebMvcTest                                                                             <i class="conum" data-value="1"></i><b>(1)</b>
+class BasicTest {
+
+    @Autowired MockMvc mvc;                                                             <i class="conum" data-value="2"></i><b>(2)</b>
+
+    Gru gru = Gru.create(Spring.create(this));                                          <i class="conum" data-value="3"></i><b>(3)</b>
+
+    @Test
+    void testMoon() throws Throwable {
+        gru.verify(test -&gt; test.get("/moons/earth/moon"));                              <i class="conum" data-value="4"></i><b>(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Use <code>@WebMvcTest</code> to properly setup Spring MVC test</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Field with type <code>MockMvc</code> must exist and must not be <code>null</code> during the test execution (implement <code>HasMockMvc</code> interface for faster execution)</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Initiate <code>Gru</code> with <code>Spring</code> client</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Issue mock <code>GET</code> request to <code>/moon/earth/moon</code> and expect it returns <code>OK(200)</code> response</td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Minimal Spring Usage (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">package com.agorapulse.gru.spring.heist
 
@@ -628,7 +922,7 @@ class BasicSpec extends Specification {
 
     @Autowired MockMvc mvc                                                              <i class="conum" data-value="2"></i><b>(2)</b>
 
-    @AutoCleanup Gru&lt;Spring&gt; gru = Gru.create(Spring.create(this))                      <i class="conum" data-value="3"></i><b>(3)</b>
+    @AutoCleanup Gru gru = Gru.create(Spring.create(this))                              <i class="conum" data-value="3"></i><b>(3)</b>
 
     void 'look at the moon'() {
         expect:
@@ -667,7 +961,7 @@ class BasicSpec extends Specification {
 </td>
 <td class="content">
 <div class="paragraph">
-<p>Spock version at least <code>1.1</code> must be used when executing Spring tests. For example <a href="https://projects.spring.io/spring-boot/">Spring Boot</a>
+<p>For Groovy tests, Spock version at least <code>1.1</code> must be used when executing Spring tests. For example <a href="https://projects.spring.io/spring-boot/">Spring Boot</a>
 overrides the default transitive dependency back to <code>1.0</code> so you need to explicity declare Spock version in your build file:</p>
 </div>
 <div class="listingblock">
@@ -713,8 +1007,20 @@ declared in default package. See <a href="#minimal-grails-usage">Minimal Grails 
 <div class="paragraph">
 <p>You can specify additional URL parameters</p>
 </div>
-<div class="listingblock">
-<div class="title">Additional URL Parameters</div>
+<div class="listingblock primary">
+<div class="title">Additional URL Parameters (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void stealTheMoonWithShrinkRay() throws Throwable {
+    gru.verify(test -&gt; test
+        .delete("/moons/earth/moon", req -&gt; req.param("with", "shrink-ray"))
+        .expect(resp -&gt; resp.status(NO_CONTENT))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Additional URL Parameters (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'steal the moon with shrink ray'() {
     expect:
@@ -735,8 +1041,19 @@ declared in default package. See <a href="#minimal-grails-usage">Minimal Grails 
 <div class="paragraph">
 <p>You can specify additional HTTP headers sent with the request.</p>
 </div>
-<div class="listingblock">
-<div class="title">Request Headers</div>
+<div class="listingblock primary">
+<div class="title">Request Headers (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void visitSecretMoonNoom() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/noom", req -&gt; req.header("Authorization", "Felonius"))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Request Headers (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'visit secret moon Noom'() {
     expect:
@@ -754,8 +1071,19 @@ declared in default package. See <a href="#minimal-grails-usage">Minimal Grails 
 <div class="paragraph">
 <p>You can use JSON payload from file.</p>
 </div>
-<div class="listingblock">
-<div class="title">JSON Payload</div>
+<div class="listingblock primary">
+<div class="title">JSON Payload (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void createMoonForMargot() throws Throwable {
+    gru.verify(test -&gt; test.
+        post("/moons/earth", req -&gt; req.json("newMoonRequest.json"))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">JSON Payload (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'create moon for Margot'() {
     expect:
@@ -774,7 +1102,7 @@ declared in default package. See <a href="#minimal-grails-usage">Minimal Grails 
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-You can also define json as map or list e.g. <code>json(foo: 'bar')</code>. Both are serialized to JSON using a JSON integration on the classpath.
+You can also define json as map or list e.g. <code>json(Collections.singletonMap("foo", "bar"))</code> in Java or  <code>json(foo: 'bar')</code> in Groovy. Both are serialized to JSON using a JSON integration on the classpath.
 </td>
 </tr>
 </table>
@@ -788,7 +1116,7 @@ You can also define json as map or list e.g. <code>json(foo: 'bar')</code>. Both
 <td class="content">
 JSON files are loaded relatively to directory having the same name as the current specification and it is placed
 in the same directory corresponding the package of the the current specification. For example if your specification name
-is <code>org.example.ExampleSpec</code> then <code>createNewMoonResponse.json</code> file&#8217;s path should be <code>org/example/ExampleSpec/createNewMoonResponse.json</code>.
+is <code>org.example.ExampleSpec</code> then <code>createNewMoonResponse.json</code> file&#8217;s path should be <code>org/example/ExampleSpec/createNewMoonResponse.json</code>. See <a href="https://agorapulse.github.io/testing-libraries/#_fixt">Fixt</a> for more details.
 </td>
 </tr>
 </table>
@@ -814,8 +1142,19 @@ in <code>src/test/resources</code> relatively to the working directory. See the 
 <div class="paragraph">
 <p>You can use generic payload from file.</p>
 </div>
+<div class="listingblock primary">
+<div class="title">Generic Payload (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void createMoonForMargotGeneric() throws Throwable {
+    gru.verify(test -&gt; test.
+        post("/moons/earth", req -&gt; req.content("newMoonRequest.json", "application/json"))
+    );
+}</code></pre>
+</div>
+</div>
 <div class="listingblock">
-<div class="title">Generic Payload</div>
+<div class="title">Generic Payload (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'create moon for Margot generic'() {
     expect:
@@ -861,8 +1200,31 @@ in <code>src/test/resources</code> relatively to the working directory.
 <div class="paragraph">
 <p>You can emulate multipart file uploads.</p>
 </div>
+<div class="listingblock primary">
+<div class="title">Generic Payload (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void uploadFile() throws Throwable {
+    gru.verify(test -&gt; test
+        .post(
+            "/upload",
+            req -&gt; req.upload(u -&gt; u
+                .param("message", "Hello")
+                .file(
+                    "theFile",
+                    "hello.txt",
+                    inline("Hello World"),
+                    "text/plain"
+                )
+            )
+        )
+        .expect(resp -&gt; resp.text(inline("11")))
+    );
+}</code></pre>
+</div>
+</div>
 <div class="listingblock">
-<div class="title">File Upload</div>
+<div class="title">File Upload (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'upload file with message'() {
     expect:
@@ -906,10 +1268,42 @@ in <code>src/test/resources</code> relatively to the working directory.
 <div class="sect3">
 <h4 id="cookies"><a class="anchor" href="#cookies"></a>3.1.6. Cookies</h4>
 <div class="paragraph">
-<p>You can emulate cookies send by the browser or set by the server.</p>
+<p>You can emulate cookies send by the browser or verify they have been set by the server response.</p>
 </div>
-<div class="listingblock">
-<div class="title">File Upload</div>
+<div class="listingblock primary">
+<div class="title">Cookies (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void sendCookies() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/cookie", req -&gt; req.
+            cookie("chocolate", "rules")                                            <i class="conum" data-value="1"></i><b>(1)</b>
+        )
+        .expect(resp -&gt; resp.
+            json("cookies.json", Option.IGNORING_EXTRA_FIELDS)
+        )
+    );
+}
+
+@Test
+public void setCookies() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/setCookie")
+        .expect(resp -&gt; resp
+            .cookie("chocolate", "rules")                                           <i class="conum" data-value="2"></i><b>(2)</b>
+            .cookie(c -&gt; c                                                                      <i class="conum" data-value="3"></i><b>(3)</b>
+                .name("coffee")
+                .value("lover")
+                .secure(true)
+                .domain("localhost")
+            )
+        )
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Cookies (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'send cookies'() {
     expect:
@@ -969,8 +1363,20 @@ void 'set cookies'() {
 <p>You can specify expected response status code. Constants for HTTP status codes are available within the <code>expect</code> closure call.
 Default status is <code>OK(200)</code> which is asserted within every test. See <a href="#redirect">Redirection</a> for exception.</p>
 </div>
-<div class="listingblock">
-<div class="title">Status Code</div>
+<div class="listingblock primary">
+<div class="title">Status Code (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void stealTheMoonWithShrinkRay() throws Throwable {
+    gru.verify(test -&gt; test
+        .delete("/moons/earth/moon", req -&gt; req.param("with", "shrink-ray"))
+        .expect(resp -&gt; resp.status(NO_CONTENT))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Status Code (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'steal the moon with shrink ray'() {
     expect:
@@ -1003,8 +1409,20 @@ If multiple statuses are possible then you can use <code>statuses(&#8230;&#8203;
 <div class="paragraph">
 <p>You can specify expected response headers.</p>
 </div>
-<div class="listingblock">
-<div class="title">Response Headers</div>
+<div class="listingblock primary">
+<div class="title">Response Headers (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void jsonIsRendered() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/moon")
+        .expect(resp -&gt; resp.header("Content-Type", "application/json"))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Response Headers (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'json is rendered'() {
     expect:
@@ -1023,8 +1441,20 @@ If multiple statuses are possible then you can use <code>statuses(&#8230;&#8203;
 <div class="paragraph">
 <p>You can specify expected redirection URI. For redirection, default status code is <code>FOUND(302)</code>.</p>
 </div>
+<div class="listingblock primary">
+<div class="title">Redirection (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void noPlanetNeeded() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/-/moon")
+        .expect(resp -&gt; resp.redirect("/moons/earth/moon"))
+    );
+}</code></pre>
+</div>
+</div>
 <div class="listingblock">
-<div class="title">Redirection</div>
+<div class="title">Redirection (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'no planet needed'() {
     expect:
@@ -1043,8 +1473,20 @@ If multiple statuses are possible then you can use <code>statuses(&#8230;&#8203;
 <div class="paragraph">
 <p>You can specify expected plain text response. The responded JSON is verified just by <code>equals</code> method.</p>
 </div>
-<div class="listingblock">
-<div class="title">Plain Text Response</div>
+<div class="listingblock primary">
+<div class="title">Plain Text Response (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void infoIsRendered() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/moon/info")
+        .expect(resp -&gt; resp.text("textResponse.txt"))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Plain Text Response (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'verify text'() {
     expect:
@@ -1068,8 +1510,20 @@ If multiple statuses are possible then you can use <code>statuses(&#8230;&#8203;
 <div class="paragraph">
 <p>You can also specify the text inline. Inline method is also available for JSON and HTML.</p>
 </div>
-<div class="listingblock">
-<div class="title">Plain Text Inline Response</div>
+<div class="listingblock primary">
+<div class="title">Plain Text Inline Response (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void infoIsRenderedInline() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/moon/info")
+        .expect(resp -&gt; resp.text(inline("moon goes around earth")))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">Plain Text Inline Response (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'verify text inline'() {
     expect:
@@ -1090,8 +1544,20 @@ If multiple statuses are possible then you can use <code>statuses(&#8230;&#8203;
 <div class="paragraph">
 <p>You can specify expected JSON response. The responded JSON is verified using <a href="https://github.com/lukas-krecan/JsonUnit">JsonUnit</a>.</p>
 </div>
-<div class="listingblock">
-<div class="title">JSON Response</div>
+<div class="listingblock primary">
+<div class="title">JSON Response (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void verifyJson() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/moon")
+        .expect(resp -&gt; resp.json("moonResponse.json"))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">JSON Response (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'verify json'() {
     expect:
@@ -1117,8 +1583,20 @@ If multiple statuses are possible then you can use <code>statuses(&#8230;&#8203;
 <div class="paragraph">
 <p>You can pass JsonUnit options along with the file name.</p>
 </div>
-<div class="listingblock">
-<div class="title">JSON Response with Options</div>
+<div class="listingblock primary">
+<div class="title">JSON Response with Options (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void verifyJsonWithOptions() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth")
+        .expect(resp -&gt; resp.json("moonsResponse.json", Option.IGNORING_EXTRA_ARRAY_ITEMS))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">JSON Response with Options (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'verify json 2'() {
     expect:
@@ -1220,8 +1698,29 @@ If multiple statuses are possible then you can use <code>statuses(&#8230;&#8203;
 <div class="paragraph">
 <p>You can customize <code>JsonUnit</code> fluent assertion within <code>json</code> block inside <code>expect</code> definition:</p>
 </div>
-<div class="listingblock">
-<div class="title">JsonUnit Customisation</div>
+<div class="listingblock primary">
+<div class="title">JsonUnit Customisation (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void customiseJsonUnit() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/moon")
+        .expect(resp -&gt; resp
+            .json("moonResponse.json")
+            .json(json -&gt; json
+                .withTolerance(0.1)
+                .withMatcher(
+                    "negativeIntegerString",
+                    MatchesPattern.matchesPattern( "-\\d+")
+                )
+            )
+        )
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">JsonUnit Customisation (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'customise json unit'() {
     expect:
@@ -1285,8 +1784,20 @@ unset COM_AGORAPULSE_GRU_REWRITE</pre>
 the difference is performed using <a href="http://www.xmlunit.org/">XMLUnit</a>. You can replace any text node with <code>${xml-unit.ignore}</code>
 to ignore the value fo the node.</p>
 </div>
-<div class="listingblock">
-<div class="title">HTML Response</div>
+<div class="listingblock primary">
+<div class="title">HTML Response (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void verifyHtml() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/moon/html")
+        .expect(resp -&gt; resp.html("htmlResponse.html"))
+    );
+}</code></pre>
+</div>
+</div>
+<div class="listingblock secondary">
+<div class="title">HTML Response (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'verify html'() {
     expect:
@@ -1376,7 +1887,7 @@ import spock.lang.Specification
 
 class IncludeUrlMappingsSpec extends Specification implements ControllerUnitTest&lt;MoonController&gt; {
 
-    @AutoCleanup Gru&lt;Grails&lt;IncludeUrlMappingsSpec&gt;&gt; gru = Gru.create(Grails.create(this)).prepare {
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
         include ApiUrlMappings                                                          <i class="conum" data-value="1"></i><b>(1)</b>
     }
 
@@ -1426,7 +1937,7 @@ import spock.lang.Specification
 
 class IncludeInterceptorSpec extends Specification implements ControllerUnitTest&lt;MoonController&gt; {
 
-    @AutoCleanup Gru&lt;Grails&lt;IncludeInterceptorSpec&gt;&gt; gru = Gru.create(Grails.create(this)).prepare {
+    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
         include ApiUrlMappings
         include VectorInterceptor, true                                                 <i class="conum" data-value="1"></i><b>(1)</b>
     }
@@ -1556,7 +2067,7 @@ particular <code>MethodClosure</code> instance.</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">@Value('${local.server.port}')
 Integer serverPort                                                                      <i class="conum" data-value="1"></i><b>(1)</b>
 
-@AutoCleanup Gru&lt;Http&gt; gru = Gru.create(Http.create(this))                              <i class="conum" data-value="2"></i><b>(2)</b>
+@AutoCleanup Gru gru = Gru.create(Http.create(this))                                    <i class="conum" data-value="2"></i><b>(2)</b>
 
 void setup() {
     final String serverUrl = "http://localhost:${serverPort}"                           <i class="conum" data-value="3"></i><b>(3)</b>
@@ -1618,7 +2129,51 @@ within <code>expect</code> block to add additional <code>ResultMatcher</code>. B
 blocks so you can write the assertions in more fluent way.</p>
 </div>
 <div class="listingblock">
-<div class="title">MockMVC Builders</div>
+<div class="title">MockMVC Builders (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">    @Test
+    public void jsonIsRendered() throws Throwable {
+        gru.verify(test -&gt; test
+            .get("/moons/earth/moon", req -&gt; req
+                .command(RequestBuilderMinion.class, m -&gt; m                             <i class="conum" data-value="1"></i><b>(1)</b>
+                    .addBuildStep(mock -&gt; mock
+                        .accept(MediaType.APPLICATION_JSON_UTF8)                        <i class="conum" data-value="2"></i><b>(2)</b>
+                        .locale(Locale.CANADA)
+                    )
+                )
+            )
+            .expect(resp -&gt; resp
+                .header("Content-Type", "application/json;charset=UTF-8")
+                .json("moonResponse.json")
+                .command(ResultMatcherMinion.class, m -&gt; m                              <i class="conum" data-value="3"></i><b>(3)</b>
+                    .addMatcher(content().encoding("UTF-8"))                            <i class="conum" data-value="4"></i><b>(4)</b>
+                    .addMatcher(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                )
+            )
+        );
+    }</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Command <code>RequestBuilderMinion</code> minion to fine-tune <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/request/MockHttpServletRequestBuilder.html">MockHttpServletRequestBuilder</a></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Declare <code>Accept</code> header</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Command <code>ResultBuilderMinion</code> minion to add additional result matchers
+&lt;4&gt;&gt; Check the content encoding using the <code>content()</code> method that is statically imported from
+<a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html">MockMvcResultMatchers</a> class, asserts the content encoding</td>
+</tr>
+</table>
+</div>
+<div class="listingblock">
+<div class="title">MockMVC Builders (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">    void 'json is rendered'() {
         expect:
@@ -1660,44 +2215,76 @@ blocks so you can write the assertions in more fluent way.</p>
 <td>Use <code>that</code> method to add additional result matchers, the <code>content()</code> method is statically imported from
 <a href="https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html">MockMvcResultMatchers</a> class, asserts the content encoding</td>
 </tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>Same as <code>that</code>, asserts the content type returned</td>
-</tr>
 </table>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_integration_tests_2"><a class="anchor" href="#_integration_tests_2"></a>5.2. Integration Tests</h3>
 <div class="paragraph">
-<p>You use <code>Http</code> client to verify controller within <code>@Integration</code> test.</p>
+<p>You use <code>Http</code> client to verify controller within <code>@Integration</code> test. Once <code>gru-spring-integration-test</code> is on the classpath then you can inject <code>Gru</code> bean into your tests.</p>
 </div>
-<div class="listingblock">
-<div class="title">Integration Setup</div>
+<div class="listingblock primary">
+<div class="title">Integration Setup (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">package com.agorapulse.gru.spring.heist;
+
+import com.agorapulse.gru.Gru;
+import com.agorapulse.gru.http.Http;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)             <i class="conum" data-value="1"></i><b>(1)</b>
+public class MoonControllerIntegrationTest {
+
+    @Autowired private Gru gru;                                                         <i class="conum" data-value="2"></i><b>(2)</b>
+
+    @Test
+    public void renderJson() throws Throwable {                                         <i class="conum" data-value="3"></i><b>(3)</b>
+        gru.verify(test -&gt; test
+            .get("/moons/earth/moon")
+            .expect(resp -&gt; resp.json("renderJsonResponse.json"))
+        );
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Run integration test using the random port</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inject <code>Gru</code> into your tests</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Test the application</td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Integration Setup (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">package com.agorapulse.gru.spring.heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.http.Http
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.context.SpringBootTest
 import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)             <i class="conum" data-value="1"></i><b>(1)</b>
-class MoonControllerIntegrationTest extends Specification {
+class MoonControllerIntegrationSpec extends Specification {
 
-    @Value('${local.server.port}') private int serverPort                               <i class="conum" data-value="2"></i><b>(2)</b>
+    @Autowired Gru gru                                                                  <i class="conum" data-value="2"></i><b>(2)</b>
 
-    @AutoCleanup Gru&lt;Http&gt; gru = Gru.create(Http.create(this))                          <i class="conum" data-value="3"></i><b>(3)</b>
-
-    void setup() {
-        gru.prepare {
-            baseUri "http://localhost:${serverPort}"                                    <i class="conum" data-value="4"></i><b>(4)</b>
-        }
-    }
-
-    void 'render json'() {                                                              <i class="conum" data-value="5"></i><b>(5)</b>
+    void 'render json'() {                                                              <i class="conum" data-value="3"></i><b>(3)</b>
         expect:
             gru.test {
                 get('/moons/earth/moon')
@@ -1709,6 +2296,22 @@ class MoonControllerIntegrationTest extends Specification {
 
 }</code></pre>
 </div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Run integration test using the random port</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Inject <code>Gru</code> into your tests</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Test the application</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -2045,8 +2648,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 0.10.0<br>
-Last updated 2022-04-27 10:18:47 UTC
+Version 1.0.0<br>
+Last updated 2022-04-29 09:20:20 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
