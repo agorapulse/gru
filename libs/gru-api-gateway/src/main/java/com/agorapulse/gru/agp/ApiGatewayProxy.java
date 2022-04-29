@@ -72,7 +72,7 @@ public class ApiGatewayProxy extends AbstractClient {
         try {
             this.response = new ApiGatewayProxyResponse(configuration
                 .findMapping(request.getMethod(), request.getPath())
-                .executeHandler(request, unitTest)
+                .executeHandler(request, getUnitTest())
             );
             return context.withResult(this.response);
         } catch (ClassNotFoundException | IOException | IllegalAccessException | InvocationTargetException | InstantiationException e) {

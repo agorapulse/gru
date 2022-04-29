@@ -22,15 +22,17 @@ dependencies {
     testCompile "com.agorapulse:gru-http:{project-version}"                             // <1>
     testCompile "com.agorapulse:gru-grails:{project-version}"                           // <2>
     testCompile "com.agorapulse:gru-spring:{project-version}"                           // <3>
-    testCompile "com.agorapulse:gru-api-gateway:{project-version}"                      // <4>
-    testCompile "com.agorapulse:gru-micronaut:{project-version}"                        // <5>
+    testCompile "com.agorapulse:gru-spring-integration-testing:{project-version}"       // <4>
+    testCompile "com.agorapulse:gru-api-gateway:{project-version}"                      // <5>
+    testCompile "com.agorapulse:gru-micronaut:{project-version}"                        // <6>
 }
 ----
 <1> HTTP module for any HTTP backend such as Micronaut embedded server
 <2> Grails module to emulate HTTP interaction within Grails Unit tests
 <3> Spring module to emulate HTTP interaction using `MockMvc`
-<4> AWS API Gateway module for HTTP proxy lambdas
-<5> Micronaut module for running HTTP request against the embedded server
+<4> Spring module for real HTTP calls in integration tests
+<5> AWS API Gateway module for HTTP proxy lambdas
+<6> Micronaut module for running HTTP request against the embedded server
 
 == Setup
 
@@ -392,8 +394,14 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 ==== Redirection
 You can specify expected redirection URI. For redirection, default status code is `FOUND(302)`.
 
-.Redirection
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Redirection (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=redirect,indent=0]
+----
+
 [source,groovy]
+.Redirection (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=redirect,indent=0]
 ----
@@ -401,8 +409,14 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 ==== Plain Text Response
 You can specify expected plain text response. The responded JSON is verified just by `equals` method.
 
-.Plain Text Response
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Plain Text Response (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyText,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Plain Text Response (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyText,indent=0]
 ----
@@ -414,8 +428,14 @@ include::{root-dir}/examples/heist/src/test/resources/heist/MoonControllerSpec/t
 
 You can also specify the text inline. Inline method is also available for JSON and HTML.
 
-.Plain Text Inline Response
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Plain Text Inline Response (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyTextInline,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Plain Text Inline Response (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyTextInline,indent=0]
 ----
@@ -423,8 +443,14 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 ==== JSON Response
 You can specify expected JSON response. The responded JSON is verified using https://github.com/lukas-krecan/JsonUnit[JsonUnit].
 
-.JSON Response
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.JSON Response (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyJson,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Response (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyJson,indent=0]
 ----
@@ -437,8 +463,15 @@ include::{root-dir}/examples/heist/src/test/resources/heist/MoonControllerSpec/m
 
 You can pass JsonUnit options along with the file name.
 
-.JSON Response with Options
-[source,groovy]
+
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.JSON Response with Options (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyJson2,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Response with Options (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyJson2,indent=0]
 ----
@@ -480,8 +513,14 @@ There are built in and custom placeholders which can be used when evaluating the
 
 You can customize `JsonUnit` fluent assertion within `json` block inside `expect` definition:
 
-.JsonUnit Customisation
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.JsonUnit Customisation (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=customiseJsonUnit,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.JsonUnit Customisation (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=customiseJsonUnit,indent=0]
 ----
@@ -507,8 +546,14 @@ You can specify expected HTML response. The responded HTML is cleaned using http
 the difference is performed using http://www.xmlunit.org/[XMLUnit]. You can replace any text node with `${xml-unit.ignore}`
 to ignore the value fo the node.
 
-.HTML Response
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.HTML Response (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyHtml,indent=0]
+----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.HTML Response (Groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyHtml,indent=0]
 ----
@@ -625,8 +670,19 @@ You can configure additional request steps within `request` method closure defin
 within `expect` block to add additional `ResultMatcher`. Both methods are aliased to `and` method within their
 blocks so you can write the assertions in more fluent way.
 
-.MockMVC Builders
 [source, groovy]
+.MockMVC Builders (Java)
+----
+include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerTest.java[tag=mockmvc,ident=0]
+----
+<1> Command `RequestBuilderMinion` minion to fine-tune link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/request/MockHttpServletRequestBuilder.html[MockHttpServletRequestBuilder]
+<2> Declare `Accept` header
+<3> Command `ResultBuilderMinion` minion to add additional result matchers
+<4>> Check the content encoding using the `content()` method that is statically imported from
+link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
+
+[source, groovy]
+.MockMVC Builders (Groovy)
 ----
 include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerSpec.groovy[tag=mockmvc,ident=0]
 ----
@@ -635,16 +691,27 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 <3> Same as `request`, declares desired locale
 <4> Use `that` method to add additional result matchers, the `content()` method is statically imported from
 link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
-<5> Same as `that`, asserts the content type returned
 
 === Integration Tests
-You use `Http` client to verify controller within `@Integration` test.
+You use `Http` client to verify controller within `@Integration` test. Once `gru-spring-integration-test` is on the classpath then you can inject `Gru<Http>` bean into your tests.
 
-.Integration Setup
-[source,groovy]
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Integration Setup (Java)
 ----
-include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerIntegrationTest.groovy[lines=18..-1]
+include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerIntegrationTest.java[lines=18..-1]
 ----
+<1> Run integration test using the random port
+<2> Inject `Gru<Http>` into your tests
+<3> Test the application
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Integration Setup (Groovy)
+----
+include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gru/spring/heist/MoonControllerIntegrationSpec.groovy[lines=18..-1]
+----
+<1> Run integration test using the random port
+<2> Inject `Gru<Http>` into your tests
+<3> Test the application
 
 == AWS API Gateway
 

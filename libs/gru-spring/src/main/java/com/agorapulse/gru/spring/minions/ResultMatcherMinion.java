@@ -39,8 +39,9 @@ public class ResultMatcherMinion extends AbstractMinion<Spring> {
         super(Spring.class);
     }
 
-    public void addMatcher(ResultMatcher matcher) {
+    public ResultMatcherMinion addMatcher(ResultMatcher matcher) {
         matchers.add(matcher);
+        return this;
     }
 
     @Override

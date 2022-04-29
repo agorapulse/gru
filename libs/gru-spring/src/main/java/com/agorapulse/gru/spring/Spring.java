@@ -105,20 +105,20 @@ public class Spring extends AbstractClient {
     }
 
     private MockMvc findMockMvc() {
-        if (unitTest instanceof HasMockMvc) {
-            HasMockMvc test = (HasMockMvc) unitTest;
+        if (getUnitTest() instanceof HasMockMvc) {
+            HasMockMvc test = (HasMockMvc) getUnitTest();
             return test.getMockMvc();
         }
 
         System.err.println("Please, let the unit test implement HasMockMvc interface to avoid unnecessary reflection.");
 
-        return Arrays.stream(unitTest.getClass().getDeclaredFields())
+        return Arrays.stream(getUnitTestClass().getDeclaredFields())
             .filter(f -> MockMvc.class.isAssignableFrom(f.getType()))
             .findFirst()
             .map(f -> {
                 try {
                     f.setAccessible(true);
-                    return (MockMvc) f.get(unitTest);
+                    return (MockMvc) f.get(getUnitTest());
                 } catch (IllegalAccessException e) {
                     throw new IllegalStateException("Cannot read field " + f, e);
                 }

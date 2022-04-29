@@ -41,6 +41,8 @@ public interface Client {
 
     Object getUnitTest();
 
+    Class<?> getUnitTestClass();
+
     interface Request {
 
         String getBaseUri();

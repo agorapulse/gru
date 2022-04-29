@@ -1,0 +1,7 @@
+[
+  {
+    "name": "earth",
+    "planet": "moon",
+    "created": "${json-unit.ignore}"
+  }
+]

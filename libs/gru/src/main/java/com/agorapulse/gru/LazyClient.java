@@ -79,6 +79,10 @@ public class LazyClient implements Client {
         return ensureClient().getUnitTest();
     }
 
+    @Override
+    public Class<?> getUnitTestClass() {
+        return ensureClient().getUnitTestClass();
+    }
 
     private Client ensureClient() {
         if (client == null) {
