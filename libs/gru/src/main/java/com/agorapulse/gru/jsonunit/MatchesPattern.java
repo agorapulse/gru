@@ -31,7 +31,7 @@ public class MatchesPattern extends BaseMatcher<String> {
     /**
      * Matches ISO Date.
      */
-    public static final Matcher<String> ISO_DATE = matchesPattern("\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d(:[0-5]\\d(\\.\\d{1,3})?)?([+-][0-2]\\d:[0-5]\\d|Z)");
+    public static final Matcher<String> ISO_DATE = matchesPattern("\\d{4}-[01]\\d-[0-3]\\dT[0-2]\\d:[0-5]\\d(:[0-5]\\d(\\.\\d{1,10})?)?([+-][0-2]\\d:[0-5]\\d|Z)");
 
     /**
      * Matches any positive number integer string.

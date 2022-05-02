@@ -36,6 +36,8 @@ class MatchesPatternSpec extends Specification {
             matches | date
             true    | new DateTime().toString(ISODateTimeFormat.dateTime())
             true    | new DateTime().toString(ISODateTimeFormat.dateTimeNoMillis())
+            true    | new DateTime().toString(ISODateTimeFormat.dateHourMinuteSecondFraction()) + 'Z'
+            true    | '2022-05-02T06:59:08.502028Z'
             false   | 'foo.bar'
             false   | null
 
