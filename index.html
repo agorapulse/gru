@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 1.0.1</span>
+<span id="revnumber">version 1.0.2</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -164,12 +164,12 @@ HTTP server framework.</p>
 
 dependencies {
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:1.0.1"                             <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:1.0.1"                           <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:1.0.1"                           <i class="conum" data-value="3"></i><b>(3)</b>
-    testCompile "com.agorapulse:gru-spring-integration-testing:1.0.1"       <i class="conum" data-value="4"></i><b>(4)</b>
-    testCompile "com.agorapulse:gru-api-gateway:1.0.1"                      <i class="conum" data-value="5"></i><b>(5)</b>
-    testCompile "com.agorapulse:gru-micronaut:1.0.1"                        <i class="conum" data-value="6"></i><b>(6)</b>
+    testCompile "com.agorapulse:gru-http:1.0.2"                             <i class="conum" data-value="1"></i><b>(1)</b>
+    testCompile "com.agorapulse:gru-grails:1.0.2"                           <i class="conum" data-value="2"></i><b>(2)</b>
+    testCompile "com.agorapulse:gru-spring:1.0.2"                           <i class="conum" data-value="3"></i><b>(3)</b>
+    testCompile "com.agorapulse:gru-spring-integration-testing:1.0.2"       <i class="conum" data-value="4"></i><b>(4)</b>
+    testCompile "com.agorapulse:gru-api-gateway:1.0.2"                      <i class="conum" data-value="5"></i><b>(5)</b>
+    testCompile "com.agorapulse:gru-micronaut:1.0.2"                        <i class="conum" data-value="6"></i><b>(6)</b>
 }</code></pre>
 </div>
 </div>
@@ -1153,7 +1153,7 @@ public void createMoonForMargotGeneric() throws Throwable {
 }</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock secondary">
 <div class="title">Generic Payload (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'create moon for Margot generic'() {
@@ -1223,7 +1223,7 @@ public void uploadFile() throws Throwable {
 }</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock secondary">
 <div class="title">File Upload (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'upload file with message'() {
@@ -1453,7 +1453,7 @@ public void noPlanetNeeded() throws Throwable {
 }</code></pre>
 </div>
 </div>
-<div class="listingblock">
+<div class="listingblock secondary">
 <div class="title">Redirection (Groovy)</div>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">void 'no planet needed'() {
@@ -2128,30 +2128,30 @@ this fixed soon.
 within <code>expect</code> block to add additional <code>ResultMatcher</code>. Both methods are aliased to <code>and</code> method within their
 blocks so you can write the assertions in more fluent way.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock primary">
 <div class="title">MockMVC Builders (Java)</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">    @Test
-    public void jsonIsRendered() throws Throwable {
-        gru.verify(test -&gt; test
-            .get("/moons/earth/moon", req -&gt; req
-                .command(RequestBuilderMinion.class, m -&gt; m                             <i class="conum" data-value="1"></i><b>(1)</b>
-                    .addBuildStep(mock -&gt; mock
-                        .accept(MediaType.APPLICATION_JSON_UTF8)                        <i class="conum" data-value="2"></i><b>(2)</b>
-                        .locale(Locale.CANADA)
-                    )
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void jsonIsRendered() throws Throwable {
+    gru.verify(test -&gt; test
+        .get("/moons/earth/moon", req -&gt; req
+            .command(RequestBuilderMinion.class, m -&gt; m                             <i class="conum" data-value="1"></i><b>(1)</b>
+                .addBuildStep(mock -&gt; mock
+                    .accept(MediaType.APPLICATION_JSON_UTF8)                        <i class="conum" data-value="2"></i><b>(2)</b>
+                    .locale(Locale.CANADA)
                 )
             )
-            .expect(resp -&gt; resp
-                .header("Content-Type", "application/json;charset=UTF-8")
-                .json("moonResponse.json")
-                .command(ResultMatcherMinion.class, m -&gt; m                              <i class="conum" data-value="3"></i><b>(3)</b>
-                    .addMatcher(content().encoding("UTF-8"))                            <i class="conum" data-value="4"></i><b>(4)</b>
-                    .addMatcher(content().contentType(MediaType.APPLICATION_JSON_UTF8))
-                )
+        )
+        .expect(resp -&gt; resp
+            .header("Content-Type", "application/json;charset=UTF-8")
+            .json("moonResponse.json")
+            .command(ResultMatcherMinion.class, m -&gt; m                              <i class="conum" data-value="3"></i><b>(3)</b>
+                .addMatcher(content().encoding("UTF-8"))                            <i class="conum" data-value="4"></i><b>(4)</b>
+                .addMatcher(content().contentType(MediaType.APPLICATION_JSON_UTF8))
             )
-        );
-    }</code></pre>
+        )
+    );
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2172,28 +2172,28 @@ blocks so you can write the assertions in more fluent way.</p>
 </tr>
 </table>
 </div>
-<div class="listingblock">
+<div class="listingblock secondary">
 <div class="title">MockMVC Builders (Groovy)</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">    void 'json is rendered'() {
-        expect:
-            gru.test {
-                get '/moons/earth/moon', {
-                    request {                                                           <i class="conum" data-value="1"></i><b>(1)</b>
-                        accept(MediaType.APPLICATION_JSON_UTF8)                         <i class="conum" data-value="2"></i><b>(2)</b>
-                    }
-                    and {                                                               <i class="conum" data-value="3"></i><b>(3)</b>
-                        locale(Locale.CANADA)
-                    }
+<pre class="prettyprint highlight"><code data-lang="groovy">void 'json is rendered'() {
+    expect:
+        gru.test {
+            get '/moons/earth/moon', {
+                request {                                                           <i class="conum" data-value="1"></i><b>(1)</b>
+                    accept(MediaType.APPLICATION_JSON_UTF8)                         <i class="conum" data-value="2"></i><b>(2)</b>
                 }
-                expect {
-                    headers 'Content-Type': 'application/json;charset=UTF-8'
-                    json 'moonResponse.json'
-                    that content().encoding('UTF-8')                                    <i class="conum" data-value="4"></i><b>(4)</b>
-                    and content().contentType(MediaType.APPLICATION_JSON_UTF8)          <i class="conum" data-value="5"></i><b>(5)</b>
+                and {                                                               <i class="conum" data-value="3"></i><b>(3)</b>
+                    locale(Locale.CANADA)
                 }
             }
-    }</code></pre>
+            expect {
+                headers 'Content-Type': 'application/json;charset=UTF-8'
+                json 'moonResponse.json'
+                that content().encoding('UTF-8')                                    <i class="conum" data-value="4"></i><b>(4)</b>
+                and content().contentType(MediaType.APPLICATION_JSON_UTF8)          <i class="conum" data-value="5"></i><b>(5)</b>
+            }
+        }
+}</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2339,12 +2339,12 @@ with Gru. First of all you need to tell Gru which handlers are responsible for p
 <div class="listingblock">
 <div class="title">API Gateway Lambda Proxy Configuration</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">            Gru gru = Gru.create(ApiGatewayProxy.create {
-                map '/one' to SampleHandler.name                                        <i class="conum" data-value="1"></i><b>(1)</b>
-                map '/two' to SampleHandler                                             <i class="conum" data-value="2"></i><b>(2)</b>
-                map '/three', GET to SampleHandler.name                                 <i class="conum" data-value="3"></i><b>(3)</b>
-                map '/four', GET, POST to SampleHandler
-            })</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">Gru gru = Gru.create(ApiGatewayProxy.create {
+    map '/one' to SampleHandler.name                                        <i class="conum" data-value="1"></i><b>(1)</b>
+    map '/two' to SampleHandler                                             <i class="conum" data-value="2"></i><b>(2)</b>
+    map '/three', GET to SampleHandler.name                                 <i class="conum" data-value="3"></i><b>(3)</b>
+    map '/four', GET, POST to SampleHandler
+})</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2369,15 +2369,15 @@ with Gru. First of all you need to tell Gru which handlers are responsible for p
 <div class="listingblock">
 <div class="title">API Gateway Lambda Configuration (without Proxy)</div>
 <div class="content">
-<pre class="prettyprint highlight"><code data-lang="groovy">            Gru gru = Gru.create(ApiGatewayProxy.create {
-                map '/five/{action}/{id}' to NonProxyHandler, {                         <i class="conum" data-value="1"></i><b>(1)</b>
-                    pathParameters('action', 'id')                                      <i class="conum" data-value="2"></i><b>(2)</b>
-                    queryStringParameters 'foo', 'bar'                                  <i class="conum" data-value="3"></i><b>(3)</b>
-                    response(200) {                                                     <i class="conum" data-value="4"></i><b>(4)</b>
-                        headers 'Content-Type': 'application/json'                      <i class="conum" data-value="5"></i><b>(5)</b>
-                    }
-                }
-            })</code></pre>
+<pre class="prettyprint highlight"><code data-lang="groovy">Gru gru = Gru.create(ApiGatewayProxy.create {
+    map '/five/{action}/{id}' to NonProxyHandler, {                         <i class="conum" data-value="1"></i><b>(1)</b>
+        pathParameters('action', 'id')                                      <i class="conum" data-value="2"></i><b>(2)</b>
+        queryStringParameters 'foo', 'bar'                                  <i class="conum" data-value="3"></i><b>(3)</b>
+        response(200) {                                                     <i class="conum" data-value="4"></i><b>(4)</b>
+            headers 'Content-Type': 'application/json'                      <i class="conum" data-value="5"></i><b>(5)</b>
+        }
+    }
+})</code></pre>
 </div>
 </div>
 <div class="colist arabic">
@@ -2648,8 +2648,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.0.1<br>
-Last updated 2022-04-29 09:36:17 UTC
+Version 1.0.2<br>
+Last updated 2022-05-02 08:23:05 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
