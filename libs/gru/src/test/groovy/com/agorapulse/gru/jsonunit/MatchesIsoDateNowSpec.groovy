@@ -39,6 +39,8 @@ class MatchesIsoDateNowSpec extends Specification {
         where:
             matches | date
             true    | new DateTime().toString(ISODateTimeFormat.dateTime())
+            true    | new DateTime().toString(ISODateTimeFormat.dateHourMinuteSecondFraction()) + 'Z'
+            true    | new DateTime().toString(ISODateTimeFormat.dateTimeNoMillis())
             true    | new DateTime().toString(ISODateTimeFormat.dateTimeNoMillis())
             true    | Instant.now().toString()
             false   | 'foo.bar'
