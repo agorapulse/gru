@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
@@ -153,6 +154,23 @@ public class Micronaut implements Client {
         return build(unitTest).start();
     }
 
+
+    /**
+     * Creates a new client either reusing the existing application context if the unit test
+     * implements {@link ApplicationContextProvider} or starting a new custom one.
+     *
+     * @param delegate the delegate client to be used to perform HTTP requests
+     * @param unitTest the current test
+     * @return a builder for a client using either existing or a custom {@link ApplicationContext}
+     */
+    public static Client create(Client delegate, Object unitTest) {
+        if (unitTest instanceof ApplicationContextProvider) {
+            return new Micronaut((ApplicationContextProvider) unitTest, delegate);
+        }
+        assertProviderIfPossible(unitTest);
+        return build(unitTest).start();
+    }
+
     /**
      * Creates a lazy initialized client using the provided application context.
      *
@@ -165,6 +183,18 @@ public class Micronaut implements Client {
     }
 
     /**
+     * Creates a lazy initialized client using the provided application context.
+     *
+     * @param delegateCreator the function to create a client to perform HTTP requests for given unit test
+     * @param unitTestProvider the current test provider
+     * @param provider the context provider
+     * @return a builder for a client using either existing or a custom {@link ApplicationContext}
+     */
+    public static Client createLazy(Function<Object, Client> delegateCreator, Supplier<?> unitTestProvider, ApplicationContextProvider provider) {
+        return new Micronaut(provider, LazyClient.create(() -> delegateCreator.apply(unitTestProvider.get())));
+    }
+
+    /**
      * Creates a new client using the provided application context.
      *
      * @param unitTest the current test
@@ -173,6 +203,18 @@ public class Micronaut implements Client {
      */
     public static Client create(Object unitTest, ApplicationContextProvider provider) {
         return new Micronaut(provider, Http.create(unitTest));
+    }
+
+    /**
+     * Creates a new client using the provided application context.
+     *
+     * @param delegate the delegate client to be used to perform HTTP requests
+     * @param unitTest the current test
+     * @param provider the context provider
+     * @return a builder for a client using either existing or a custom {@link ApplicationContext}
+     */
+    public static Client create(Client delegate, Object unitTest, ApplicationContextProvider provider) {
+        return new Micronaut(provider, delegate);
     }
 
     private Micronaut(ApplicationContextProvider contextProvider, Client delegate) {
