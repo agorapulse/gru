@@ -26,6 +26,7 @@ import groovy.transform.stc.ClosureParams;
 import groovy.transform.stc.FromString;
 import groovy.transform.stc.SimpleType;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import org.intellij.lang.annotations.Language;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 import space.jasan.support.groovy.closure.FunctionWithDelegate;
 
@@ -211,7 +212,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder head(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -221,7 +222,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder post(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -232,7 +233,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder get(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -243,7 +244,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder put(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -253,7 +254,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder patch(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -263,7 +264,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder delete(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -273,7 +274,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder options(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -283,7 +284,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder trace(
         TestDefinitionBuilder self,
-        CharSequence uri,
+        @Language("http-url-reference") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition

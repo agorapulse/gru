@@ -19,6 +19,7 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
+import org.intellij.lang.annotations.Language;
 
 import java.util.function.Consumer;
 
@@ -31,37 +32,37 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder expect(Consumer<ResponseDefinitionBuilder> definition);
 
-    TestDefinitionBuilder head(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder head(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder head(CharSequence uri);
+    TestDefinitionBuilder head(@Language("http-url-reference") String uri);
 
-    TestDefinitionBuilder post(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder post(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder post(CharSequence uri);
+    TestDefinitionBuilder post(@Language("http-url-reference") String uri);
 
-    TestDefinitionBuilder put(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder put(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder put(CharSequence uri);
+    TestDefinitionBuilder put(@Language("http-url-reference") String uri);
 
-    TestDefinitionBuilder patch(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder patch(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder patch(CharSequence uri);
+    TestDefinitionBuilder patch(@Language("http-url-reference") String uri);
 
-    TestDefinitionBuilder delete(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder delete(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder delete(CharSequence uri);
+    TestDefinitionBuilder delete(@Language("http-url-reference") String uri);
 
-    TestDefinitionBuilder options(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder options(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder options(CharSequence uri);
+    TestDefinitionBuilder options(@Language("http-url-reference") String uri);
 
-    TestDefinitionBuilder trace(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder trace(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder trace(CharSequence uri);
+    TestDefinitionBuilder trace(@Language("http-url-reference") String uri);
 
-    TestDefinitionBuilder get(CharSequence uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder get(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder get(CharSequence uri);
+    TestDefinitionBuilder get(@Language("http-url-reference") String uri);
 
     TestDefinitionBuilder baseUri(String uri);
 

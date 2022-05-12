@@ -20,6 +20,7 @@ package com.agorapulse.gru;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Collections;
 import java.util.List;
@@ -97,7 +98,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @param contentType content type of the payload
      * @return self
      */
-    RequestDefinitionBuilder content(String relativePath, String contentType);
+    RequestDefinitionBuilder content(String relativePath, @Language("mime-type-reference") String contentType);
 
     /**
      * Sets a request payload from given content.
@@ -108,7 +109,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      * @param contentType content type of the payload
      * @return self
      */
-    RequestDefinitionBuilder content(Content content, String contentType);
+    RequestDefinitionBuilder content(Content content, @Language("mime-type-reference") String contentType);
 
     /**
      * Adds URL parameters for the action execution.
@@ -150,7 +151,7 @@ public interface RequestDefinitionBuilder extends WithContentSupport {
      */
     RequestDefinitionBuilder cookies(Map<String, String> cookies);
 
-    default RequestDefinitionBuilder header(String name, String value) {
+    default RequestDefinitionBuilder header(@Language("http-header-reference") String name, String value) {
         return headers(Collections.singletonMap(name, value));
     }
 }

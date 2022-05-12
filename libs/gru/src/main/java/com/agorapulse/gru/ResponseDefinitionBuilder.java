@@ -22,6 +22,7 @@ import com.agorapulse.gru.minions.Minion;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Collections;
 import java.util.List;
@@ -156,7 +157,7 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      */
     ResponseDefinitionBuilder headers(Map<String, String> additionalHeaders);
 
-    default ResponseDefinitionBuilder header(String name, String value) {
+    default ResponseDefinitionBuilder header(@Language("http-header-reference") String name, String value) {
         return headers(Collections.singletonMap(name, value));
     }
 
