@@ -59,7 +59,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder head(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder head(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, HEAD, definition);
     }
 
@@ -70,7 +70,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder head(CharSequence uri) {
+    public TestDefinitionBuilder head(String uri) {
         return request(uri, HEAD);
     }
 
@@ -82,7 +82,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder post(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder post(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, POST, definition);
     }
 
@@ -93,7 +93,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder post(CharSequence uri) {
+    public TestDefinitionBuilder post(String uri) {
         return request(uri, POST);
     }
 
@@ -105,7 +105,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder put(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder put(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, PUT, definition);
     }
 
@@ -116,7 +116,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder put(CharSequence uri) {
+    public TestDefinitionBuilder put(String uri) {
         return request(uri, PUT);
     }
 
@@ -128,7 +128,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder patch(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder patch(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, PATCH, definition);
     }
 
@@ -139,7 +139,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder patch(CharSequence uri) {
+    public TestDefinitionBuilder patch(String uri) {
         return request(uri, PATCH);
     }
 
@@ -151,7 +151,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder delete(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder delete(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, DELETE, definition);
     }
 
@@ -162,7 +162,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder delete(CharSequence uri) {
+    public TestDefinitionBuilder delete(String uri) {
         return request(uri, DELETE);
     }
 
@@ -174,7 +174,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder options(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder options(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, OPTIONS, definition);
     }
 
@@ -185,7 +185,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder options(CharSequence uri) {
+    public TestDefinitionBuilder options(String uri) {
         return request(uri, OPTIONS);
     }
 
@@ -197,7 +197,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder trace(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder trace(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, TRACE, definition);
     }
 
@@ -208,7 +208,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder trace(CharSequence uri) {
+    public TestDefinitionBuilder trace(String uri) {
         return request(uri, TRACE);
     }
 
@@ -220,7 +220,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder get(CharSequence uri, Consumer<RequestDefinitionBuilder> definition) {
+    public TestDefinitionBuilder get(String uri, Consumer<RequestDefinitionBuilder> definition) {
         return request(uri, GET, definition);
     }
 
@@ -231,7 +231,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
      * @return self
      */
     @Override
-    public TestDefinitionBuilder get(CharSequence uri) {
+    public TestDefinitionBuilder get(String uri) {
         return request(uri, GET);
     }
 
@@ -248,7 +248,6 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
         return this;
     }
 
-    @SuppressWarnings("unchecked")
     private TestDefinitionBuilder request(CharSequence uri, String method) {
         return request(uri, method, (r) -> {});
     }

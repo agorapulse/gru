@@ -18,6 +18,7 @@
 package com.agorapulse.gru;
 
 import com.agorapulse.gru.content.FileContent;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Collections;
 import java.util.Map;
@@ -30,9 +31,9 @@ public interface MultipartDefinitionBuilder extends WithContentSupport {
         return params(Collections.singletonMap(name, value));
     }
 
-    MultipartDefinitionBuilder file(String parameterName, String filename, Content content, String contentType);
+    MultipartDefinitionBuilder file(String parameterName, String filename, Content content, @Language("mime-type-reference") String contentType);
 
-    default MultipartDefinitionBuilder file(String parameterName, String filename, String relativePath, String contentType) {
+    default MultipartDefinitionBuilder file(String parameterName, String filename, String relativePath, @Language("mime-type-reference") String contentType) {
         return file(parameterName, filename, FileContent.create(relativePath), contentType);
     }
 

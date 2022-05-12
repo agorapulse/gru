@@ -19,6 +19,7 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.cookie.Cookie;
 import com.agorapulse.gru.minions.Minion;
+import org.intellij.lang.annotations.Language;
 
 import java.io.InputStream;
 import java.util.List;
@@ -47,25 +48,25 @@ public interface Client {
 
         String getBaseUri();
 
-        void setBaseUri(String baseUri);
+        void setBaseUri(@Language("http-url-reference") String baseUri);
 
         String getUri();
 
-        void setUri(String uri);
+        void setUri(@Language("http-url-reference") String uri);
 
         String getMethod();
 
-        void setMethod(String method);
+        void setMethod(@Language("http-method-reference") String method);
 
-        void addHeader(String name, String value);
+        void addHeader(@Language("http-header-reference") String name, String value);
 
         default void addCookie(Cookie cookie) {
             addHeader("Cookie", cookie.toString());
         }
 
-        void setJson(String jsonText);
+        void setJson(@Language("json") String jsonText);
 
-        void setContent(String contentType, byte[] payload);
+        void setContent(@Language("mime-type-reference") String contentType, byte[] payload);
 
         void addParameter(String name, Object value);
 
