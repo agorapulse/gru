@@ -52,7 +52,7 @@
 <a class="jxr_linenumber" name="L44" href="#L44">44</a>          @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.TestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L45" href="#L45">45</a>          Closure&lt;TestDefinitionBuilder&gt; configuration
 <a class="jxr_linenumber" name="L46" href="#L46">46</a>      ) {
-<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">return</strong> self.prepare(ConsumerWithDelegate.create(configuration));
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>          <strong class="jxr_keyword">return</strong> self.prepare(builder -&gt; ConsumerWithDelegate.create(configuration).accept(<strong class="jxr_keyword">new</strong> <a name="GroovyTestDefinitionBuilder" href="../../../../com/agorapulse/gru/groovy/GroovyTestDefinitionBuilder.html#GroovyTestDefinitionBuilder">GroovyTestDefinitionBuilder</a>(builder, configuration.getOwner())));
 <a class="jxr_linenumber" name="L48" href="#L48">48</a>      }
 <a class="jxr_linenumber" name="L49" href="#L49">49</a>  
 <a class="jxr_linenumber" name="L50" href="#L50">50</a>  
@@ -70,7 +70,7 @@
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>          @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.TestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>          Closure&lt;TestDefinitionBuilder&gt; expectation
 <a class="jxr_linenumber" name="L64" href="#L64">64</a>      ) {
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">return</strong> self.test(ConsumerWithDelegate.create(expectation));
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">return</strong> self.test(builder -&gt; ConsumerWithDelegate.create(expectation).accept(<strong class="jxr_keyword">new</strong> <a name="GroovyTestDefinitionBuilder" href="../../../../com/agorapulse/gru/groovy/GroovyTestDefinitionBuilder.html#GroovyTestDefinitionBuilder">GroovyTestDefinitionBuilder</a>(builder, expectation.getOwner())));
 <a class="jxr_linenumber" name="L66" href="#L66">66</a>      }
 <a class="jxr_linenumber" name="L67" href="#L67">67</a>  
 <a class="jxr_linenumber" name="L68" href="#L68">68</a>      <em class="jxr_javadoccomment">/**</em>
@@ -84,7 +84,7 @@
 <a class="jxr_linenumber" name="L76" href="#L76">76</a>          @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.TestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L77" href="#L77">77</a>          Closure&lt;TestDefinitionBuilder&gt; expectation
 <a class="jxr_linenumber" name="L78" href="#L78">78</a>      ) <strong class="jxr_keyword">throws</strong> Throwable {
-<a class="jxr_linenumber" name="L79" href="#L79">79</a>          self.verify(ConsumerWithDelegate.create(expectation));
+<a class="jxr_linenumber" name="L79" href="#L79">79</a>          self.verify(builder -&gt; ConsumerWithDelegate.create(expectation).accept(<strong class="jxr_keyword">new</strong> <a name="GroovyTestDefinitionBuilder" href="../../../../com/agorapulse/gru/groovy/GroovyTestDefinitionBuilder.html#GroovyTestDefinitionBuilder">GroovyTestDefinitionBuilder</a>(builder, expectation.getOwner())));
 <a class="jxr_linenumber" name="L80" href="#L80">80</a>      }
 <a class="jxr_linenumber" name="L81" href="#L81">81</a>  
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>      <em class="jxr_javadoccomment">/**</em>
