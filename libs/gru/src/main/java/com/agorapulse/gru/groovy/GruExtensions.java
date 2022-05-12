@@ -44,7 +44,7 @@ public class GruExtensions {
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
         Closure<TestDefinitionBuilder> configuration
     ) {
-        return self.prepare(ConsumerWithDelegate.create(configuration));
+        return self.prepare(builder -> ConsumerWithDelegate.create(configuration).accept(new GroovyTestDefinitionBuilder(builder, configuration.getOwner())));
     }
 
 
@@ -62,7 +62,7 @@ public class GruExtensions {
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
         Closure<TestDefinitionBuilder> expectation
     ) {
-        return self.test(ConsumerWithDelegate.create(expectation));
+        return self.test(builder -> ConsumerWithDelegate.create(expectation).accept(new GroovyTestDefinitionBuilder(builder, expectation.getOwner())));
     }
 
     /**
@@ -76,7 +76,7 @@ public class GruExtensions {
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.TestDefinitionBuilder")
         Closure<TestDefinitionBuilder> expectation
     ) throws Throwable {
-        self.verify(ConsumerWithDelegate.create(expectation));
+        self.verify(builder -> ConsumerWithDelegate.create(expectation).accept(new GroovyTestDefinitionBuilder(builder, expectation.getOwner())));
     }
 
     /**
