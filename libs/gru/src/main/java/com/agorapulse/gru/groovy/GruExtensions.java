@@ -212,7 +212,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder head(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -222,7 +222,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder post(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -233,7 +233,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder get(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -244,7 +244,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder put(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -254,7 +254,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder patch(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -264,7 +264,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder delete(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -274,7 +274,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder options(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
@@ -284,7 +284,7 @@ public class GruExtensions {
 
     public static TestDefinitionBuilder trace(
         TestDefinitionBuilder self,
-        @Language("http-url-reference") String uri,
+        @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
         @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition

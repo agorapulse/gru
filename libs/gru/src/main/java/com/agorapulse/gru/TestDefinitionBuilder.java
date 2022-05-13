@@ -32,37 +32,37 @@ public interface TestDefinitionBuilder extends HttpVerbsShortcuts {
 
     TestDefinitionBuilder expect(Consumer<ResponseDefinitionBuilder> definition);
 
-    TestDefinitionBuilder head(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder head(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder head(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder head(@Language("HTTP Request") String uri);
 
-    TestDefinitionBuilder post(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder post(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder post(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder post(@Language("HTTP Request") String uri);
 
-    TestDefinitionBuilder put(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder put(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder put(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder put(@Language("HTTP Request") String uri);
 
-    TestDefinitionBuilder patch(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder patch(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder patch(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder patch(@Language("HTTP Request") String uri);
 
-    TestDefinitionBuilder delete(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder delete(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder delete(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder delete(@Language("HTTP Request") String uri);
 
-    TestDefinitionBuilder options(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder options(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder options(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder options(@Language("HTTP Request") String uri);
 
-    TestDefinitionBuilder trace(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder trace(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder trace(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder trace(@Language("HTTP Request") String uri);
 
-    TestDefinitionBuilder get(@Language("http-url-reference") String uri, Consumer<RequestDefinitionBuilder> definition);
+    TestDefinitionBuilder get(@Language("HTTP Request") String uri, Consumer<RequestDefinitionBuilder> definition);
 
-    TestDefinitionBuilder get(@Language("http-url-reference") String uri);
+    TestDefinitionBuilder get(@Language("HTTP Request") String uri);
 
     TestDefinitionBuilder baseUri(String uri);
 

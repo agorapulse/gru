@@ -48,11 +48,11 @@ public interface Client {
 
         String getBaseUri();
 
-        void setBaseUri(@Language("http-url-reference") String baseUri);
+        void setBaseUri(@Language("HTTP Request") String baseUri);
 
         String getUri();
 
-        void setUri(@Language("http-url-reference") String uri);
+        void setUri(@Language("HTTP Request") String uri);
 
         String getMethod();
 
