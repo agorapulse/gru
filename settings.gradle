@@ -38,7 +38,7 @@ rootProject.name = 'gru-root'
 
 projects {
     cache = false
-    directories = ['docs', 'libs', 'examples']
+    directories = ['docs', 'libs', 'examples', 'platforms']
 
     plugins {
         dir('docs') {
@@ -48,6 +48,9 @@ projects {
         dirs(['libs', 'examples']) {
             id 'java-library'
             id 'groovy'
+        }
+        dir('platforms') {
+            id 'java-platform'
         }
     }
 }

@@ -194,6 +194,8 @@ projects {
             tasks.withType(Test) {
                 useJUnitPlatform()
             }
+
+            project(':gru-bom').dependencies.constraints.api it
         }
 
         dir ('examples') {
@@ -203,6 +205,14 @@ projects {
                     codenarc {
                         enabled = false
                     }
+                }
+            }
+        }
+
+        dir('platforms') {
+            config {
+                publishing {
+                    enabled = true
                 }
             }
         }
