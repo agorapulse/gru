@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 1.1.1</span>
+<span id="revnumber">version 1.1.2</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -163,13 +163,14 @@ HTTP server framework.</p>
 }
 
 dependencies {
+    testImplementation platform('com.agorapulse:gru-bom::1.1.2')            <i class="conum" data-value="1"></i><b>(1)</b>
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:1.1.1"                             <i class="conum" data-value="1"></i><b>(1)</b>
-    testCompile "com.agorapulse:gru-grails:1.1.1"                           <i class="conum" data-value="2"></i><b>(2)</b>
-    testCompile "com.agorapulse:gru-spring:1.1.1"                           <i class="conum" data-value="3"></i><b>(3)</b>
-    testCompile "com.agorapulse:gru-spring-integration-testing:1.1.1"       <i class="conum" data-value="4"></i><b>(4)</b>
-    testCompile "com.agorapulse:gru-api-gateway:1.1.1"                      <i class="conum" data-value="5"></i><b>(5)</b>
-    testCompile "com.agorapulse:gru-micronaut:1.1.1"                        <i class="conum" data-value="6"></i><b>(6)</b>
+    testImplementation 'com.agorapulse:gru-http'                                        <i class="conum" data-value="2"></i><b>(2)</b>
+    testImplementation 'com.agorapulse:gru-grails'                                      <i class="conum" data-value="3"></i><b>(3)</b>
+    testImplementation 'com.agorapulse:gru-spring'                                      <i class="conum" data-value="4"></i><b>(4)</b>
+    testImplementation 'com.agorapulse:gru-spring-integration-testing'                  <i class="conum" data-value="5"></i><b>(5)</b>
+    testImplementation 'com.agorapulse:gru-api-gateway'                                 <i class="conum" data-value="6"></i><b>(6)</b>
+    testImplementation 'com.agorapulse:gru-micronaut'                                   <i class="conum" data-value="7"></i><b>(7)</b>
 }</code></pre>
 </div>
 </div>
@@ -177,26 +178,30 @@ dependencies {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>HTTP module for any HTTP backend such as Micronaut embedded server</td>
+<td>You can use BOM to manage the dependencies</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>Grails module to emulate HTTP interaction within Grails Unit tests</td>
+<td>HTTP module for any HTTP backend such as Micronaut embedded server</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>Spring module to emulate HTTP interaction using <code>MockMvc</code></td>
+<td>Grails module to emulate HTTP interaction within Grails Unit tests</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Spring module for real HTTP calls in integration tests</td>
+<td>Spring module to emulate HTTP interaction using <code>MockMvc</code></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>AWS API Gateway module for HTTP proxy lambdas</td>
+<td>Spring module for real HTTP calls in integration tests</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>AWS API Gateway module for HTTP proxy lambdas</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
 <td>Micronaut module for running HTTP request against the embedded server</td>
 </tr>
 </table>
@@ -967,8 +972,8 @@ overrides the default transitive dependency back to <code>1.0</code> so you need
 <div class="listingblock">
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="groovy">String spockVersion = '1.1-groovy-2.4'
-testCompile("org.spockframework:spock-spring:$spockVersion")
-testCompile("org.spockframework:spock-core:$spockVersion")</code></pre>
+testImplementation("org.spockframework:spock-spring:$spockVersion")
+testImplementation("org.spockframework:spock-core:$spockVersion")</code></pre>
 </div>
 </div>
 </td>
@@ -2648,8 +2653,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.1.1<br>
-Last updated 2022-05-12 13:52:00 UTC
+Version 1.1.2<br>
+Last updated 2022-06-02 10:00:11 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
