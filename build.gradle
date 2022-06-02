@@ -216,5 +216,27 @@ projects {
                 }
             }
         }
+
+        dir('kotlin-libs') {
+            repositories {
+                mavenCentral()
+            }
+
+            jar {
+                manifest.attributes provider: 'gradle'
+            }
+
+            config {
+                publishing {
+                    enabled = true
+                }
+            }
+
+            tasks.withType(Test) {
+                useJUnitPlatform()
+            }
+
+            project(':gru-bom').dependencies.constraints.api it
+        }
     }
 }

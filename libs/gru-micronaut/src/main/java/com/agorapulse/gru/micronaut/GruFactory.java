@@ -17,7 +17,6 @@
  */
 package com.agorapulse.gru.micronaut;
 
-import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Bean;
@@ -41,6 +40,13 @@ public class GruFactory {
     Gru gru(ApplicationContext context) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
         return Gru.create(Micronaut.createLazy(() -> context.getBean(testClass), () -> context));
+    }
+
+    @Singleton
+    @Bean(preDestroy = "close")
+    @Requires(classes = com.agorapulse.gru.kotlin.Gru.class)
+    com.agorapulse.gru.kotlin.Gru kotlinGru(Gru gru) {
+        return new com.agorapulse.gru.kotlin.Gru(gru);
     }
 
 }
