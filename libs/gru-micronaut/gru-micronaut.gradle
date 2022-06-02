@@ -23,6 +23,7 @@ dependencies {
     api project(':gru-http')
 
     compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly project(':gru-kotlin')
 
     implementation platform("io.micronaut:micronaut-bom:$micronautCompactVersion")
     implementation("io.micronaut:micronaut-validation")

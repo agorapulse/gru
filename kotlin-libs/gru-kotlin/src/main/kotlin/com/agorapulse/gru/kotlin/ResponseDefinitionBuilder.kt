@@ -15,31 +15,31 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.gru;
+package com.agorapulse.gru.kotlin
 
-import com.agorapulse.gru.minions.Command;
-import com.agorapulse.gru.minions.Minion;
-import net.javacrumbs.jsonunit.core.Option;
-import net.javacrumbs.jsonunit.core.internal.JsonUtils;
-import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
-import org.intellij.lang.annotations.Language;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Consumer;
-import java.util.function.Function;
+import com.agorapulse.gru.*
+import com.agorapulse.gru.minions.Minion
+import net.javacrumbs.jsonunit.core.Option
+import net.javacrumbs.jsonunit.core.internal.JsonUtils
+import net.javacrumbs.jsonunit.fluent.JsonFluentAssert.ConfigurableJsonFluentAssert
+import org.intellij.lang.annotations.Language
+import java.util.*
+import com.agorapulse.gru.ResponseDefinitionBuilder as JavaResponseDefinitionBuilder
 
 /**
  * Sets expectations for the response after the controller action has been executed.
  *
  */
-public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnitOptionsShortcuts, WithContentSupport {
+class ResponseDefinitionBuilder(private val delegate: JavaResponseDefinitionBuilder) : HttpStatusShortcuts,
+    JsonUnitOptionsShortcuts, WithContentSupport {
 
     /**
-     * @see Squad#command(Class, Command)
+     * @see Squad.command
      */
-    <M extends Minion> ResponseDefinitionBuilder command(Class<M> minionType, Command<M> command);
+    fun <M : Minion> command(minionType: Class<M>, command: M.() -> Unit): ResponseDefinitionBuilder {
+        delegate.command(minionType) { command(it) }
+        return this
+    }
 
     /**
      * Sets an expected status returned.
@@ -48,7 +48,10 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param aStatus an expected status returned
      * @return self
      */
-    ResponseDefinitionBuilder status(int aStatus);
+    fun status(aStatus: Int): ResponseDefinitionBuilder {
+        delegate.status(aStatus)
+        return this
+    }
 
     /**
      * Sets the acceptable statuses returned.
@@ -57,8 +60,10 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param statuses the acceptable statuses
      * @return self
      */
-    ResponseDefinitionBuilder statuses(int... statuses);
-
+    fun statuses(vararg statuses: Int): ResponseDefinitionBuilder {
+        delegate.statuses(*statuses)
+        return this
+    }
 
     /**
      * Sets an expected JSON response from given file.
@@ -69,7 +74,10 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param relativePath an expected JSON response file
      * @return self
      */
-    ResponseDefinitionBuilder json(String relativePath);
+    fun json(relativePath: String): ResponseDefinitionBuilder {
+        delegate.json(relativePath)
+        return this
+    }
 
     /**
      * Sets an expected JSON response from given content.
@@ -77,7 +85,10 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param content direct content
      * @return self
      */
-    ResponseDefinitionBuilder json(Content content);
+    fun json(content: Content): ResponseDefinitionBuilder {
+        delegate.json(content)
+        return this
+    }
 
     /**
      * Sets a JSON request from given content.
@@ -87,8 +98,8 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param map map to be converted to JSON
      * @return self
      */
-    default ResponseDefinitionBuilder json(Map<?, ?> map) {
-        return json(inline(JsonUtils.convertToJson(map, "response").toString()));
+    fun json(map: Map<*, *>): ResponseDefinitionBuilder {
+        return json(inline(JsonUtils.convertToJson(map, "response").toString()))
     }
 
     /**
@@ -99,10 +110,9 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param list list to be converted to JSON
      * @return self
      */
-    default ResponseDefinitionBuilder json(List<?> list) {
-        return json(inline(JsonUtils.convertToJson(list, "response").toString()));
+    fun json(list: List<*>): ResponseDefinitionBuilder {
+        return json(inline(JsonUtils.convertToJson(list, "response").toString()))
     }
-
 
     /**
      * Sets an expected HTML response from given file.
@@ -113,15 +123,21 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param relativePath an expected HTML response file
      * @return self
      */
-    ResponseDefinitionBuilder html(String relativePath);
+    fun html(relativePath: String): ResponseDefinitionBuilder {
+        delegate.html(relativePath)
+        return this
+    }
 
     /**
      * Sets an expected HTML response from given content.
      *
-     *  @param content an expected HTML response file
+     * @param content an expected HTML response file
      * @return self
      */
-    ResponseDefinitionBuilder html(Content content);
+    fun html(content: Content): ResponseDefinitionBuilder {
+        delegate.html(content)
+        return this
+    }
 
     /**
      * Sets an expected text response from given file.
@@ -132,14 +148,21 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param relativePath an expected HTML response file
      * @return self
      */
-    ResponseDefinitionBuilder text(String relativePath);
+    fun text(relativePath: String): ResponseDefinitionBuilder {
+        delegate.text(relativePath)
+        return this
+    }
+
     /**
      * Sets an expected text response from given content.
      *
      * @param content an expected HTML response file
      * @return self
      */
-    ResponseDefinitionBuilder text(Content content);
+    fun text(content: Content): ResponseDefinitionBuilder {
+        delegate.text(content)
+        return this
+    }
 
     /**
      * Sets additional assertions and configuration for JsonFluentAssert instance which is testing the response.
@@ -147,7 +170,10 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    ResponseDefinitionBuilder json(Function<JsonFluentAssert.ConfigurableJsonFluentAssert, JsonFluentAssert.ConfigurableJsonFluentAssert> additionalConfiguration);
+    fun json(additionalConfiguration: ConfigurableJsonFluentAssert.() -> ConfigurableJsonFluentAssert): ResponseDefinitionBuilder {
+        delegate.json { additionalConfiguration(it) }
+        return this
+    }
 
     /**
      * Adds HTTP headers which are expected to be returned after action execution.
@@ -155,10 +181,13 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param additionalHeaders additional HTTP headers which are expected to be returned after action execution
      * @return self
      */
-    ResponseDefinitionBuilder headers(Map<String, String> additionalHeaders);
+    fun headers(additionalHeaders: Map<String, String>): ResponseDefinitionBuilder {
+        delegate.headers(additionalHeaders)
+        return this
+    }
 
-    default ResponseDefinitionBuilder header(@Language("http-header-reference") String name, String value) {
-        return headers(Collections.singletonMap(name, value));
+    fun header(@Language("http-header-reference") name: String, value: String): ResponseDefinitionBuilder {
+        return headers(Collections.singletonMap(name, value))
     }
 
     /**
@@ -167,7 +196,10 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param uri expected URI
      * @return self
      */
-    ResponseDefinitionBuilder redirect(String uri);
+    fun redirect(uri: String): ResponseDefinitionBuilder {
+        delegate.redirect(uri)
+        return this
+    }
 
     /**
      * Sets an expected JSON response from given file.
@@ -179,22 +211,32 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param option       JsonUnit option, e.g. IGNORING_EXTRA_ARRAY_ITEMS
      * @return self other JsonUnit options e.g. IGNORING_EXTRA_ARRAY_ITEMS
      */
-    ResponseDefinitionBuilder json(String relativePath, Option option, Option... options);
+    fun json(relativePath: String, option: Option, vararg options: Option): ResponseDefinitionBuilder {
+        delegate.json(relativePath, option, *options)
+        return this
+    }
 
     /**
      * Expect a cookie returned by the server.
      * @param cookieDefinition definition of the cookie
      * @return self
      */
-    ResponseDefinitionBuilder cookie(Consumer<ResponseCookieDefinition> cookieDefinition);
-
-    default ResponseDefinitionBuilder cookies(Map<String, String> cookies) {
-        cookies.forEach((name, value) -> cookie(c -> c.name(name).value(value)));
-        return this;
+    fun cookie(cookieDefinition: ResponseCookieDefinition.() -> ResponseCookieDefinition): ResponseDefinitionBuilder {
+        delegate.cookie { cookieDefinition(it) }
+        return this
     }
 
-    default ResponseDefinitionBuilder cookie(String name, String value) {
-        cookie(c -> c.name(name).value(value));
-        return this;
+    fun cookies(cookies: Map<String, String>): ResponseDefinitionBuilder {
+        cookies.forEach { (name: String, value: String) ->
+            cookie {
+                name(name).value(value)
+            }
+        }
+        return this
+    }
+
+    fun cookie(name: String, value: String): ResponseDefinitionBuilder {
+        cookie { name(name).value(value) }
+        return this
     }
 }

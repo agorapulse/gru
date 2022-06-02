@@ -15,3 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.agorapulse.gru.spring.itest;
+
+import com.agorapulse.gru.Gru;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
+@Configuration
+@ConditionalOnClass(com.agorapulse.gru.kotlin.Gru.class)
+public class GruKotlinIntegrationTestConfiguration {
+
+    @Scope("prototype")
+    @Bean(destroyMethod = "close")
+    public static com.agorapulse.gru.kotlin.Gru kotlinGru(Gru gru) {
+        return new com.agorapulse.gru.kotlin.Gru(gru);
+    }
+
+}

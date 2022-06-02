@@ -100,7 +100,7 @@ public class GruExtensions {
         @ClosureParams(value = FromString.class, options = "M")
         Closure<?> command
     ) {
-        return self.command(minionType, Command.create(command));
+        return self.command(minionType, createCommand(command));
     }
 
     public static RequestDefinitionBuilder upload(
@@ -122,7 +122,7 @@ public class GruExtensions {
         @ClosureParams(value = FromString.class, options = "M")
         Closure<?> command
     ) {
-        return self.command(minionType, Command.create(command));
+        return self.command(minionType, createCommand(command));
     }
 
     /**
@@ -169,7 +169,7 @@ public class GruExtensions {
         @ClosureParams(value = FromString.class, options = "M")
         Closure<?> aCommand
     ) {
-        self.command(minionType, Command.create(aCommand));
+        self.command(minionType, createCommand(aCommand));
     }
 
     /**
@@ -207,7 +207,7 @@ public class GruExtensions {
         @ClosureParams(value = FromString.class, options = "M")
         Closure<?> command
     ) {
-        return self.command(minionType, Command.create(command));
+        return self.command(minionType, createCommand(command));
     }
 
     public static TestDefinitionBuilder head(
@@ -290,6 +290,10 @@ public class GruExtensions {
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.trace(uri, ConsumerWithDelegate.create(definition));
+    }
+
+    private static <M extends Minion> Command<M> createCommand(Closure<?> closure) {
+        return m -> ConsumerWithDelegate.create(closure).accept(m);
     }
 
 }

@@ -17,8 +17,10 @@
  */
 dependencies {
     api project(":gru-http")
+    compileOnly project(':gru-kotlin')
     compileOnly group: 'org.springframework', name: 'spring-beans', version: springVersion
     compileOnly group: 'org.springframework', name: 'spring-context', version: springVersion
+    compileOnly group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: springBootVersion
 }
 
 groovydoc.onlyIf { false }
