@@ -18,21 +18,23 @@ repositories {
 }
 
 dependencies {
+    testImplementation platform('com.agorapulse:gru-bom::{project-version}')            // <1>
     // pick any of these as you need
-    testCompile "com.agorapulse:gru-http:{project-version}"                             // <1>
-    testCompile "com.agorapulse:gru-grails:{project-version}"                           // <2>
-    testCompile "com.agorapulse:gru-spring:{project-version}"                           // <3>
-    testCompile "com.agorapulse:gru-spring-integration-testing:{project-version}"       // <4>
-    testCompile "com.agorapulse:gru-api-gateway:{project-version}"                      // <5>
-    testCompile "com.agorapulse:gru-micronaut:{project-version}"                        // <6>
+    testImplementation 'com.agorapulse:gru-http'                                        // <2>
+    testImplementation 'com.agorapulse:gru-grails'                                      // <3>
+    testImplementation 'com.agorapulse:gru-spring'                                      // <4>
+    testImplementation 'com.agorapulse:gru-spring-integration-testing'                  // <5>
+    testImplementation 'com.agorapulse:gru-api-gateway'                                 // <6>
+    testImplementation 'com.agorapulse:gru-micronaut'                                   // <7>
 }
 ----
-<1> HTTP module for any HTTP backend such as Micronaut embedded server
-<2> Grails module to emulate HTTP interaction within Grails Unit tests
-<3> Spring module to emulate HTTP interaction using `MockMvc`
-<4> Spring module for real HTTP calls in integration tests
-<5> AWS API Gateway module for HTTP proxy lambdas
-<6> Micronaut module for running HTTP request against the embedded server
+<1> You can use BOM to manage the dependencies
+<2> HTTP module for any HTTP backend such as Micronaut embedded server
+<3> Grails module to emulate HTTP interaction within Grails Unit tests
+<4> Spring module to emulate HTTP interaction using `MockMvc`
+<5> Spring module for real HTTP calls in integration tests
+<6> AWS API Gateway module for HTTP proxy lambdas
+<7> Micronaut module for running HTTP request against the embedded server
 
 == Setup
 
@@ -204,8 +206,8 @@ overrides the default transitive dependency back to `1.0` so you need to explici
 [source,groovy]
 ----
 String spockVersion = '1.1-groovy-2.4'
-testCompile("org.spockframework:spock-spring:$spockVersion")
-testCompile("org.spockframework:spock-core:$spockVersion")
+testImplementation("org.spockframework:spock-spring:$spockVersion")
+testImplementation("org.spockframework:spock-core:$spockVersion")
 ----
 ====
 
