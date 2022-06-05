@@ -19,6 +19,8 @@ package com.agorapulse.gru
 
 import spock.lang.Specification
 
+import static com.agorapulse.gru.HttpStatusShortcuts.OK
+
 /**
  * Tests for Gru.
  */
@@ -42,6 +44,32 @@ class GruSpec extends Specification {
         then:
             AssertionError e = thrown(AssertionError)
             e.message?.startsWith('Test wasn\'t verified.')
+    }
+
+    void 'global configuration base uri always takes precedence'() {
+        given:
+        String expectedBaseUri = "http://localhost:12345"
+        String notExpectedBaseUri = "http://localhost:54321"
+        Client.Request request = Mock(Client.Request)
+        Client.Response response = Mock(Client.Response)
+        response.getStatus() >> OK
+        response.getHeaders((String) _) >> []
+        Client client = Mock(Client) {
+            getInitialSquad() >> []
+            getRequest() >> request
+            getResponse() >> response
+            run(_, _) >> GruContext.EMPTY
+        }
+        Gru gru = Gru.create(client)
+        gru.prepare(expectedBaseUri)
+        when:
+        gru.verify() {
+            baseUri notExpectedBaseUri
+            get '/foo/bar'
+        }
+        gru.close()
+        then:
+        1 * request.setBaseUri(expectedBaseUri)
     }
 
 }

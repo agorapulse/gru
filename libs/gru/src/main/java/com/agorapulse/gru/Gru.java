@@ -24,6 +24,8 @@ import com.agorapulse.gru.minions.Minion;
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -65,15 +67,25 @@ public class Gru implements Closeable {
     /**
      * Prepare every test with following configuration.
      *
+     * @deprecated Use <code>prepare(GlobalConfiguration.GlobalConfigurationBuilder builder)</code> instead
      * @param configuration configuration applied to every feature method
      * @return self
      */
+    @Deprecated
     public final Gru prepare(Consumer<TestDefinitionBuilder> configuration
     ) {
         this.configurations.add(configuration);
         return this;
     }
 
+    public final Gru prepare(GlobalConfiguration.GlobalConfigurationBuilder builder) {
+        return prepare(builder.build());
+    }
+
+    public final Gru prepare(GlobalConfiguration configuration) {
+        this.configuration = configuration;
+        return this;
+    }
 
     /**
      * Prepare tests with given base URI.
@@ -82,8 +94,7 @@ public class Gru implements Closeable {
      * @return self
      */
     public final Gru prepare(String baseUri) {
-        this.configurations.add(c -> c.baseUri(baseUri));
-        return this;
+        return prepare(GlobalConfiguration.defaults().withBaseUri(baseUri));
     }
 
     /**
@@ -149,6 +160,15 @@ public class Gru implements Closeable {
         }
 
         expectation.accept(builder);
+
+        String baseUri = Optional.ofNullable(this.configuration.getBaseUri())
+            .filter(uri -> Objects.nonNull(uri) && uri.length() > 0)
+            .orElse(null);
+
+
+        if (Objects.nonNull(baseUri)) {
+            builder.baseUri(baseUri);
+        }
 
         checkExpectationsPresent();
 
@@ -249,4 +269,10 @@ public class Gru implements Closeable {
      * IF test method has been called
      */
     private boolean definition;
+
+    /**
+     * Global Configurations
+     */
+    private GlobalConfiguration configuration = GlobalConfiguration.defaults()
+        .build();
 }
