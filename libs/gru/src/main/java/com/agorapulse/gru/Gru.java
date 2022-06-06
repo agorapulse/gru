@@ -110,7 +110,7 @@ public class Gru implements Closeable {
             }
         }
 
-        reset();
+        reset(false);
     }
 
     /**
