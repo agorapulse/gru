@@ -21,17 +21,26 @@ import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.http.Http;
 import org.springframework.beans.factory.InjectionPoint;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 
+import java.util.Optional;
+
 @Configuration
+@ConditionalOnWebApplication
 public class GruIntegrationTestConfiguration {
 
+    @ConditionalOnMissingBean(Gru.class)
     @Bean(destroyMethod = "close")
     @Scope("prototype")
-    public static Gru gru(@Value("${local.server.port}") int serverPort, InjectionPoint injectionPoint) {
-        return Gru.create(Http.create(injectionPoint.getMember().getDeclaringClass())).prepare("http://localhost:" + serverPort);
+    public static Gru gru(@Value("${local.server.port:#{null}}") Optional<Integer> maybePort, InjectionPoint injectionPoint) {
+        Gru result = Gru.create(Http.create(injectionPoint.getMember().getDeclaringClass()));
+
+        return maybePort.map(serverPort -> result.prepare("http://localhost:" + serverPort))
+            .orElse(result);
     }
 
 }
