@@ -22,9 +22,10 @@ import com.agorapulse.gru.minions.Minion;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import org.hamcrest.Matcher;
+import org.hamcrest.Matchers;
 import org.intellij.lang.annotations.Language;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -155,11 +156,18 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param additionalHeaders additional HTTP headers which are expected to be returned after action execution
      * @return self
      */
-    ResponseDefinitionBuilder headers(Map<String, String> additionalHeaders);
+    default ResponseDefinitionBuilder headers(Map<String, String> additionalHeaders) {
+        additionalHeaders
+            .forEach((k, v) -> header(k, Matchers.equalToIgnoringCase(v)));
+
+        return this;
+    }
 
     default ResponseDefinitionBuilder header(@Language("http-header-reference") String name, String value) {
-        return headers(Collections.singletonMap(name, value));
+        return header(name, Matchers.equalToIgnoringCase(value));
     }
+
+    ResponseDefinitionBuilder header(@Language("http-header-reference") String name, Matcher<String> matcher);
 
     /**
      * Sets the expected redirection URI.

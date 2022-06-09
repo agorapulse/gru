@@ -28,9 +28,8 @@ import com.agorapulse.gru.minions.Minion;
 import com.agorapulse.gru.minions.TextMinion;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import org.hamcrest.Matcher;
 
-import java.util.ArrayList;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -112,18 +111,11 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
         return command(JsonMinion.class, minion -> minion.setJsonUnitConfiguration(additionalConfiguration));
     }
 
-    /**
-     * Adds HTTP headers which are expected to be returned after action execution.
-     *
-     * @param additionalHeaders additional HTTP headers which are expected to be returned after action execution
-     * @return self
-     */
-    public DefaultResponseDefinitionBuilder headers(final Map<String, String> additionalHeaders) {
-        return command(HttpMinion.class, minion ->
-            additionalHeaders.forEach((key, value) ->
-                minion.getResponseHeaders().computeIfAbsent(key, k -> new ArrayList<>()).add(value)
-            )
-        );
+    @Override
+    public ResponseDefinitionBuilder header(String name, Matcher<String> matcher) {
+        return command(HttpMinion.class, minion -> {
+            minion.putHeaderMatcher(name, matcher);
+        });
     }
 
     /**

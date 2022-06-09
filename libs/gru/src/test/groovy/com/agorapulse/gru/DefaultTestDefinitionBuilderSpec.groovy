@@ -17,6 +17,8 @@
  */
 package com.agorapulse.gru
 
+import com.agorapulse.gru.minions.HttpMinion
+import org.hamcrest.Matchers
 import spock.lang.Specification
 import spock.lang.Unroll
 
@@ -63,6 +65,34 @@ class DefaultTestDefinitionBuilderSpec extends Specification {
             method << HttpVerbsShortcuts.fields.findAll {
                 Modifier.isStatic(it.modifiers) && Modifier.isFinal(it.modifiers) && it.type == String
             } *.name
+    }
+
+    void "multi header response is matched"() {
+        given:
+        String expectedHeader = "X-Foo"
+
+        Client.Request request = Mock(Client.Request)
+        Client.Response response = Mock(Client.Response)
+
+        Client client = Mock(Client) {
+            getInitialSquad() >> []
+            getRequest() >> request
+            getResponse() >> response
+        }
+
+        response.getHeaders(expectedHeader) >> ["Bar", "Baz"]
+        Gru gru = Gru.create(client)
+
+        when:
+        gru.verify {
+            get '/foo/bar'
+            expect {
+                header(expectedHeader, Matchers.equalToIgnoringCase("Bar"))
+                header(expectedHeader, Matchers.equalToIgnoringCase("Baz"))
+            }
+        }
+        then:
+        noExceptionThrown()
     }
 
 }
