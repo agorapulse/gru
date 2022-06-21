@@ -158,13 +158,13 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      */
     default ResponseDefinitionBuilder headers(Map<String, String> additionalHeaders) {
         additionalHeaders
-            .forEach((k, v) -> header(k, Matchers.equalToIgnoringCase(v)));
+            .forEach((k, v) -> header(k, Matchers.equalTo(v)));
 
         return this;
     }
 
     default ResponseDefinitionBuilder header(@Language("http-header-reference") String name, String value) {
-        return header(name, Matchers.equalToIgnoringCase(value));
+        return header(name, Matchers.equalTo(value));
     }
 
     ResponseDefinitionBuilder header(@Language("http-header-reference") String name, Matcher<String> matcher);

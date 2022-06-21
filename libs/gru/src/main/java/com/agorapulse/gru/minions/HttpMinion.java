@@ -34,8 +34,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 import java.util.stream.Collectors;
 
 /**
@@ -48,10 +46,8 @@ public class HttpMinion extends AbstractMinion<Client> {
     private Set<Integer> statuses = Collections.singleton(DEFAULT_STATUS);
     private final Map<String, Collection<String>> requestHeaders = new LinkedHashMap<>();
     private final Map<String, Collection<String>> responseHeaders = new LinkedHashMap<>();
-    private final ConcurrentMap<String, Collection<Matcher<String>>> responseHeaderMatchers = new ConcurrentHashMap<>();
+    private final Map<String, Collection<Matcher<String>>> responseHeaderMatchers = new LinkedHashMap<>();
     private String redirectUri;
-
-    private final Object _lock = new Object();
 
     public HttpMinion() {
         super(Client.class);
@@ -135,12 +131,10 @@ public class HttpMinion extends AbstractMinion<Client> {
     }
 
     public Map<String, Collection<Matcher<String>>> putHeaderMatcher(String name, Matcher<String> matcher) {
-        synchronized (_lock) {
-            Collection<Matcher<String>> matchers = responseHeaderMatchers.getOrDefault(name, new LinkedList<>());
-            responseHeaderMatchers.put(name, matchers);
+        Collection<Matcher<String>> matchers = responseHeaderMatchers.getOrDefault(name, new LinkedList<>());
+        responseHeaderMatchers.put(name, matchers);
 
-            matchers.add(matcher);
-        }
+        matchers.add(matcher);
 
         return responseHeaderMatchers;
     }
