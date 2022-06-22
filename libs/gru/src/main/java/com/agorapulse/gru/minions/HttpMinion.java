@@ -20,8 +20,20 @@ package com.agorapulse.gru.minions;
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.GruContext;
 import com.agorapulse.gru.Squad;
+import org.hamcrest.Matcher;
+import org.hamcrest.StringDescription;
 
-import java.util.*;
+import java.text.MessageFormat;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 /**
@@ -34,6 +46,7 @@ public class HttpMinion extends AbstractMinion<Client> {
     private Set<Integer> statuses = Collections.singleton(DEFAULT_STATUS);
     private final Map<String, Collection<String>> requestHeaders = new LinkedHashMap<>();
     private final Map<String, Collection<String>> responseHeaders = new LinkedHashMap<>();
+    private final Map<String, Collection<Matcher<String>>> responseHeaderMatchers = new LinkedHashMap<>();
     private String redirectUri;
 
     public HttpMinion() {
@@ -66,14 +79,25 @@ public class HttpMinion extends AbstractMinion<Client> {
             }
         }
 
-        for (Map.Entry<String, Collection<String>> header : responseHeaders.entrySet()) {
-            Optional.ofNullable(header.getValue()).ifPresent(headers -> {
-                for (String value : headers) {
-                    if (!(client.getResponse().getHeaders(header.getKey()).contains(value))) {
-                        throw new AssertionError("Missing header " + header.getKey() + " with value " + value);
+        for (Map.Entry<String, Collection<Matcher<String>>> headerMatcher : responseHeaderMatchers.entrySet()) {
+            List<String> headerValues = client.getResponse().getHeaders(headerMatcher.getKey());
+            if (Objects.isNull(headerValues) || headerValues.isEmpty()) {
+                throw new AssertionError("Missing header " + headerMatcher.getKey());
+            }
+
+            headerMatcher.getValue()
+                .stream()
+                .allMatch(matcher -> {
+                    boolean matches = headerValues.stream().anyMatch(matcher::matches);
+                    if (!matches) {
+                        StringDescription description = new StringDescription();
+                        matcher.describeMismatch(headerValues, description);
+                        throw new AssertionError(MessageFormat
+                            .format("Header value mismatch {0}: {1}", headerMatcher.getKey(), description));
                     }
-                }
-            });
+
+                    return true;
+                });
         }
 
         if (redirectUri != null) {
@@ -104,6 +128,15 @@ public class HttpMinion extends AbstractMinion<Client> {
 
     public Map<String, Collection<String>> getResponseHeaders() {
         return responseHeaders;
+    }
+
+    public Map<String, Collection<Matcher<String>>> putHeaderMatcher(String name, Matcher<String> matcher) {
+        Collection<Matcher<String>> matchers = responseHeaderMatchers.getOrDefault(name, new LinkedList<>());
+        responseHeaderMatchers.put(name, matchers);
+
+        matchers.add(matcher);
+
+        return responseHeaderMatchers;
     }
 
     public void setRedirectUri(String redirectUri) {
