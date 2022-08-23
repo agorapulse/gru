@@ -73,7 +73,7 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             Class<?> clazz = Class.forName(className);
 
             if (RequestStreamHandler.class.isAssignableFrom(clazz)) {
-                return handleRequestStreamHandler(request, (Class<? extends RequestStreamHandler>) clazz);
+                return handleRequestStreamHandler(request, unitTest, (Class<? extends RequestStreamHandler>) clazz);
             }
 
             Method method = Arrays.stream(clazz.getMethods())
@@ -120,8 +120,8 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
             return outputStream.toString();
         }
 
-        private String handleRequestStreamHandler(ApiGatewayProxyRequest request, Class<? extends RequestStreamHandler> handlerClass) throws IllegalAccessException, InstantiationException, IOException {
-            RequestStreamHandler streamHandler = handlerClass.newInstance();
+        private String handleRequestStreamHandler(ApiGatewayProxyRequest request, Object unitTest, Class<? extends RequestStreamHandler> handlerClass) throws IllegalAccessException, InstantiationException, IOException {
+            RequestStreamHandler streamHandler = getOrCreateHandler(unitTest, handlerClass);
 
             ByteArrayInputStream bais = new ByteArrayInputStream(prepareRequestObject(request).getBytes());
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
