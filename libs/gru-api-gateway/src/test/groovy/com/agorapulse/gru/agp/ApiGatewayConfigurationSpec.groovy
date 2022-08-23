@@ -34,6 +34,8 @@ class ApiGatewayConfigurationSpec extends Specification {
     @SuppressWarnings('UnusedPrivateField')
     private final NonProxyHandler nonProxyHandler = new NonProxyHandler()
 
+    private final AnotherStreamingHandler anotherStreamingHandler = new AnotherStreamingHandler('ahoy')
+
     void 'sample handler'() {
         given:
             // tag::simple[]
@@ -209,6 +211,22 @@ class ApiGatewayConfigurationSpec extends Specification {
             gru.verify()
     }
 
+    void 'proxy to streaming field'() {
+        given:
+            Gru gru = Gru.create(ApiGatewayProxy.create {
+                map '/seven' to AnotherStreamingHandler
+            })
+        when:
+            gru.reset().test {
+                get '/seven'
+                expect {
+                    json 'seventhResponse.json'
+                }
+            }
+        then:
+            gru.verify()
+    }
+
 }
 
 class SampleHandler implements RequestHandler<Map, Map> {
@@ -255,5 +273,24 @@ class StreamingHandler implements RequestStreamHandler {
     void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
         ObjectMapper mapper = new ObjectMapper()
         mapper.writer().writeValue(output, [body: [input: mapper.readValue(input, Map)]])
+    }
+}
+
+class AnotherStreamingHandler implements RequestStreamHandler {
+
+    private final String message;
+
+    AnotherStreamingHandler() {
+        this('hello')
+    }
+
+    AnotherStreamingHandler(String message) {
+        this.message = message
+    }
+
+    @Override
+    void handleRequest(InputStream input, OutputStream output, Context context) throws IOException {
+        ObjectMapper mapper = new ObjectMapper()
+        mapper.writer().writeValue(output, [body: [message: message, input: mapper.readValue(input, Map)]])
     }
 }

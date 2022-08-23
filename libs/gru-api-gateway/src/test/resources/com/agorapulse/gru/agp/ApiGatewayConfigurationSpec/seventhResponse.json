@@ -1,0 +1,7 @@
+{
+  "message": "ahoy",
+  "input": {
+    "path": "/seven",
+    "httpMethod": "GET"
+  }
+}
