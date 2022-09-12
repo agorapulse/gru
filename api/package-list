@@ -10,6 +10,7 @@ com.agorapulse.gru.groovy
 com.agorapulse.gru.http
 com.agorapulse.gru.jsonunit
 com.agorapulse.gru.micronaut
+com.agorapulse.gru.micronaut.okhttp3
 com.agorapulse.gru.minions
 com.agorapulse.gru.spring
 com.agorapulse.gru.spring.groovy

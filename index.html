@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 1.2.3</span>
+<span id="revnumber">version 1.2.4</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -163,7 +163,7 @@ HTTP server framework.</p>
 }
 
 dependencies {
-    testImplementation platform('com.agorapulse:gru-bom::1.2.3')            <i class="conum" data-value="1"></i><b>(1)</b>
+    testImplementation platform('com.agorapulse:gru-bom::1.2.4')            <i class="conum" data-value="1"></i><b>(1)</b>
     // pick any of these as you need
     testImplementation 'com.agorapulse:gru-http'                                        <i class="conum" data-value="2"></i><b>(2)</b>
     testImplementation 'com.agorapulse:gru-grails'                                      <i class="conum" data-value="3"></i><b>(3)</b>
@@ -293,6 +293,18 @@ class HttpSpec extends Specification{
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
 <td>Execute HTTP GET request on <code>/wiki/Felonius_Gru</code> URI and verify it is accessible and returns <code>OK(200)</code> status code.</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+The timeouts are automatically increased to one hour when debug mode is detected.
+</td>
 </tr>
 </table>
 </div>
@@ -754,6 +766,18 @@ class AdvancedAutomaticMicronautSpec extends Specification {
 <tr>
 <td><i class="conum" data-value="5"></i><b>5</b></td>
 <td>The field can be automatically injected</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+You can further customize the creation of the underlying OkHttp client by implementing <code>MicronautGruConfiguration</code> interface.
+</td>
 </tr>
 </table>
 </div>
@@ -2653,8 +2677,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.2.3<br>
-Last updated 2022-08-23 11:08:22 UTC
+Version 1.2.4<br>
+Last updated 2022-09-12 07:50:18 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
