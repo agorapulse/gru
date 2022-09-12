@@ -23,7 +23,10 @@ import com.agorapulse.gru.Squad;
 import okhttp3.OkHttpClient;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
+
+import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 
 /**
  * Http Gru client preforms real HTTP calls against given URIs.
@@ -81,6 +84,10 @@ public class Http extends AbstractClient {
             configuration.accept(builder);
         }
 
+        if (isDebugMode()) {
+            increaseTimeouts(builder);
+        }
+
         httpClient = builder.build();
     }
 
@@ -113,6 +120,18 @@ public class Http extends AbstractClient {
         } catch (IOException e) {
             throw new AssertionError("Failed to execute request " + request, e);
         }
+    }
+
+    private void increaseTimeouts(OkHttpClient.Builder builder) {
+        builder
+            .callTimeout(1, TimeUnit.HOURS)
+            .connectTimeout(1, TimeUnit.HOURS)
+            .writeTimeout(1, TimeUnit.HOURS)
+            .readTimeout(1, TimeUnit.HOURS);
+    }
+
+    private boolean isDebugMode() {
+        return getRuntimeMXBean().getInputArguments().stream().anyMatch(arg -> arg.contains("-agentlib:jdwp"));
     }
 
 }
