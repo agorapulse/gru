@@ -60,6 +60,8 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=1
 <2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
 <3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
+TIP: The timeouts are automatically increased to one hour when debug mode is detected.
+
 === Micronaut
 
 Micronaut plays well with `@MicronautTest` annotation. If you are using `@MicronautTest` you can simply inject
@@ -140,6 +142,8 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutom
 <3> Customize the `ApplicationContext` itself, e.g. register mocks
 <4> Start the application and injects fields into the test automatically
 <5> The field can be automatically injected
+
+TIP: You can further customize the creation of the underlying OkHttp client by implementing `MicronautGruConfiguration` interface.
 
 === Grails
 
