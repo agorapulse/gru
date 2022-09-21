@@ -27,6 +27,7 @@ class UrlMappings {
         "/moons/params-to-json"(controller: "moon", action: "paramsToJson", method: HttpMethod.POST)
         "/moons/error"(controller: "moon", action: "exceptional")
         "/moons/upload"(controller: "moon", action: "postWithMessageAndImage")
+        "/moons/upload2"(controller: "moon", action: "postWithCommandObject")
         "/moons/cookie"(controller: "moon", action: "cookie")
         "/moons/setCookie"(controller: "moon", action: "setCookie")
 

@@ -592,6 +592,22 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
     }
     // end::fileUpload[]
 
+    void 'upload file with message using a command object'() {
+        expect:
+        gru.test {
+            post '/moons/upload2', {
+                upload {
+                    params message: 'Hello'
+                    file 'theFile', 'hello.txt', inline('Hello World'), 'text/plain'
+                }
+                executes controller.&postWithCommandObject
+            }
+            expect {
+                json 'uploadResult.json'
+            }
+        }
+    }
+
     // tag::cookies[]
     void 'send cookies'() {
         expect:

@@ -18,7 +18,6 @@
 package heist
 
 import grails.converters.JSON
-import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
@@ -132,6 +131,15 @@ class MoonController {
                 size: file.bytes.length,
                 contentType: file.contentType,
                 filename: file.originalFilename
+        ] as JSON)
+    }
+
+    def postWithCommandObject(MessageAndImageCommand command) {
+        render([
+                message: command.message,
+                size: command.theFile.bytes.length,
+                contentType: command.theFile.contentType,
+                filename: command.theFile.originalFilename
         ] as JSON)
     }
 
