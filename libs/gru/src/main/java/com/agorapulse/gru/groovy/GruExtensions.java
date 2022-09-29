@@ -214,7 +214,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.head(uri, ConsumerWithDelegate.create(definition));
@@ -224,7 +224,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.post(uri, ConsumerWithDelegate.create(definition));
@@ -235,7 +235,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.get(uri, ConsumerWithDelegate.create(definition));
@@ -246,7 +246,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.put(uri, ConsumerWithDelegate.create(definition));
@@ -256,7 +256,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.patch(uri, ConsumerWithDelegate.create(definition));
@@ -266,7 +266,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.delete(uri, ConsumerWithDelegate.create(definition));
@@ -276,7 +276,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.options(uri, ConsumerWithDelegate.create(definition));
@@ -286,7 +286,7 @@ public class GruExtensions {
         TestDefinitionBuilder self,
         @Language("HTTP Request") String uri,
         @DelegatesTo(value = RequestDefinitionBuilder.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.ResponseDefinitionBuilder")
+        @ClosureParams(value = SimpleType.class, options = "com.agorapulse.gru.RequestDefinitionBuilder")
         Closure<RequestDefinitionBuilder> definition
     ) {
         return self.trace(uri, ConsumerWithDelegate.create(definition));
