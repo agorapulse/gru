@@ -222,7 +222,7 @@
 <a class="jxr_linenumber" name="L214" href="#L214">214</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L215" href="#L215">215</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L216" href="#L216">216</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L217" href="#L217">217</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L217" href="#L217">217</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L218" href="#L218">218</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L219" href="#L219">219</a>     ) {
 <a class="jxr_linenumber" name="L220" href="#L220">220</a>         <strong class="jxr_keyword">return</strong> self.head(uri, ConsumerWithDelegate.create(definition));
@@ -232,7 +232,7 @@
 <a class="jxr_linenumber" name="L224" href="#L224">224</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L225" href="#L225">225</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L226" href="#L226">226</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L227" href="#L227">227</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L227" href="#L227">227</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L228" href="#L228">228</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L229" href="#L229">229</a>     ) {
 <a class="jxr_linenumber" name="L230" href="#L230">230</a>         <strong class="jxr_keyword">return</strong> self.post(uri, ConsumerWithDelegate.create(definition));
@@ -243,7 +243,7 @@
 <a class="jxr_linenumber" name="L235" href="#L235">235</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L236" href="#L236">236</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L237" href="#L237">237</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L238" href="#L238">238</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L238" href="#L238">238</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L239" href="#L239">239</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L240" href="#L240">240</a>     ) {
 <a class="jxr_linenumber" name="L241" href="#L241">241</a>         <strong class="jxr_keyword">return</strong> self.get(uri, ConsumerWithDelegate.create(definition));
@@ -254,7 +254,7 @@
 <a class="jxr_linenumber" name="L246" href="#L246">246</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L247" href="#L247">247</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L248" href="#L248">248</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L249" href="#L249">249</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L249" href="#L249">249</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L250" href="#L250">250</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L251" href="#L251">251</a>     ) {
 <a class="jxr_linenumber" name="L252" href="#L252">252</a>         <strong class="jxr_keyword">return</strong> self.put(uri, ConsumerWithDelegate.create(definition));
@@ -264,7 +264,7 @@
 <a class="jxr_linenumber" name="L256" href="#L256">256</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L257" href="#L257">257</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L258" href="#L258">258</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L259" href="#L259">259</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L259" href="#L259">259</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L260" href="#L260">260</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L261" href="#L261">261</a>     ) {
 <a class="jxr_linenumber" name="L262" href="#L262">262</a>         <strong class="jxr_keyword">return</strong> self.patch(uri, ConsumerWithDelegate.create(definition));
@@ -274,7 +274,7 @@
 <a class="jxr_linenumber" name="L266" href="#L266">266</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L267" href="#L267">267</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L268" href="#L268">268</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L269" href="#L269">269</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L269" href="#L269">269</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L270" href="#L270">270</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L271" href="#L271">271</a>     ) {
 <a class="jxr_linenumber" name="L272" href="#L272">272</a>         <strong class="jxr_keyword">return</strong> self.delete(uri, ConsumerWithDelegate.create(definition));
@@ -284,7 +284,7 @@
 <a class="jxr_linenumber" name="L276" href="#L276">276</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L277" href="#L277">277</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L278" href="#L278">278</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L279" href="#L279">279</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L279" href="#L279">279</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L280" href="#L280">280</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L281" href="#L281">281</a>     ) {
 <a class="jxr_linenumber" name="L282" href="#L282">282</a>         <strong class="jxr_keyword">return</strong> self.options(uri, ConsumerWithDelegate.create(definition));
@@ -294,7 +294,7 @@
 <a class="jxr_linenumber" name="L286" href="#L286">286</a>         <a name="TestDefinitionBuilder" href="../../../../com/agorapulse/gru/TestDefinitionBuilder.html#TestDefinitionBuilder">TestDefinitionBuilder</a> self,
 <a class="jxr_linenumber" name="L287" href="#L287">287</a>         @Language(<span class="jxr_string">"HTTP Request"</span>) String uri,
 <a class="jxr_linenumber" name="L288" href="#L288">288</a>         @DelegatesTo(value = RequestDefinitionBuilder.<strong class="jxr_keyword">class</strong>, strategy = Closure.DELEGATE_FIRST)
-<a class="jxr_linenumber" name="L289" href="#L289">289</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.ResponseDefinitionBuilder"</span>)
+<a class="jxr_linenumber" name="L289" href="#L289">289</a>         @ClosureParams(value = SimpleType.<strong class="jxr_keyword">class</strong>, options = <span class="jxr_string">"com.agorapulse.gru.RequestDefinitionBuilder"</span>)
 <a class="jxr_linenumber" name="L290" href="#L290">290</a>         Closure&lt;RequestDefinitionBuilder&gt; definition
 <a class="jxr_linenumber" name="L291" href="#L291">291</a>     ) {
 <a class="jxr_linenumber" name="L292" href="#L292">292</a>         <strong class="jxr_keyword">return</strong> self.trace(uri, ConsumerWithDelegate.create(definition));
