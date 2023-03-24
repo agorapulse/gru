@@ -18,23 +18,36 @@
 package heist;
 
 import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.micronaut.Micronaut;
+import com.agorapulse.gru.minions.AbstractContentMinion;
+import com.agorapulse.gru.minions.JsonMinion;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import javax.inject.Inject;
 
-@MicronautTest                                                                          // <1>
-public class InjectNativeMicronautTest {
+@MicronautTest
+public class CaptureResultTest {
 
-    @Inject Gru gru;                                                                    // <2>
+    @Inject Gru gru;
 
+    // tag::extractResponseText[]
     @Test
     public void testGet() throws Throwable {
-        gru.verify(test -> test
+        gru.test(test -> test                                                           // <1>
             .get("/moons/earth/moon")
             .expect(response -> response.json("moon.json"))
         );
+
+        gru.verify();                                                                   // <2>
+
+        String responseText = gru.getSquad()
+            .ask(JsonMinion.class, AbstractContentMinion::getResponseText);             // <3>
+
+        Assertions.assertTrue(responseText.contains("moon"));                           // <4>
+
+        gru.close();                                                                    // <5>
     }
+    // end::extractResponseText[]
 
 }

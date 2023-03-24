@@ -18,43 +18,36 @@
 package heist
 
 import com.agorapulse.gru.Gru
-import com.agorapulse.gru.micronaut.Micronaut
-import heist.micronaut.Moon
-import heist.micronaut.MoonService
-import io.micronaut.context.env.Environment
+import com.agorapulse.gru.minions.JsonMinion
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
 
-class AdvancedAutomaticMicronautSpec extends Specification {
+@MicronautTest
+class CaptureResultSpec extends Specification {
 
-    MoonService moonService = Mock()                                                    // <1>
+    @Inject @AutoCleanup Gru gru
 
-    @AutoCleanup Gru gru = Gru.create(
-        Micronaut.build(this) {
-            environments 'my-custom-env'                                                // <2>
-        }.then {
-            registerSingleton(MoonService, moonService)                                 // <3>
-        }.start()                                                                       // <4>
-    )
-
-    @Inject Environment environment                                                     // <5>
-
+    // tag::extractResponseText[]
     void 'test it works'() {
-        expect:
-            'my-custom-env' in environment.activeNames
-        when:
+        when:                                                                           // <1>
             gru.test {
                 get '/moons/earth/moon'
                 expect {
                     json 'moon.json'
                 }
             }
-        then:
-            gru.verify()
 
-            1 * moonService.get('earth', 'moon') >> new Moon('earth', 'moon')
+        then:
+            gru.verify()                                                                // <2>
+
+        when:
+            String responseText = gru.squad.ask(JsonMinion) { responseText }            // <3>
+        then:
+            responseText.contains('moon')                                               // <4>
     }
+    // end::extractResponseText[]
 
 }

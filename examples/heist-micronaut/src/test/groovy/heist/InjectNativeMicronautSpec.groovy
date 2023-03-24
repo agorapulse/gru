@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2022 Agorapulse.
+ * Copyright 2018-2023 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package heist
 
 import com.agorapulse.gru.Gru
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -26,7 +27,7 @@ import javax.inject.Inject
 @MicronautTest                                                                          // <1>
 class InjectNativeMicronautSpec extends Specification {
 
-    @Inject Gru gru                                                                     // <2>
+    @Inject @AutoCleanup Gru gru                                                        // <2>
 
     void 'test it works'() {
         expect:
