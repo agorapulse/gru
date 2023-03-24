@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 1.2.5</span>
+<span id="revnumber">version 1.3.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -163,7 +163,7 @@ HTTP server framework.</p>
 }
 
 dependencies {
-    testImplementation platform('com.agorapulse:gru-bom::1.2.5')            <i class="conum" data-value="1"></i><b>(1)</b>
+    testImplementation platform('com.agorapulse:gru-bom::1.3.0')            <i class="conum" data-value="1"></i><b>(1)</b>
     // pick any of these as you need
     testImplementation 'com.agorapulse:gru-http'                                        <i class="conum" data-value="2"></i><b>(2)</b>
     testImplementation 'com.agorapulse:gru-grails'                                      <i class="conum" data-value="3"></i><b>(3)</b>
@@ -262,12 +262,11 @@ public class HttpTest {
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.http.Http
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class HttpSpec extends Specification{
 
-    @AutoCleanup Gru gru = Gru.create(Http.create(this))                                <i class="conum" data-value="1"></i><b>(1)</b>
+    Gru gru = Gru.create(Http.create(this))                                             <i class="conum" data-value="1"></i><b>(1)</b>
                                     .prepare('https://despicableme.fandom.com')         <i class="conum" data-value="2"></i><b>(2)</b>
 
     void 'despicable me'() {
@@ -284,7 +283,7 @@ class HttpSpec extends Specification{
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td><code>Gru</code> initialized with the specification object must be closed after each execution which can be done with @AutoCleanup annotation</td>
+<td><code>Gru</code> initialized with the specification object</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
@@ -454,14 +453,13 @@ public class AutomaticMicronautTest {
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.micronaut.Micronaut
 import io.micronaut.context.env.Environment
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 class AutomaticMicronautSpec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this))                           <i class="conum" data-value="1"></i><b>(1)</b>
+    Gru gru = Gru.create(Micronaut.create(this))                                        <i class="conum" data-value="1"></i><b>(1)</b>
 
     @Inject Environment environment                                                     <i class="conum" data-value="2"></i><b>(2)</b>
 
@@ -569,7 +567,7 @@ import spock.lang.Specification
 
 class ManualWithSimpleProviderMicronautSpec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this) { context })               <i class="conum" data-value="1"></i><b>(1)</b>
+    Gru gru = Gru.create(Micronaut.create(this) { context })                            <i class="conum" data-value="1"></i><b>(1)</b>
 
     @AutoCleanup ApplicationContext context
     @AutoCleanup EmbeddedServer embeddedServer
@@ -707,7 +705,6 @@ import com.agorapulse.gru.micronaut.Micronaut
 import heist.micronaut.Moon
 import heist.micronaut.MoonService
 import io.micronaut.context.env.Environment
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -716,7 +713,7 @@ class AdvancedAutomaticMicronautSpec extends Specification {
 
     MoonService moonService = Mock()                                                    <i class="conum" data-value="1"></i><b>(1)</b>
 
-    @AutoCleanup Gru gru = Gru.create(
+    Gru gru = Gru.create(
         Micronaut.build(this) {
             environments 'my-custom-env'                                                <i class="conum" data-value="2"></i><b>(2)</b>
         }.then {
@@ -796,12 +793,11 @@ Gru steals a lot from <a href="https://testing.grails.org/latest/guide/index.htm
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import grails.testing.web.controllers.ControllerUnitTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class BasicSpec extends Specification implements ControllerUnitTest&lt;MoonController&gt; {   <i class="conum" data-value="1"></i><b>(1)</b>
 
-    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {                    <i class="conum" data-value="2"></i><b>(2)</b>
+    Gru gru = Gru.create(Grails.create(this)).prepare {                                 <i class="conum" data-value="2"></i><b>(2)</b>
         include UrlMappings                                                             <i class="conum" data-value="3"></i><b>(3)</b>
     }
 
@@ -826,7 +822,7 @@ class BasicSpec extends Specification implements ControllerUnitTest&lt;MoonContr
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td><code>Gru</code> initialized with the specification object must be closed after each execution which can be done with @AutoCleanup annotation</td>
+<td><code>Gru</code> initialized with the specification object</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
@@ -943,7 +939,6 @@ import com.agorapulse.gru.spring.Spring
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 @WebMvcTest                                                                             <i class="conum" data-value="1"></i><b>(1)</b>
@@ -951,7 +946,7 @@ class BasicSpec extends Specification {
 
     @Autowired MockMvc mvc                                                              <i class="conum" data-value="2"></i><b>(2)</b>
 
-    @AutoCleanup Gru gru = Gru.create(Spring.create(this))                              <i class="conum" data-value="3"></i><b>(3)</b>
+    Gru gru = Gru.create(Spring.create(this))                                           <i class="conum" data-value="3"></i><b>(3)</b>
 
     void 'look at the moon'() {
         expect:
@@ -1868,6 +1863,100 @@ HTML support for Grails is currently experimental as it does not apply the layou
 </table>
 </div>
 </div>
+<div class="sect3">
+<h4 id="_capturing_text_response"><a class="anchor" href="#_capturing_text_response"></a>3.2.7. Capturing Text Response</h4>
+<div class="paragraph">
+<p>You can reach the response text from any content minion such as <code>JsonMinion</code> if you need
+to access the actual response.</p>
+</div>
+<div class="listingblock primary">
+<div class="title">Reading Response Text (Java)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="java">@Test
+public void testGet() throws Throwable {
+    gru.test(test -&gt; test                                                           <i class="conum" data-value="1"></i><b>(1)</b>
+        .get("/moons/earth/moon")
+        .expect(response -&gt; response.json("moon.json"))
+    );
+
+    gru.verify();                                                                   <i class="conum" data-value="2"></i><b>(2)</b>
+
+    String responseText = gru.getSquad()
+        .ask(JsonMinion.class, AbstractContentMinion::getResponseText);             <i class="conum" data-value="3"></i><b>(3)</b>
+
+    Assertions.assertTrue(responseText.contains("moon"));                           <i class="conum" data-value="4"></i><b>(4)</b>
+
+    gru.close();                                                                    <i class="conum" data-value="5"></i><b>(5)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>use <code>test</code> instead of <code>verify(Consumer)</code> to keep Gru&#8217;s internal state</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>use <code>verify</code> to perform the verification call and populate the response text</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>read the response text from <code>JsonMinion</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>make some assertion using the response text</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>don&#8217;t forget to close/reset the Gru instance manually</td>
+</tr>
+</table>
+</div>
+<div class="listingblock secondary">
+<div class="title">Reading Response Text (Groovy)</div>
+<div class="content">
+<pre class="prettyprint highlight"><code data-lang="groovy">void 'test it works'() {
+    when:                                                                           <i class="conum" data-value="1"></i><b>(1)</b>
+        gru.test {
+            get '/moons/earth/moon'
+            expect {
+                json 'moon.json'
+            }
+        }
+
+    then:
+        gru.verify()                                                                <i class="conum" data-value="2"></i><b>(2)</b>
+
+    when:
+        String responseText = gru.squad.ask(JsonMinion) { responseText }            <i class="conum" data-value="3"></i><b>(3)</b>
+    then:
+        responseText.contains('moon')                                               <i class="conum" data-value="4"></i><b>(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>split the verification call between <code>when</code> and <code>then</code> instead of <code>expect</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>use <code>verify</code> to perform the verification call and populate the response text</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>read the response text from <code>JsonMinion</code></td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>make some assertion using the response text</td>
+</tr>
+</table>
+</div>
+</div>
 </div>
 </div>
 </div>
@@ -1911,12 +2000,11 @@ the URIs. You can use just name of the class as string if your URL mappings resi
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import grails.testing.web.controllers.ControllerUnitTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class IncludeUrlMappingsSpec extends Specification implements ControllerUnitTest&lt;MoonController&gt; {
 
-    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
+    Gru gru = Gru.create(Grails.create(this)).prepare {
         include ApiUrlMappings                                                          <i class="conum" data-value="1"></i><b>(1)</b>
     }
 
@@ -1961,12 +2049,11 @@ You can add additional boolean <code>true</code> parameter to the include method
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import grails.testing.web.controllers.ControllerUnitTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class IncludeInterceptorSpec extends Specification implements ControllerUnitTest&lt;MoonController&gt; {
 
-    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
+    Gru gru = Gru.create(Grails.create(this)).prepare {
         include ApiUrlMappings
         include VectorInterceptor, true                                                 <i class="conum" data-value="1"></i><b>(1)</b>
     }
@@ -2096,7 +2183,7 @@ particular <code>MethodClosure</code> instance.</p>
 <pre class="prettyprint highlight"><code data-lang="groovy">@Value('${local.server.port}')
 Integer serverPort                                                                      <i class="conum" data-value="1"></i><b>(1)</b>
 
-@AutoCleanup Gru gru = Gru.create(Http.create(this))                                    <i class="conum" data-value="2"></i><b>(2)</b>
+Gru gru = Gru.create(Http.create(this))                                             <i class="conum" data-value="2"></i><b>(2)</b>
 
 void setup() {
     final String serverUrl = "http://localhost:${serverPort}"                           <i class="conum" data-value="3"></i><b>(3)</b>
@@ -2677,8 +2764,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.2.5<br>
-Last updated 2022-09-29 08:47:23 UTC
+Version 1.3.0<br>
+Last updated 2023-03-24 16:09:12 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
