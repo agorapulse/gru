@@ -19,7 +19,6 @@ package heist
 
 import com.agorapulse.gru.Gru
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -27,7 +26,7 @@ import javax.inject.Inject
 @MicronautTest                                                                          // <1>
 class InjectNativeMicronautSpec extends Specification {
 
-    @Inject @AutoCleanup Gru gru                                                        // <2>
+    @Inject Gru gru                                                                     // <2>
 
     void 'test it works'() {
         expect:

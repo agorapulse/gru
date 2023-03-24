@@ -56,7 +56,7 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/HttpTest.java[lines=18.
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=18..-1]
 ----
-<1> `Gru` initialized with the specification object must be closed after each execution which can be done with @AutoCleanup annotation
+<1> `Gru` initialized with the specification object
 <2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
 <3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
@@ -81,7 +81,7 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeM
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautSpec.groovy[lines=18..-1]
 ----
 <1> Annotate your test with `@MicronautTest`
-<2> Inject `Gru`, don't forget `@AutoCleanup` annotation
+<2> Inject `Gru`
 
 Alternatively, you can let `Gru` to create default `ApplicationContext` for you.
 
@@ -157,7 +157,7 @@ Gru steals a lot from link:https://testing.grails.org/latest/guide/index.html[Gr
 include::{root-dir}/examples/heist/src/test/groovy/heist/BasicSpec.groovy[lines=18..-1]
 ----
 <1> The only requirement for Grails integration is that specification must implement `ControllerUnitTest` trait
-<2> `Gru` initialized with the specification object must be closed after each execution which can be done with @AutoCleanup annotation
+<2> `Gru` initialized with the specification object
 <3> Include the appropriate `UrlMappings` so `Gru` knows which controller action should be executed
 <4> `Gru` executes action for `GET` request to URL `/moons/earth/moon` and verifies it does not throw any exception and
 it returns status `OK(200)`

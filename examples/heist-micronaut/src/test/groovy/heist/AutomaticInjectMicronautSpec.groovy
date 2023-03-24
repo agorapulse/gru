@@ -20,14 +20,13 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.micronaut.Micronaut
 import io.micronaut.context.env.Environment
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
 
 class AutomaticInjectMicronautSpec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.build(this).start())
+    Gru gru = Gru.create(Micronaut.build(this).start())
 
     @Inject Environment environment
 

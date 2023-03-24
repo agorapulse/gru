@@ -20,12 +20,11 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import grails.testing.web.controllers.ControllerUnitTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class UseNoMappingSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru gru = Gru.create(Grails.create(this))
+    Gru gru = Gru.create(Grails.create(this))
 
     void 'look at the moon'() {
         when:

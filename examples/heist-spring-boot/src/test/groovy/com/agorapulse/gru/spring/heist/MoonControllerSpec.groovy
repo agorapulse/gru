@@ -33,7 +33,7 @@ class MoonControllerSpec extends Specification {
 
     @Autowired MockMvc mvc
 
-    @AutoCleanup Gru gru = Gru.create(Spring.create(this))
+    Gru gru = Gru.create(Spring.create(this))
 
     // tag::mockmvc[]
     void 'json is rendered'() {

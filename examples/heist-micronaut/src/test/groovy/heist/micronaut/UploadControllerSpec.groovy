@@ -19,7 +19,6 @@ package heist.micronaut
 
 import com.agorapulse.gru.Gru
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -27,7 +26,7 @@ import javax.inject.Inject
 @MicronautTest
 class UploadControllerSpec extends Specification {
 
-    @AutoCleanup @Inject Gru gru
+    @Inject Gru gru
 
     void 'upload file'() {
         expect:

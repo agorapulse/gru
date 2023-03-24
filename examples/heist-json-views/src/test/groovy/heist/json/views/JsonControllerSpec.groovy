@@ -20,12 +20,11 @@ package heist.json.views
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import grails.testing.web.controllers.ControllerUnitTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class JsonControllerSpec extends Specification implements ControllerUnitTest<JsonController> {
 
-    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
+    Gru gru = Gru.create(Grails.create(this)).prepare {
         include UrlMappings
     }
 

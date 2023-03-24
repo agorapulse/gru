@@ -20,7 +20,6 @@ package heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.minions.JsonMinion
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -28,7 +27,7 @@ import javax.inject.Inject
 @MicronautTest
 class CaptureResultSpec extends Specification {
 
-    @Inject @AutoCleanup Gru gru
+    @Inject Gru gru
 
     // tag::extractResponseText[]
     void 'test it works'() {
