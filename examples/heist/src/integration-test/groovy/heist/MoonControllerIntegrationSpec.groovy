@@ -21,7 +21,6 @@ import com.agorapulse.gru.Gru
 import com.agorapulse.gru.http.Http
 import grails.testing.mixin.integration.Integration
 import org.springframework.beans.factory.annotation.Value
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -34,7 +33,7 @@ class MoonControllerIntegrationSpec extends Specification {
     @Value('${local.server.port}')
     Integer serverPort                                                                      // <1>
 
-    @AutoCleanup Gru gru = Gru.create(Http.create(this))                                    // <2>
+    Gru gru = Gru.create(Http.create(this))                                             // <2>
 
     void setup() {
         final String serverUrl = "http://localhost:${serverPort}"                           // <3>

@@ -49,7 +49,7 @@ public class Gru implements Closeable {
     /**
      * Creates Gru's instance for a given unit test.
      * <p>
-     * Typical usage is <code>@AutoCleanup Gru gru = Gru.create(this)</code>
+     * Typical usage is <code>Gru gru = Gru.create(this)</code>
      *
      * @param client unit test
      * @return new Gru instance using the current unit test

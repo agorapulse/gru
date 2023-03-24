@@ -20,13 +20,12 @@ package com.agorapulse.gru.spring.heist
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.spring.Spring
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 @WebMvcTest
 class MoonController4Spec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Spring.create(this))
+    Gru gru = Gru.create(Spring.create(this))
 
     void 'there is no mockmvc'() {
         when:

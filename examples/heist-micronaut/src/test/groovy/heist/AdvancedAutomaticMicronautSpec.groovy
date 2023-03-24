@@ -22,7 +22,6 @@ import com.agorapulse.gru.micronaut.Micronaut
 import heist.micronaut.Moon
 import heist.micronaut.MoonService
 import io.micronaut.context.env.Environment
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import javax.inject.Inject
@@ -31,7 +30,7 @@ class AdvancedAutomaticMicronautSpec extends Specification {
 
     MoonService moonService = Mock()                                                    // <1>
 
-    @AutoCleanup Gru gru = Gru.create(
+    Gru gru = Gru.create(
         Micronaut.build(this) {
             environments 'my-custom-env'                                                // <2>
         }.then {

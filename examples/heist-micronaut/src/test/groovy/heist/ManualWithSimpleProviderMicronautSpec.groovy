@@ -26,7 +26,7 @@ import spock.lang.Specification
 
 class ManualWithSimpleProviderMicronautSpec extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this) { context })               // <1>
+    Gru gru = Gru.create(Micronaut.create(this) { context })                            // <1>
 
     @AutoCleanup ApplicationContext context
     @AutoCleanup EmbeddedServer embeddedServer

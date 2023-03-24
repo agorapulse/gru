@@ -22,7 +22,6 @@ import com.agorapulse.gru.spring.Spring
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 @WebMvcTest                                                                             // <1>
@@ -30,7 +29,7 @@ class BasicSpec extends Specification {
 
     @Autowired MockMvc mvc                                                              // <2>
 
-    @AutoCleanup Gru gru = Gru.create(Spring.create(this))                              // <3>
+    Gru gru = Gru.create(Spring.create(this))                                           // <3>
 
     void 'look at the moon'() {
         expect:

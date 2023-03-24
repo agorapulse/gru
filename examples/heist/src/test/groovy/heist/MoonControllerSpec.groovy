@@ -29,7 +29,6 @@ import grails.testing.web.controllers.ControllerUnitTest
 import groovy.transform.NotYetImplemented
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.ModelAndView
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 /**
@@ -37,7 +36,7 @@ import spock.lang.Specification
  */
 class MoonControllerSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
+    Gru gru = Gru.create(Grails.create(this)).prepare {
         include UrlMappings
     }
 

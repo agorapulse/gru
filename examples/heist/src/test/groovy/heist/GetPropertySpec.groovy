@@ -21,14 +21,13 @@ import com.agorapulse.gru.Gru
 import com.agorapulse.gru.grails.Grails
 import grails.testing.web.controllers.ControllerUnitTest
 import groovy.transform.CompileStatic
-import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 class GetPropertySpec extends Specification
     implements ControllerUnitTest<MoonController> {
 
-    @AutoCleanup Gru gru = Gru.create(Grails.create(this)).prepare {
+    Gru gru = Gru.create(Grails.create(this)).prepare {
         include UrlMappings
     }
 

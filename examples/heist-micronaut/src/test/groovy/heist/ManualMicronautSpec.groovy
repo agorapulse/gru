@@ -27,7 +27,7 @@ import spock.lang.Specification
 
 class ManualMicronautSpec extends Specification implements ApplicationContextProvider {
 
-    @AutoCleanup Gru gru = Gru.create(Micronaut.create(this))
+    Gru gru = Gru.create(Micronaut.create(this))
 
     @AutoCleanup ApplicationContext applicationContext
     @AutoCleanup EmbeddedServer embeddedServer

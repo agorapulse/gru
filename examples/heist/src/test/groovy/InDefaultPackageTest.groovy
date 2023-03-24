@@ -17,14 +17,13 @@
  */
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.http.Http
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import java.util.concurrent.TimeUnit
 
 class InDefaultPackageTest extends Specification {
 
-    @AutoCleanup Gru gru = Gru.create(Http.create {
+    Gru gru = Gru.create(Http.create {
         readTimeout(10, TimeUnit.SECONDS)
     }).prepare('https://despicableme.fandom.com')
 

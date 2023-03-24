@@ -23,7 +23,6 @@ import com.agorapulse.gru.spring.minions.ResultMatcherMinion
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
@@ -33,7 +32,7 @@ class MoonController5Spec extends Specification {
 
     @Autowired MockMvc mvc
 
-    @AutoCleanup Gru gru = Gru.create(Spring.create(this))
+    Gru gru = Gru.create(Spring.create(this))
                                       .engage(new ResultMatcherMinion())
                                       .engage(new NastyMinion())
 

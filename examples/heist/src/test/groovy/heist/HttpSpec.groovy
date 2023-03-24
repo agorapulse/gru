@@ -19,12 +19,11 @@ package heist
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.http.Http
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 class HttpSpec extends Specification{
 
-    @AutoCleanup Gru gru = Gru.create(Http.create(this))                                // <1>
+    Gru gru = Gru.create(Http.create(this))                                             // <1>
                                     .prepare('https://despicableme.fandom.com')         // <2>
 
     void 'despicable me'() {

@@ -22,7 +22,6 @@ import com.agorapulse.gru.spring.Spring
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
 import org.springframework.test.web.servlet.MockMvc
-import spock.lang.AutoCleanup
 import spock.lang.Specification
 
 @WebMvcTest
@@ -32,7 +31,7 @@ class MoonController3Spec extends Specification {
 
     @Autowired MockMvc whatever
 
-    @AutoCleanup Gru gru = Gru.create(Spring.create(this))
+    Gru gru = Gru.create(Spring.create(this))
 
     void 'use Gru for testing'() {
         expect:
