@@ -81,7 +81,7 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeM
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautSpec.groovy[lines=18..-1]
 ----
 <1> Annotate your test with `@MicronautTest`
-<2> Inject `Gru`
+<2> Inject `Gru`, don't forget `@AutoCleanup` annotation
 
 Alternatively, you can let `Gru` to create default `ApplicationContext` for you.
 
@@ -572,6 +572,33 @@ include::{root-dir}/examples/heist/src/test/resources/heist/MoonControllerSpec/h
 
 [WARNING]
 HTML support for Grails is currently experimental as it does not apply the layouts.
+
+
+==== Capturing Text Response
+
+You can reach the response text from any content minion such as `JsonMinion` if you need
+to access the actual response.
+
+[source,java,indent=0,role="primary",subs='verbatim,attributes']
+.Reading Response Text (Java)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/CaptureResultTest.java[tag=extractResponseText,indent=0]
+----
+<1> use `test` instead of `verify(Consumer)` to keep Gru's internal state
+<2> use `verify` to perform the verification call and populate the response text
+<3> read the response text from `JsonMinion`
+<4> make some assertion using the response text
+<5> don't forget to close/reset the Gru instance manually
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Reading Response Text (Groovy)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/CaptureResultSpec.groovy[tag=extractResponseText,indent=0]
+----
+<1> split the verification call between `when` and `then` instead of `expect`
+<2> use `verify` to perform the verification call and populate the response text
+<3> read the response text from `JsonMinion`
+<4> make some assertion using the response text
 
 == Grails Unit Test Interactions
 On top of standard HTTP interaction, Gru provides additional methods specific for Grails only.

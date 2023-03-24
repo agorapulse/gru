@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2022 Agorapulse.
+ * Copyright 2018-2023 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -97,6 +97,18 @@ public class Gru implements Closeable {
         return this;
     }
 
+    /**
+     * Returns the current {@link Squad}.
+     * <p>
+     * New squad is created after each call to {@link #close()} or {@link #reset()} methods that
+     * are called automatically after {@link #verify(Consumer)} method. Use {@link #test(Consumer)} and {@link #verify()} separately if you need
+     * to access the squad.
+     *
+     * @return the current {@link Squad}
+     */
+    public Squad getSquad() {
+        return squad;
+    }
 
     /**
      * Checks if the expectations has been verified and resets the internal state.

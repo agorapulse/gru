@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2022 Agorapulse.
+ * Copyright 2018-2023 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ public abstract class AbstractContentMinion<C extends Client> extends AbstractMi
     public static final String ENVIRONMENT_VARIABLE_REWRITE_RESOURCES = "COM_AGORAPULSE_GRU_REWRITE";
     public static final String SYSTEM_PROPERTY_REWRITE_RESOURCES = "com.agorapulse.gru.rewrite";
     private Content responseContent;
+    private String responseText;
     private final boolean rewrite;
     protected final List<Content> createdResources = new ArrayList<>();
 
@@ -52,7 +53,7 @@ public abstract class AbstractContentMinion<C extends Client> extends AbstractMi
         if (responseContent != null) {
             final InputStream is = responseContent.load(client);
             String expectedResponseText = is == null ? null : ContentUtils.getText(is);
-            String responseText = readResponseText(client, squad, context);
+            responseText = readResponseText(client, squad, context);
 
             if (expectedResponseText == null && responseText != null) {
                 expectedResponseText = responseText;
@@ -85,6 +86,10 @@ public abstract class AbstractContentMinion<C extends Client> extends AbstractMi
 
     public Content getResponseContent() {
         return responseContent;
+    }
+
+    public String getResponseText() {
+        return responseText;
     }
 
     public void setResponseContent(Content responseContent) {
