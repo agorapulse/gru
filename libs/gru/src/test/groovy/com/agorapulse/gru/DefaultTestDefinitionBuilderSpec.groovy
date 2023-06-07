@@ -72,12 +72,15 @@ class DefaultTestDefinitionBuilderSpec extends Specification {
         String expectedHeader = "X-Foo"
 
         Client.Request request = Mock(Client.Request)
-        Client.Response response = Mock(Client.Response)
+        Client.Response response = Mock(Client.Response) {
+            getStatus() >> 200
+        }
 
         Client client = Mock(Client) {
             getInitialSquad() >> []
             getRequest() >> request
             getResponse() >> response
+            run(_,_) >> { args -> args[1]}
         }
 
         response.getHeaders(expectedHeader) >> ["Bar", "Baz"]

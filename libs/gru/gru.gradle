@@ -24,6 +24,7 @@ dependencies {
     api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    implementation 'org.hamcrest:hamcrest:2.2'
 
     compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
     compileOnly 'org.jetbrains:annotations:13.0'

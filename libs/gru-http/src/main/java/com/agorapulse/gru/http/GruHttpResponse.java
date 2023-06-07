@@ -18,6 +18,7 @@
 package com.agorapulse.gru.http;
 
 import com.agorapulse.gru.Client;
+import com.agorapulse.gru.cookie.Cookie;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 
@@ -48,6 +49,9 @@ class GruHttpResponse implements Client.Response {
 
     @Override
     public List<String> getHeaders(String name) {
+        if (response.priorResponse() != null && response.priorResponse().isRedirect()) {
+            return response.priorResponse().headers(name);
+        }
         return response.headers(name);
     }
 
@@ -67,4 +71,12 @@ class GruHttpResponse implements Client.Response {
         return priorResponse == null ? null : priorResponse.header("Location");
     }
 
+    @Override
+    public List<Cookie> getCookies() {
+        if (response.priorResponse() != null &&
+            response.priorResponse().isRedirect()) {
+            return Cookie.parseAll(response.priorResponse().headers("Set-Cookie"));
+        }
+        return Client.Response.super.getCookies();
+    }
 }
