@@ -23,7 +23,6 @@ dependencies {
     compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 
     testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion"
-    testImplementation 'javax.activation:activation:1.1.1'
     testImplementation "io.undertow:undertow-core:$undertowVersion"
-    testImplementation 'org.slf4j:slf4j-nop:2.0.5'
+    testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
 }
