@@ -220,7 +220,15 @@ gradleProjects {
         dir('platforms') {
             config {
                 publishing {
-                    enabled = true
+                    // faulty for Java Platform projects
+                    enabled = false
+                }
+            }
+            publishing {
+                publications {
+                    main(MavenPublication) {
+                        from components.javaPlatform
+                    }
                 }
             }
         }
