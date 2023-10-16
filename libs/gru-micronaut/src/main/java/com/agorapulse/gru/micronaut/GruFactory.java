@@ -25,7 +25,7 @@ import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 
-import javax.inject.Singleton;
+import jakarta.inject.Singleton;
 import java.util.List;
 
 /**
@@ -40,7 +40,7 @@ public class GruFactory {
     @Singleton
     @Bean(preDestroy = "close")
     @SuppressWarnings({"rawtypes", "unchecked"})
-    Gru gru(ApplicationContext context, List<MicronautGruConfiguration> httpConfiguration) {
+    public Gru gru(ApplicationContext context, List<MicronautGruConfiguration> httpConfiguration) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
         return Gru.create(
             Micronaut.createLazy(unitTest ->

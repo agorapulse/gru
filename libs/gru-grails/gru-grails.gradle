@@ -22,5 +22,5 @@ dependencies {
 
     implementation "org.codehaus.groovy:groovy:$groovyVersion"
 
-    compileOnly 'org.grails.plugins:views-json:2.0.4'
+    compileOnly 'org.grails.plugins:views-json:2.3.2'
 }

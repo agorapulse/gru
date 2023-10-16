@@ -143,7 +143,7 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      */
     public DefaultResponseDefinitionBuilder json(String relativePath, final Option option, final Option... options) {
         json(relativePath);
-        return json((a) -> a.when(option, options));
+        return json(a -> a.when(option, options));
     }
 
     @Override

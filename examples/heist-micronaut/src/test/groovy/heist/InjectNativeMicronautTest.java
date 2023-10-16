@@ -18,11 +18,10 @@
 package heist;
 
 import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.micronaut.Micronaut;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @MicronautTest                                                                          // <1>
 public class InjectNativeMicronautTest {

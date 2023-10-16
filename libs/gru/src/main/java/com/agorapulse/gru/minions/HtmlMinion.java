@@ -72,7 +72,7 @@ public class HtmlMinion extends AbstractContentMinion<Client> {
             .withTest(expectedSource)
             .withDifferenceEvaluator(DifferenceEvaluators.chain(DifferenceEvaluators.Default, (comparison, outcome) -> {
                 if (outcome.equals(ComparisonResult.DIFFERENT)) {
-                    if (comparison.getTestDetails().getValue().equals("${xml-unit.ignore}")) {
+                    if ("${xml-unit.ignore}".equals(comparison.getTestDetails().getValue())) {
                         return ComparisonResult.EQUAL;
                     }
 

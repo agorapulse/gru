@@ -17,7 +17,6 @@
  */
 package heist;
 
-import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.micronaut.Micronaut;
 import heist.micronaut.Moon;
@@ -25,7 +24,7 @@ import heist.micronaut.MoonService;
 import io.micronaut.context.env.Environment;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;

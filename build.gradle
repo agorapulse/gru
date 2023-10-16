@@ -148,7 +148,7 @@ subprojects {
     }
 }
 
-projects {
+gradleProjects {
     subprojects {
         dirs(['libs', 'examples']) { Project subproject ->
             sourceCompatibility = 1.8

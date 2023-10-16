@@ -281,7 +281,7 @@ public class ApiGatewayConfiguration implements HttpVerbsShortcuts {
         }
 
         public Mapping to(String handler) {
-            return to(handler, (c) -> {
+            return to(handler, c -> {
             }, true);
         }
 

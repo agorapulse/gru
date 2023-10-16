@@ -249,7 +249,7 @@ public class DefaultTestDefinitionBuilder implements TestDefinitionBuilder {
     }
 
     private TestDefinitionBuilder request(CharSequence uri, String method) {
-        return request(uri, method, (r) -> {});
+        return request(uri, method, r -> {});
     }
 
     private final Client client;

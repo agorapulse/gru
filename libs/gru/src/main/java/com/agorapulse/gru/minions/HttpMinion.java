@@ -45,7 +45,6 @@ public class HttpMinion extends AbstractMinion<Client> {
 
     private Set<Integer> statuses = Collections.singleton(DEFAULT_STATUS);
     private final Map<String, Collection<String>> requestHeaders = new LinkedHashMap<>();
-    private final Map<String, Collection<String>> responseHeaders = new LinkedHashMap<>();
     private final Map<String, Collection<Matcher<String>>> responseHeaderMatchers = new LinkedHashMap<>();
     private String redirectUri;
 
@@ -124,10 +123,6 @@ public class HttpMinion extends AbstractMinion<Client> {
 
     public Map<String, Collection<String>> getRequestHeaders() {
         return requestHeaders;
-    }
-
-    public Map<String, Collection<String>> getResponseHeaders() {
-        return responseHeaders;
     }
 
     public Map<String, Collection<Matcher<String>>> putHeaderMatcher(String name, Matcher<String> matcher) {

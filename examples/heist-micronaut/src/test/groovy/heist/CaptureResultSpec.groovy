@@ -22,7 +22,7 @@ import com.agorapulse.gru.minions.JsonMinion
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 class CaptureResultSpec extends Specification {

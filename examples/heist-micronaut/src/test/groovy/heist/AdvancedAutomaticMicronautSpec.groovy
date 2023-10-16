@@ -24,7 +24,7 @@ import heist.micronaut.MoonService
 import io.micronaut.context.env.Environment
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 class AdvancedAutomaticMicronautSpec extends Specification {
 

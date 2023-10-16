@@ -18,3 +18,9 @@
 dependencies {
     api project(':gru')
 }
+
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of('8'))
+    }
+}

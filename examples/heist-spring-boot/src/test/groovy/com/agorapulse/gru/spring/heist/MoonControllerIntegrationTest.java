@@ -18,7 +18,6 @@
 package com.agorapulse.gru.spring.heist;
 
 import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.http.Http;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
