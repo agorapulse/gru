@@ -19,9 +19,11 @@ package heist
 
 import grails.boot.GrailsApp
 import grails.boot.config.GrailsAutoConfiguration
-import groovy.transform.PackageScope
 import org.springframework.context.ConfigurableApplicationContext
 
+import groovy.transform.CompileStatic
+
+@CompileStatic
 class Application extends GrailsAutoConfiguration {
 
     // for testing only

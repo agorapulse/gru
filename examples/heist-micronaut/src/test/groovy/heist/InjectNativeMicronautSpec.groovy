@@ -21,7 +21,7 @@ import com.agorapulse.gru.Gru
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest                                                                          // <1>
 class InjectNativeMicronautSpec extends Specification {

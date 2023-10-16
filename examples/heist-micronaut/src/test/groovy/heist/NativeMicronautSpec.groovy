@@ -24,7 +24,7 @@ import io.micronaut.context.ApplicationContextProvider
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest
 class NativeMicronautSpec extends Specification implements ApplicationContextProvider {

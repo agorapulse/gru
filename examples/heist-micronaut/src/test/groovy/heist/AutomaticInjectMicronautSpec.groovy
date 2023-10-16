@@ -22,7 +22,7 @@ import com.agorapulse.gru.micronaut.Micronaut
 import io.micronaut.context.env.Environment
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 class AutomaticInjectMicronautSpec extends Specification {
 

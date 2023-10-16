@@ -17,7 +17,6 @@
  */
 package heist;
 
-import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.micronaut.Micronaut;
 import io.micronaut.context.ApplicationContext;

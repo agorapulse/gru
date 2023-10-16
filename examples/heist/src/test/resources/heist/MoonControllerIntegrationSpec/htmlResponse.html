@@ -1,40 +1,84 @@
 <html lang="en" class="no-js">
- <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
   <title>
-        Moon's Info
-    </title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <link rel="stylesheet" href="/assets/bootstrap.css?compile=false" />
-  <link rel="stylesheet" href="/assets/grails.css?compile=false" />
-  <link rel="stylesheet" href="/assets/main.css?compile=false" />
-  <link rel="stylesheet" href="/assets/mobile.css?compile=false" />
-  <link rel="stylesheet" href="/assets/application.css?compile=false" />
-  <meta name="layout" content="main" />
- </head>
- <body>
-  <div class="navbar navbar-default navbar-static-top" role="navigation">
-   <div class="container">
-    <div class="navbar-header">
-     <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span> </button>
-     <a class="navbar-brand" href="/#"> <i class="fa grails-icon"> <img src="/assets/grails-cupsonly-logo-white.svg" /> </i> Grails </a>
+    Moon's Info
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <link rel="icon" type="image/x-ico" href="/assets/favicon.ico"/>
+  <link rel="stylesheet" href="/assets/bootstrap.css?compile=false"/>
+  <link rel="stylesheet" href="/assets/grails.css?compile=false"/>
+  <link rel="stylesheet" href="/assets/main.css?compile=false"/>
+  <link rel="stylesheet" href="/assets/mobile.css?compile=false"/>
+  <link rel="stylesheet" href="/assets/application.css?compile=false"/>
+  <meta name="layout" content="main"/>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark navbar-static-top" role="navigation">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/#">
+      <img src="/assets/grails.svg" alt="Grails Logo"/>
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
+            aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" aria-expanded="false" style="height: 0.8px;" id="navbarContent">
+      <ul class="nav navbar-nav ml-auto">
+      </ul>
     </div>
-    <div class="navbar-collapse collapse" aria-expanded="false" style="height: 0.8px;">
-     <ul class="nav navbar-nav navbar-right">
-     </ul>
+  </div>
+</nav>
+<h1>Moon</h1>
+<h2>Earth</h2>
+<p>${xml-unit.ignore}</p>
+<div class="footer" role="contentinfo">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col">
+        <a href="http://guides.grails.org" target="_blank">
+          <img src="/assets/advancedgrails.svg" alt="Grails Guides" class="float-left"/>
+        </a>
+        <strong class="centered">
+          <a href="http://guides.grails.org" target="_blank">Grails Guides</a>
+        </strong>
+        <p>Building your first Grails app? Looking to add security, or create a Single-Page-App? Check
+          out the <a href="http://guides.grails.org" target="_blank">Grails Guides</a> for
+          step-by-step tutorials.
+        </p>
+      </div>
+      <div class="col">
+        <a href="http://docs.grails.org" target="_blank">
+          <img src="/assets/documentation.svg" alt="Grails Documentation" class="float-left"/>
+        </a>
+        <strong class="centered">
+          <a href="http://docs.grails.org" target="_blank">Documentation</a>
+        </strong>
+        <p>Ready to dig in? You can find in-depth documentation for all the features of Grails in the <a
+          href="http://docs.grails.org" target="_blank">User Guide</a>.
+        </p>
+      </div>
+      <div class="col">
+        <a href="https://slack.grails.org" target="_blank">
+          <img src="/assets/slack.svg" alt="Grails Slack" class="float-left"/>
+        </a>
+        <strong class="centered">
+          <a href="https://slack.grails.org" target="_blank">Join the Community</a>
+        </strong>
+        <p>Get feedback and share your experience with other Grails developers in the community <a
+          href="https://slack.grails.org" target="_blank">Slack channel</a>.
+        </p>
+      </div>
     </div>
-   </div>
   </div>
-  <h1>Moon</h1>
-  <h2>Earth</h2>
-  <p>${xml-unit.ignore}</p>
-  <div class="footer" role="contentinfo"></div>
-  <div id="spinner" class="spinner" style="display:none;">
-    Loading…
-  </div>
-  <script type="text/javascript" src="/assets/jquery-2.2.0.min.js?compile=false"></script>
-  <script type="text/javascript" src="/assets/bootstrap.js?compile=false"></script>
-  <script type="text/javascript" src="/assets/application.js?compile=false"></script>
- </body>
+</div>
+<div id="spinner" class="spinner" style="display:none;">
+  Loading…
+</div>
+<script type="text/javascript" src="/assets/jquery-3.5.1.min.js?compile=false"></script>
+<script type="text/javascript" src="/assets/popper.min.js?compile=false"></script>
+<script type="text/javascript" src="/assets/bootstrap.js?compile=false"></script>
+<script type="text/javascript" src="/assets/application.js?compile=false"></script>
+</body>
 </html>

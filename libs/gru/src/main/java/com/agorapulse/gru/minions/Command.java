@@ -17,9 +17,6 @@
  */
 package com.agorapulse.gru.minions;
 
-import groovy.lang.Closure;
-import space.jasan.support.groovy.closure.ConsumerWithDelegate;
-
 public interface Command<M extends  Minion> {
 
     Command<? extends Minion> NOOP = minion -> { };

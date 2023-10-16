@@ -17,14 +17,13 @@
  */
 package heist.micronaut;
 
-import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.jsonunit.MatchesPattern;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import net.javacrumbs.jsonunit.core.Option;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static com.agorapulse.gru.Content.inline;
 import static com.agorapulse.gru.HttpStatusShortcuts.NO_CONTENT;
@@ -195,7 +194,7 @@ public class MoonControllerTest {
                     .withTolerance(0.1)
                     .withMatcher(
                         "negativeIntegerString",
-                        MatchesPattern.matchesPattern( "-\\d+")
+                        MatchesPattern.matchesPattern("-\\d+")
                     )
                 )
             )
