@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform('com.agorapulse:gru-bom::{project-version}')            // <1>
+    testImplementation platform('com.agorapulse:gru-bom:{project-version}')            // <1>
     // pick any of these as you need
     testImplementation 'com.agorapulse:gru-http'                                        // <2>
     testImplementation 'com.agorapulse:gru-grails'                                      // <3>
