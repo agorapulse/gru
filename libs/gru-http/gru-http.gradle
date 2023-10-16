@@ -25,4 +25,5 @@ dependencies {
     testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion"
     testImplementation "io.undertow:undertow-core:$undertowVersion"
     testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
+    testImplementation 'javax.activation:activation:1.1.1'
 }
