@@ -23,6 +23,6 @@ jobs:
           owner: agorapulse
           repo: gru
       - name: Publish GitHub Pages
-        uses: eskatos/gradle-command-action@v2
+        uses: gradle/gradle-build-action@v2
         with:
-          arguments: gitPublishPush -Pversion=${{ steps.latest_version.outputs.latest_tag }} -Prelease=true -Dorg.ajoberstar.grgit.auth.username=${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }} --stacktrace
+          arguments: gitPublishPush -Pversion=${{ steps.latest_version.outputs.latest_tag }} -Prelease=true -Dorg.ajoberstar.grgit.auth.username=${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }} --scan
