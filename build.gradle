@@ -221,14 +221,26 @@ gradleProjects {
         dir('platforms') {
             config {
                 publishing {
-                    // faulty for Java Platform projects
-                    enabled = false
+                    enabled = true
                 }
             }
+            // fix for NullPointerException in Kordamp PublishingPlugin
             publishing {
                 publications {
                     main(MavenPublication) {
-                        from components.javaPlatform
+                        pom {
+                            properties = [
+                                'gru.version': version,
+                            ]
+
+                            withXml {
+                                def root = asNode()
+
+                                // Add properties to the POM.
+                                def propertiesNode = root.appendNode('properties')
+                                propertiesNode.appendNode('gru.version', version)
+                            }
+                        }
                     }
                 }
             }
