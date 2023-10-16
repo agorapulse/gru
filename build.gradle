@@ -112,6 +112,7 @@ config {
             }
         }
         groovydoc {
+            enabled = false
             aggregate {
                 enabled = false
             }
