@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - Groovy HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 1.3.1</span>
+<span id="revnumber">version 1.4.0</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -163,7 +163,7 @@ HTTP server framework.</p>
 }
 
 dependencies {
-    testImplementation platform('com.agorapulse:gru-bom::1.3.1')            <i class="conum" data-value="1"></i><b>(1)</b>
+    testImplementation platform('com.agorapulse:gru-bom:1.4.0')            <i class="conum" data-value="1"></i><b>(1)</b>
     // pick any of these as you need
     testImplementation 'com.agorapulse:gru-http'                                        <i class="conum" data-value="2"></i><b>(2)</b>
     testImplementation 'com.agorapulse:gru-grails'                                      <i class="conum" data-value="3"></i><b>(3)</b>
@@ -320,11 +320,10 @@ The timeouts are automatically increased to one hour when debug mode is detected
 <pre class="prettyprint highlight"><code data-lang="java">package heist;
 
 import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.micronaut.Micronaut;
 import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 @MicronautTest                                                                          <i class="conum" data-value="1"></i><b>(1)</b>
 public class InjectNativeMicronautTest {
@@ -363,7 +362,7 @@ import com.agorapulse.gru.Gru
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 @MicronautTest                                                                          <i class="conum" data-value="1"></i><b>(1)</b>
 class InjectNativeMicronautSpec extends Specification {
@@ -408,7 +407,7 @@ import com.agorapulse.gru.micronaut.Micronaut;
 import io.micronaut.context.env.Environment;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -455,7 +454,7 @@ import com.agorapulse.gru.micronaut.Micronaut
 import io.micronaut.context.env.Environment
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 class AutomaticMicronautSpec extends Specification {
 
@@ -498,7 +497,6 @@ class AutomaticMicronautSpec extends Specification {
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">package heist;
 
-import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.micronaut.Micronaut;
 import io.micronaut.context.ApplicationContext;
@@ -621,7 +619,6 @@ As an alternative, you can make your test class implement <code>io.micronaut.con
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">package heist;
 
-import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.micronaut.Micronaut;
 import heist.micronaut.Moon;
@@ -629,7 +626,7 @@ import heist.micronaut.MoonService;
 import io.micronaut.context.env.Environment;
 import org.junit.jupiter.api.Test;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -707,7 +704,7 @@ import heist.micronaut.MoonService
 import io.micronaut.context.env.Environment
 import spock.lang.Specification
 
-import javax.inject.Inject
+import jakarta.inject.Inject
 
 class AdvancedAutomaticMicronautSpec extends Specification {
 
@@ -1735,7 +1732,7 @@ public void customiseJsonUnit() throws Throwable {
                 .withTolerance(0.1)
                 .withMatcher(
                     "negativeIntegerString",
-                    MatchesPattern.matchesPattern( "-\\d+")
+                    MatchesPattern.matchesPattern("-\\d+")
                 )
             )
         )
@@ -2345,7 +2342,6 @@ public void jsonIsRendered() throws Throwable {
 <pre class="prettyprint highlight"><code data-lang="java">package com.agorapulse.gru.spring.heist;
 
 import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.http.Http;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -2764,8 +2760,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 1.3.1<br>
-Last updated 2023-06-07 06:01:48 UTC
+Version 1.4.0<br>
+Last updated 2023-10-16 12:23:09 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
