@@ -17,18 +17,17 @@
  */
 plugins {
     id("groovy")
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("io.micronaut.application") version "3.7.10"
+    id("io.micronaut.application") version "4.2.0"
 }
 
 version = "0.1"
 group = "heist"
 
-repositories {
-    mavenCentral()
-}
+graalvmNative.toolchainDetection = false
 
 micronaut {
+    importMicronautPlatform = true
+    version("4.2.0")
     runtime("netty")
     testRuntime("spock2")
     processing {
@@ -37,12 +36,17 @@ micronaut {
     }
 }
 
+repositories {
+    mavenCentral()
+}
+
 dependencies {
-    implementation("io.micronaut:micronaut-validation")
-    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-http-client")
     implementation("io.micronaut.rxjava2:micronaut-rxjava2")
+    implementation("io.micronaut:micronaut-jackson-databind")
     runtimeOnly("ch.qos.logback:logback-classic")
+    runtimeOnly("org.yaml:snakeyaml")
 
     testImplementation project(':gru-micronaut')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
@@ -55,9 +59,11 @@ dependencies {
 application {
     mainClass.set("heist.Application")
 }
+
 java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
 
 

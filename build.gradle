@@ -160,8 +160,11 @@ subprojects {
 gradleProjects {
     subprojects {
         dirs(['libs', 'examples']) { Project subproject ->
-            sourceCompatibility = 1.8
-            targetCompatibility = 1.8
+            java {
+                toolchain {
+                    languageVersion.set(JavaLanguageVersion.of(8))
+                }
+            }
 
             repositories {
                 mavenCentral()
@@ -195,9 +198,7 @@ gradleProjects {
             }
 
             dependencies {
-                testImplementation "org.spockframework:spock-core:$spockVersion", {
-                    force = true
-                }
+                testImplementation "org.spockframework:spock-core:$spockVersion"
             }
 
             tasks.withType(Test) {
