@@ -29,11 +29,11 @@ jobs:
       GRADLE_OPTS: "-Xmx6g -Xms4g"
     steps:
       - uses: actions/checkout@v2
-      - name: Setup Java 11
+      - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
-          distribution: corretto
-          java-version: 11
+          distribution: zulu
+          java-version: 17
           cache: gradle
       - name: Semantic Version
         id: version
