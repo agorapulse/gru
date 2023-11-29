@@ -19,63 +19,67 @@ package com.agorapulse.gru.http;
 
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.cookie.Cookie;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
 
-import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Wrapper around OkHttp response.
  */
 class GruHttpResponse implements Client.Response {
 
-    private final Response response;
+    private static final List<Integer> REDIRECT_STATUS_CODES = List.of(301, 302, 303, 307, 308);
 
-    public GruHttpResponse(Response response) {
+    private final HttpResponse<String> response;
+
+    public GruHttpResponse(HttpResponse<String> response) {
         this.response = response;
     }
 
     @Override
     public int getStatus() {
-        Response priorResponse = response.priorResponse();
+        Optional<HttpResponse<String>> priorResponse = response.previousResponse();
 
-        if (priorResponse != null && priorResponse.isRedirect()) {
-            return priorResponse.code();
+        if (priorResponse.isPresent() && REDIRECT_STATUS_CODES.contains(priorResponse.get().statusCode())) {
+            return priorResponse.get().statusCode();
         }
 
-        return response.code();
+        return response.statusCode();
     }
 
     @Override
     public List<String> getHeaders(String name) {
-        if (response.priorResponse() != null && response.priorResponse().isRedirect()) {
-            return response.priorResponse().headers(name);
+        Optional<HttpResponse<String>> priorResponse = response.previousResponse();
+
+        if (priorResponse.isPresent() && REDIRECT_STATUS_CODES.contains(priorResponse.get().statusCode())) {
+            return priorResponse.get().headers().allValues(name);
         }
-        return response.headers(name);
+
+        return response.headers().allValues(name);
     }
 
     @Override
     public String getText() {
-        try {
-            ResponseBody body = response.body();
-            return body == null ? null : body.string();
-        } catch (IOException e) {
-            throw new IllegalStateException("Cannot read response body", e);
-        }
+        return response.body();
     }
 
     @Override
     public String getRedirectUrl() {
-        Response priorResponse = response.priorResponse();
-        return priorResponse == null ? null : priorResponse.header("Location");
+        return response.previousResponse()
+            .flatMap(r -> r.headers().firstValue("location"))
+            .or(() -> response.headers().firstValue("location"))
+            .orElse(null);
     }
 
     @Override
     public List<Cookie> getCookies() {
-        if (response.priorResponse() != null && response.priorResponse().isRedirect()) {
-            return Cookie.parseAll(response.priorResponse().headers("Set-Cookie"));
+        Optional<HttpResponse<String>> priorResponse = response.previousResponse();
+
+        if (priorResponse.isPresent() && REDIRECT_STATUS_CODES.contains(priorResponse.get().statusCode())) {
+            return Cookie.parseAll(priorResponse.get().headers().allValues("Set-Cookie"));
         }
+
         return Client.Response.super.getCookies();
     }
 }

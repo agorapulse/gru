@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.gru.http
+package com.agorapulse.gru.okhttp
 
 import com.agorapulse.gru.Gru
 import com.agorapulse.gru.GruContext
@@ -30,7 +30,7 @@ class HttpSpec extends Specification {
 
     void 'response is not set before the action is executed'() {
         when:
-            Gru.create(Http.create(this)).engage(new VioletMinion()).test {
+            Gru.create(OkHttp.create(this)).engage(new VioletMinion()).test {
                 get '/foo/bar'
             }.verify()
         then:
@@ -38,18 +38,18 @@ class HttpSpec extends Specification {
             error.message == 'Response hasn\'t been set yet'
     }
 
-    static class VioletMinion extends AbstractMinion<Http> {
+    static class VioletMinion extends AbstractMinion<OkHttp> {
 
         int index = 0
 
         VioletMinion() {
-            super(Http)
+            super(OkHttp)
         }
 
         @Override
-        protected GruContext doBeforeRun(Http client, Squad squad, GruContext context) {
+        protected GruContext doBeforeRun(OkHttp client, Squad squad, GruContext context) {
             client.response
-            return context
+            context
         }
     }
 

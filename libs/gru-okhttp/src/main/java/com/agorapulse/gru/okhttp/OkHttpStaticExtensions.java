@@ -15,22 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.gru.http;
+package com.agorapulse.gru.okhttp;
 
 import groovy.lang.Closure;
 import groovy.lang.DelegatesTo;
 import okhttp3.OkHttpClient;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
-public class HttpStaticExtensions {
+public class OkHttpStaticExtensions {
 
-    public static Http create(Http self, @DelegatesTo(value = OkHttpClient.Builder.class, strategy = Closure.DELEGATE_FIRST) Closure<OkHttpClient.Builder> configuration) {
-        return Http.create(configuration.getOwner(), ConsumerWithDelegate.create(configuration));
+    public static OkHttp create(OkHttp self, @DelegatesTo(value = OkHttpClient.Builder.class, strategy = Closure.DELEGATE_FIRST) Closure<OkHttpClient.Builder> configuration) {
+        return OkHttp.create(configuration.getOwner(), ConsumerWithDelegate.create(configuration));
     }
-    
+
     @Deprecated
-    public static Http steal(Http self, Object unitTest, @DelegatesTo(value = OkHttpClient.Builder.class, strategy = Closure.DELEGATE_FIRST) Closure<OkHttpClient.Builder> configuration) {
-        return Http.create(unitTest, ConsumerWithDelegate.create(configuration));
+    public static OkHttp steal(OkHttp self, Object unitTest, @DelegatesTo(value = OkHttpClient.Builder.class, strategy = Closure.DELEGATE_FIRST) Closure<OkHttpClient.Builder> configuration) {
+        return OkHttp.create(unitTest, ConsumerWithDelegate.create(configuration));
     }
 
 }

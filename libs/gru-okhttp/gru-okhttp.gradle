@@ -15,15 +15,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.gru.micronaut.okhttp3;
+dependencies {
+    api project(':gru')
+    // must be api because of the configuration block in the Http constructor
+    api "com.squareup.okhttp3:okhttp:${okHttpVersion}"
 
-import okhttp3.OkHttpClient;
+    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 
-import java.util.function.Consumer;
-
-/**
- * This interface can be implemented to customize creation of the Micronaut's Http Gru client.
- */
-public interface MicronautGruConfiguration extends Consumer<OkHttpClient.Builder> {
-
+    testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion"
+    testImplementation "io.undertow:undertow-core:$undertowVersion"
+    testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
+    testImplementation 'javax.activation:activation:1.1.1'
 }

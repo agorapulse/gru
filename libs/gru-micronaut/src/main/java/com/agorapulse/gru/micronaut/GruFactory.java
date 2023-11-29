@@ -19,14 +19,12 @@ package com.agorapulse.gru.micronaut;
 
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.http.Http;
-import com.agorapulse.gru.micronaut.okhttp3.MicronautGruConfiguration;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 
 import jakarta.inject.Singleton;
-import java.util.List;
 
 /**
  * Factory which creates Gru instance for the classes annotated with @MicronautTest.
@@ -40,14 +38,10 @@ public class GruFactory {
     @Singleton
     @Bean(preDestroy = "close")
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public Gru gru(ApplicationContext context, List<MicronautGruConfiguration> httpConfiguration) {
+    public Gru gru(ApplicationContext context) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
         return Gru.create(
-            Micronaut.createLazy(unitTest ->
-                Http.create(
-                    unitTest,
-                    builder -> httpConfiguration.forEach(conf -> conf.accept(builder))
-                ),
+            Micronaut.createLazy(Http::create,
                 () -> context.getBean(testClass),
                 () -> context
             )

@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.gru.http
+package com.agorapulse.gru.okhttp
 
 import spock.lang.Specification
 import spock.lang.Unroll
@@ -28,9 +28,12 @@ class GruHttpRequestSpec extends Specification {
     @Unroll
     void '#baseUri plus #uri is normalized to #url'() {
         given:
-            GruHttpRequest request = new GruHttpRequest(baseUri: baseUri, uri: uri)
+            GruOkHttpRequest request = new GruOkHttpRequest(
+                baseUri: baseUri,
+                uri: uri
+            )
         expect:
-            request.buildHttpRequest().uri().toString() == url
+            request.buildOkHttpRequest().url().toString() == url
         where:
             baseUri                     | uri                               | url
             'http://localhost:8080'     | '/hello'                          | 'http://localhost:8080/hello'

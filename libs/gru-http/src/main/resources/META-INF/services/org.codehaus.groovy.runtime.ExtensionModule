@@ -1,3 +1,0 @@
-moduleName = gru-http
-moduleVersion = @VERSION@
-staticExtensionClasses = com.agorapulse.gru.http.HttpStaticExtensions
