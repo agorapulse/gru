@@ -33,7 +33,7 @@ micronaut {
 dependencies {
     annotationProcessor "io.micronaut.validation:micronaut-validation"
 
-    api project(':gru-http')
+    api project(':gru')
 
     compileOnly "org.apache.groovy:groovy"
     compileOnly project(':gru-kotlin')

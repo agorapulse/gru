@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 dependencies {
-    api project(":gru-http")
+    api project(":gru")
     compileOnly project(':gru-kotlin')
     compileOnly group: 'org.springframework', name: 'spring-beans', version: springVersion
     compileOnly group: 'org.springframework', name: 'spring-context', version: springVersion

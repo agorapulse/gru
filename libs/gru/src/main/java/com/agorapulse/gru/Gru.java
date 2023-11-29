@@ -17,9 +17,11 @@
  */
 package com.agorapulse.gru;
 
+import com.agorapulse.gru.http.Http;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.HttpMinion;
 import com.agorapulse.gru.minions.Minion;
+import org.jetbrains.annotations.Contract;
 
 import java.io.Closeable;
 import java.util.ArrayList;
@@ -31,6 +33,26 @@ import java.util.function.Consumer;
  * <p>
  */
 public class Gru implements Closeable {
+
+    /**
+     * Creates new Gru instance for current unit test.
+     *
+     * @return new Gru instance using the current unit test
+     */
+    public static Gru create() {
+        return create(Http.create(getCallerClass()));
+    }
+
+    /**
+     * Creates new Gru instance for current unit test and the base URL.
+     * @param baseUrl base URL for the test
+     * @return new Gru instance using the current unit test
+     */
+    @Contract("_ -> new")
+    @SuppressWarnings("resource")
+    public static Gru create(String baseUrl) {
+        return create().prepare(baseUrl);
+    }
 
     /**
      * Steals the unit test for himself.
@@ -261,4 +283,19 @@ public class Gru implements Closeable {
      * IF test method has been called
      */
     private boolean definition;
+
+    private static Class<?> getCallerClass() {
+        return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)
+            .walk(stream -> stream
+                .dropWhile(f ->
+                        f.getDeclaringClass().getName().startsWith(Gru.class.getName())
+                        || f.getDeclaringClass().getName().startsWith("org.apache.groovy")
+                        || f.getDeclaringClass().getName().startsWith("org.codehaus.groovy")
+                        || f.getDeclaringClass().getName().startsWith("org.spockframework")
+                )
+                .findFirst()
+                .map(StackWalker.StackFrame::getDeclaringClass)
+                .orElse(null));
+    }
+
 }
