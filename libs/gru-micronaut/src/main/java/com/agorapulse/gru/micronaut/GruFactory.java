@@ -17,13 +17,16 @@
  */
 package com.agorapulse.gru.micronaut;
 
+import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.http.Http;
+import com.agorapulse.gru.okhttp.OkHttp;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 
+import io.micronaut.context.annotation.Secondary;
 import jakarta.inject.Singleton;
 
 /**
@@ -37,14 +40,29 @@ public class GruFactory {
 
     @Singleton
     @Bean(preDestroy = "close")
+    public Gru gru(Client client) {
+        return Gru.create(client);
+    }
+
+    @Singleton
+    @Secondary
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public Gru gru(ApplicationContext context) {
+    public Client client(ApplicationContext context) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
-        return Gru.create(
-            Micronaut.createLazy(Http::create,
-                () -> context.getBean(testClass),
-                () -> context
-            )
+        return Micronaut.createLazy(Http::create,
+            () -> context.getBean(testClass),
+            () -> context
+        );
+    }
+
+    @Singleton
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Requires(property = "gru.http.client", value = "okhttp", classes = OkHttp.class)
+    public Client okHttpClient(ApplicationContext context) {
+        Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
+        return Micronaut.createLazy(OkHttp::create,
+            () -> context.getBean(testClass),
+            () -> context
         );
     }
 
