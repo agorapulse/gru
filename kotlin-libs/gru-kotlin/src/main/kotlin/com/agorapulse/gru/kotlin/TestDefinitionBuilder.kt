@@ -94,6 +94,7 @@ class TestDefinitionBuilder(private val delegate: JavaTestDefinitionBuilder) : H
         @Language("HTTP Request") uri: String,
         definition: RequestDefinitionBuilder.() -> RequestDefinitionBuilder
     ): TestDefinitionBuilder {
+        delegate.delete(uri) { definition(RequestDefinitionBuilder(it)) }
         return this
     }
 

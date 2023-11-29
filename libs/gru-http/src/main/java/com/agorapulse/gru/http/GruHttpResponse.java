@@ -73,8 +73,7 @@ class GruHttpResponse implements Client.Response {
 
     @Override
     public List<Cookie> getCookies() {
-        if (response.priorResponse() != null &&
-            response.priorResponse().isRedirect()) {
+        if (response.priorResponse() != null && response.priorResponse().isRedirect()) {
             return Cookie.parseAll(response.priorResponse().headers("Set-Cookie"));
         }
         return Client.Response.super.getCookies();

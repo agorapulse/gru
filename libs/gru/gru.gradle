@@ -28,9 +28,7 @@ dependencies {
 
     compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
     compileOnly 'org.jetbrains:annotations:13.0'
-    compileOnly "org.spockframework:spock-core:$spockVersion", {
-        force = true
-    }
+    compileOnly "org.spockframework:spock-core:$spockVersion"
 
     testImplementation "joda-time:joda-time:${jodaTimeVersion}"
     testImplementation 'org.assertj:assertj-core:3.11.0'

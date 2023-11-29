@@ -15,23 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+plugins {
+    id("groovy")
+    id("io.micronaut.library") version "4.2.0"
+}
+
+micronaut {
+    importMicronautPlatform = true
+    version("4.2.0")
+    testRuntime("spock2")
+    processing {
+        incremental(true)
+        annotations("heist.*")
+    }
+}
+
 dependencies {
-    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautCompactVersion")
-    annotationProcessor "io.micronaut:micronaut-inject-java"
-    annotationProcessor "io.micronaut:micronaut-validation"
+    annotationProcessor "io.micronaut.validation:micronaut-validation"
 
     api project(':gru-http')
 
-    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.apache.groovy:groovy"
     compileOnly project(':gru-kotlin')
 
-    implementation platform("io.micronaut:micronaut-bom:$micronautCompactVersion")
-    implementation("io.micronaut:micronaut-validation")
-    implementation("io.micronaut:micronaut-runtime")
+    implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-http-server")
 }
 
 java {
-    sourceCompatibility = JavaVersion.toVersion("1.8")
-    targetCompatibility = JavaVersion.toVersion("1.8")
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
+    }
 }
