@@ -19,7 +19,7 @@ dependencies {
     api project(':gru')
     api 'com.amazonaws:aws-lambda-java-core:1.2.0'
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.5'
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
 
     compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
 

@@ -23,7 +23,7 @@ dependencies {
     api group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
     api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
-    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.6'
+    implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation 'org.hamcrest:hamcrest:2.2'
 
     compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
