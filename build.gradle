@@ -162,7 +162,7 @@ gradleProjects {
         dirs(['libs', 'examples']) { Project subproject ->
             java {
                 toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(8))
+                    languageVersion.set(JavaLanguageVersion.of(11))
                 }
             }
 
