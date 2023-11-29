@@ -20,10 +20,13 @@ package com.agorapulse.gru.http;
 import com.agorapulse.gru.AbstractClient;
 import com.agorapulse.gru.GruContext;
 import com.agorapulse.gru.Squad;
-import okhttp3.OkHttpClient;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.function.Consumer;
 
 import static java.lang.management.ManagementFactory.getRuntimeMXBean;
@@ -33,10 +36,6 @@ import static java.lang.management.ManagementFactory.getRuntimeMXBean;
  */
 public class Http extends AbstractClient {
 
-    private final OkHttpClient httpClient;
-    private GruHttpRequest request;
-    private GruHttpResponse response;
-
     public static Http create(Object unitTest) {
         return new Http(unitTest, null);
     }
@@ -45,11 +44,11 @@ public class Http extends AbstractClient {
         return new Http(unitTestClass, null);
     }
 
-    public static Http create(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
+    public static Http create(Object unitTest, Consumer<HttpClient.Builder> configuration) {
         return new Http(unitTest, configuration);
     }
 
-    public static Http create(Class<?> unitTestClass, Consumer<OkHttpClient.Builder> configuration) {
+    public static Http create(Class<?> unitTestClass, Consumer<HttpClient.Builder> configuration) {
         return new Http(unitTestClass, configuration);
     }
 
@@ -59,36 +58,25 @@ public class Http extends AbstractClient {
     }
 
     @Deprecated
-    public static Http steal(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
+    public static Http steal(Object unitTest, Consumer<HttpClient.Builder> configuration) {
         return create(unitTest, configuration);
     }
 
-    private Http(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
+    private final Consumer<HttpClient.Builder> configuration;
+
+    private GruHttpRequest request;
+    private GruHttpResponse response;
+
+    private Http(Object unitTest, Consumer<HttpClient.Builder> configuration) {
         super(unitTest);
-        request = new GruHttpRequest();
-
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (configuration != null) {
-            configuration.accept(builder);
-        }
-
-        httpClient = builder.build();
+        this.configuration = configuration;
+        reset();
     }
 
-    private Http(Class<?> unitTestClass, Consumer<OkHttpClient.Builder> configuration) {
+    private Http(Class<?> unitTestClass, Consumer<HttpClient.Builder> configuration) {
         super(unitTestClass);
-        request = new GruHttpRequest();
-
-        OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        if (configuration != null) {
-            configuration.accept(builder);
-        }
-
-        if (isDebugMode()) {
-            increaseTimeouts(builder);
-        }
-
-        httpClient = builder.build();
+        this.configuration = configuration;
+        reset();
     }
 
     @Override
@@ -107,27 +95,37 @@ public class Http extends AbstractClient {
 
     @Override
     public void reset() {
-        request = new GruHttpRequest();
+        HttpRequest.Builder builder = HttpRequest.newBuilder();
+
+        request = new GruHttpRequest(builder);
         response = null;
     }
 
     @Override
     public GruContext run(Squad squad, GruContext context) {
         try {
-            okhttp3.Response response = httpClient.newCall(request.buildOkHttpRequest()).execute();
+            HttpClient.Builder builder = HttpClient.newBuilder();
+
+            if (configuration != null) {
+                configuration.accept(builder);
+            }
+
+            if (isDebugMode()) {
+                increaseTimeouts(builder);
+            }
+
+            HttpResponse<String> response = builder.build().send(request.buildHttpRequest(), HttpResponse.BodyHandlers.ofString());
             this.response = new GruHttpResponse(response);
             return context.withResult(response);
         } catch (IOException e) {
             throw new AssertionError("Failed to execute request " + request, e);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void increaseTimeouts(OkHttpClient.Builder builder) {
-        builder
-            .callTimeout(1, TimeUnit.HOURS)
-            .connectTimeout(1, TimeUnit.HOURS)
-            .writeTimeout(1, TimeUnit.HOURS)
-            .readTimeout(1, TimeUnit.HOURS);
+    private void increaseTimeouts(HttpClient.Builder builder) {
+        builder.connectTimeout(Duration.of(1, ChronoUnit.HOURS));
     }
 
     private boolean isDebugMode() {

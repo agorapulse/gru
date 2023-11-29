@@ -32,9 +32,8 @@ public interface HttpVerbsShortcuts {
     String TRACE = "TRACE";
     String GET = "GET";
 
-    List<String> HAS_URI_PARAMETERS = Collections.unmodifiableList(Arrays.asList(
-        HEAD, DELETE, OPTIONS, TRACE, GET
-    ));
+    List<String> HAS_URI_PARAMETERS = List.of(HEAD, DELETE, OPTIONS, TRACE, GET);
+    List<String> REQUIRES_BODY = List.of(POST, PUT, PATCH);
 
 
 }

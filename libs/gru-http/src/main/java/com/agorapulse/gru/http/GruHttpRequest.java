@@ -20,32 +20,29 @@ package com.agorapulse.gru.http;
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.MultipartDefinition;
 import com.agorapulse.gru.TestDefinitionBuilder;
-import okhttp3.FormBody;
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.internal.http.HttpMethod;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.net.URI;
+import java.net.URLEncoder;
+import java.net.http.HttpRequest;
+import java.nio.charset.StandardCharsets;
+import java.util.*;
 
 /**
  * Wrapper around OkHttp request.
  */
 class GruHttpRequest implements Client.Request {
 
-    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-
     private final Map<String, String> parameters = new LinkedHashMap<>();
-    private final Request.Builder builder = new Request.Builder();
-    private RequestBody body;
+    private final HttpRequest.Builder builder;
+    private HttpRequest.BodyPublisher body;
 
     private String baseUri;
     private String method = TestDefinitionBuilder.GET;
     private String uri;
+
+    GruHttpRequest(HttpRequest.Builder builder) {
+        this.builder = builder;
+    }
 
     @Override
     public String getBaseUri() {
@@ -59,12 +56,12 @@ class GruHttpRequest implements Client.Request {
 
     @Override
     public String getUri() {
-        return null;
+        return uri;
     }
 
     @Override
     public String getMethod() {
-        return null;
+        return method;
     }
 
     @Override
@@ -79,37 +76,26 @@ class GruHttpRequest implements Client.Request {
 
     @Override
     public void addHeader(String name, String value) {
-        builder.addHeader(name, value);
+        builder.header(name, value);
     }
 
     @Override
     public void setJson(String jsonText) {
-        body = RequestBody.create(JSON, jsonText);
+        addHeader("Content-Type", "application/json");
+        body = HttpRequest.BodyPublishers.ofString(jsonText);
     }
 
     @Override
     public void setContent(String contentType, byte[] payload) {
-        body = RequestBody.create(MediaType.parse(contentType), payload);
+        addHeader("Content-Type", contentType);
+        body = HttpRequest.BodyPublishers.ofByteArray(payload);
     }
 
     @Override
     public void setMultipart(MultipartDefinition definition) {
-        MultipartBody.Builder builder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
-        definition.getFiles().forEach((k, f) ->
-            builder.addFormDataPart(
-                f.getParameterName(),
-                f.getFilename(),
-                RequestBody.create(
-                    MediaType.parse(f.getContentType()),
-                    f.getBytes()
-                )
-            )
-        );
-
-        definition.getParameters().forEach((k, v) -> builder.addFormDataPart(k, v == null ? "" : String.valueOf(v)));
-
-        body = builder.build();
+        String boundary = UUID.randomUUID().toString();
+        builder.header("Content-Type", "multipart/form-data; boundary=" + boundary);
+        body = ofMultipartData(definition, boundary);
     }
 
     @Override
@@ -117,30 +103,67 @@ class GruHttpRequest implements Client.Request {
         parameters.put(name, value == null ? "" : value.toString());
     }
 
-    Request buildOkHttpRequest() {
-        HttpUrl.Builder url;
-        if (baseUri != null) {
-            String pathSegment = uri != null && uri.startsWith("/") ? uri.substring(1) : uri;
-            url = Objects.requireNonNull(HttpUrl.parse(baseUri)).newBuilder().addPathSegments(pathSegment);
-        } else {
-            url = Objects.requireNonNull(HttpUrl.parse(uri)).newBuilder();
-        }
-
+    HttpRequest buildHttpRequest() {
         if (!parameters.isEmpty()) {
             if (TestDefinitionBuilder.HAS_URI_PARAMETERS.contains(method) || body != null) {
-                parameters.forEach(url::addQueryParameter);
+                builder.uri(buildUri(baseUri, uri, parameters));
                 builder.method(method, body);
             } else {
-                FormBody.Builder form = new FormBody.Builder();
-                parameters.forEach(form::add);
-                builder.method(method, form.build());
+                StringBuilder params = new StringBuilder();
+                appendParameters(parameters, params);
+                builder.header("Content-Type", "application/x-www-form-urlencoded");
+                builder.method(method, HttpRequest.BodyPublishers.ofString(params.toString()));
             }
-        } else if (HttpMethod.requiresRequestBody(method)) {
-            builder.method(method, body != null? body : RequestBody.create(null, ""));
+        } else if (TestDefinitionBuilder.REQUIRES_BODY.contains(method)) {
+            builder.method(method, body != null ? body : HttpRequest.BodyPublishers.noBody());
         } else {
             builder.method(method, body);
         }
 
-        return builder.url(url.toString()).build();
+
+
+        return builder.build();
     }
+
+    private static HttpRequest.BodyPublisher ofMultipartData(MultipartDefinition parts, String boundary) {
+        List<byte[]> byteArrays = new ArrayList<>();
+        byte[] separator = ("--" + boundary + "\r\nContent-Disposition: form-data; name=").getBytes(StandardCharsets.UTF_8);
+
+        for (Map.Entry<String, Object> part : parts.getParameters().entrySet()) {
+            byteArrays.add(separator);
+            byteArrays.add(("\"" + part.getKey() + "\"\r\n\r\n" + part.getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
+        }
+
+        for (Map.Entry<String, MultipartDefinition.MultipartFile> part : parts.getFiles().entrySet()) {
+            byteArrays.add(separator);
+            byteArrays.add(("\"" + part.getValue().getParameterName() + "\"; filename=\"" + part.getValue().getFilename() + "\"\r\nContent-Type: " + part.getValue().getContentType() + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+            byteArrays.add(part.getValue().getBytes());
+        }
+
+        byteArrays.add(("--" + boundary + "--").getBytes(StandardCharsets.UTF_8));
+        return HttpRequest.BodyPublishers.ofByteArrays(byteArrays);
+    }
+
+    private static URI buildUri(String baseUri, String uri, Map<String, String> parameters) {
+        StringBuilder uriBuilder = baseUri != null ? new StringBuilder(baseUri) : new StringBuilder();
+        if (uri != null) {
+            if (uri.startsWith("/")) {
+                uriBuilder.append(uri);
+            } else {
+                uriBuilder.append("/").append(uri);
+            }
+        }
+        if (!parameters.isEmpty()) {
+            uriBuilder.append("?");
+            appendParameters(parameters, uriBuilder);
+        }
+
+        return URI.create(uriBuilder.toString());
+    }
+
+    private static void appendParameters(Map<String, String> parameters, StringBuilder uriBuilder) {
+        parameters.forEach((k, v) -> uriBuilder.append(URLEncoder.encode(k, StandardCharsets.UTF_8)).append("=").append(URLEncoder.encode(v, StandardCharsets.UTF_8)).append("&"));
+        uriBuilder.deleteCharAt(uriBuilder.length() - 1);
+    }
+
 }
