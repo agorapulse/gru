@@ -49,7 +49,7 @@ class HttpSpec extends Specification {
         @Override
         protected GruContext doBeforeRun(Http client, Squad squad, GruContext context) {
             client.response
-            context
+            return context
         }
     }
 

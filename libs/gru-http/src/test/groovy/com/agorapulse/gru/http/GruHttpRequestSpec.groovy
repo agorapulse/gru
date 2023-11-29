@@ -33,7 +33,7 @@ class GruHttpRequestSpec extends Specification {
                 uri: uri
             )
         expect:
-            request.buildHttpRequest().url().toString() == url
+            request.buildHttpRequest().uri().toString() == url
         where:
             baseUri                     | uri                               | url
             'http://localhost:8080'     | '/hello'                          | 'http://localhost:8080/hello'

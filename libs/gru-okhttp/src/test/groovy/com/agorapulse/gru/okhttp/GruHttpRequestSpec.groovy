@@ -17,7 +17,6 @@
  */
 package com.agorapulse.gru.okhttp
 
-import com.agorapulse.gru.http.GruOkHttpRequest
 import spock.lang.Specification
 import spock.lang.Unroll
 
