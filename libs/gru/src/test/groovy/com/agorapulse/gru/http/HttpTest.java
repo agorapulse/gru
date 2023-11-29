@@ -15,11 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-dependencies {
-    api project(':gru')
+package com.agorapulse.gru.http;
 
-    testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion"
-    testImplementation "io.undertow:undertow-core:$undertowVersion"
-    testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
-    testImplementation 'javax.activation:activation:1.1.1'
+import com.agorapulse.gru.Gru;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
+public class HttpTest {
+
+    @Test
+    void testCreateWithoutSpecifyingUnitTest() {
+        try (Gru gru = Gru.create("http://localhost:8080")) {
+            Assertions.assertNotNull(gru);
+        }
+    }
+
 }

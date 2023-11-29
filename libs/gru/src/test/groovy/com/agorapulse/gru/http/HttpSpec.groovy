@@ -38,6 +38,13 @@ class HttpSpec extends Specification {
             error.message == 'Response hasn\'t been set yet'
     }
 
+    void 'the default http instance get the test class automatically'() {
+        when:
+            Gru gru = Gru.create()
+        then:
+            gru.client.unitTestClass == HttpSpec
+    }
+
     static class VioletMinion extends AbstractMinion<Http> {
 
         int index = 0
