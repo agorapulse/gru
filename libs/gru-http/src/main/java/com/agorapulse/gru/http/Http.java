@@ -95,9 +95,7 @@ public class Http extends AbstractClient {
 
     @Override
     public void reset() {
-        HttpRequest.Builder builder = HttpRequest.newBuilder();
-
-        request = new GruHttpRequest(builder);
+        request = new GruHttpRequest();
         response = null;
     }
 

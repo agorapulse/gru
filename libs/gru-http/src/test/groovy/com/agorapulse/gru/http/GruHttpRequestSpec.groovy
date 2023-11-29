@@ -28,10 +28,7 @@ class GruHttpRequestSpec extends Specification {
     @Unroll
     void '#baseUri plus #uri is normalized to #url'() {
         given:
-            GruHttpRequest request = new GruHttpRequest(
-                baseUri: baseUri,
-                uri: uri
-            )
+            GruHttpRequest request = new GruHttpRequest(baseUri: baseUri, uri: uri)
         expect:
             request.buildHttpRequest().uri().toString() == url
         where:

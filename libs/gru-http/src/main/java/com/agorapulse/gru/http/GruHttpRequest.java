@@ -33,17 +33,12 @@ import java.util.*;
 class GruHttpRequest implements Client.Request {
 
     private final Map<String, String> parameters = new LinkedHashMap<>();
-    private final HttpRequest.Builder builder;
-    private HttpRequest.BodyPublisher body;
+    private final HttpRequest.Builder builder = HttpRequest.newBuilder();
+    private HttpRequest.BodyPublisher body = HttpRequest.BodyPublishers.noBody();
 
     private String baseUri;
     private String method = TestDefinitionBuilder.GET;
     private String uri;
-
-    GruHttpRequest(HttpRequest.Builder builder) {
-        this.builder = builder;
-    }
-
     @Override
     public String getBaseUri() {
         return baseUri;
@@ -93,7 +88,7 @@ class GruHttpRequest implements Client.Request {
 
     @Override
     public void setMultipart(MultipartDefinition definition) {
-        String boundary = UUID.randomUUID().toString();
+        String boundary = Long.toHexString(System.currentTimeMillis());
         builder.header("Content-Type", "multipart/form-data; boundary=" + boundary);
         body = ofMultipartData(definition, boundary);
     }
@@ -111,48 +106,66 @@ class GruHttpRequest implements Client.Request {
             } else {
                 StringBuilder params = new StringBuilder();
                 appendParameters(parameters, params);
+                builder.uri(buildUri(baseUri, uri, Collections.emptyMap()));
                 builder.header("Content-Type", "application/x-www-form-urlencoded");
                 builder.method(method, HttpRequest.BodyPublishers.ofString(params.toString()));
             }
         } else if (TestDefinitionBuilder.REQUIRES_BODY.contains(method)) {
-            builder.method(method, body != null ? body : HttpRequest.BodyPublishers.noBody());
-        } else {
+            builder.uri(buildUri(baseUri, uri, Collections.emptyMap()));
             builder.method(method, body);
+        } else {
+            builder.uri(buildUri(baseUri, uri, Collections.emptyMap()));
+            builder.method(method, HttpRequest.BodyPublishers.noBody());
         }
-
-
 
         return builder.build();
     }
 
-    private static HttpRequest.BodyPublisher ofMultipartData(MultipartDefinition parts, String boundary) {
-        List<byte[]> byteArrays = new ArrayList<>();
-        byte[] separator = ("--" + boundary + "\r\nContent-Disposition: form-data; name=").getBytes(StandardCharsets.UTF_8);
+private static HttpRequest.BodyPublisher ofMultipartData(MultipartDefinition parts, String boundary) {
+    List<byte[]> byteArrays = new ArrayList<>();
+    String separator = "--" + boundary + "\r\nContent-Disposition: form-data; name=";
+    String end = "\r\n";
 
-        for (Map.Entry<String, Object> part : parts.getParameters().entrySet()) {
-            byteArrays.add(separator);
-            byteArrays.add(("\"" + part.getKey() + "\"\r\n\r\n" + part.getValue() + "\r\n").getBytes(StandardCharsets.UTF_8));
-        }
-
-        for (Map.Entry<String, MultipartDefinition.MultipartFile> part : parts.getFiles().entrySet()) {
-            byteArrays.add(separator);
-            byteArrays.add(("\"" + part.getValue().getParameterName() + "\"; filename=\"" + part.getValue().getFilename() + "\"\r\nContent-Type: " + part.getValue().getContentType() + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
-            byteArrays.add(part.getValue().getBytes());
-        }
-
-        byteArrays.add(("--" + boundary + "--").getBytes(StandardCharsets.UTF_8));
-        return HttpRequest.BodyPublishers.ofByteArrays(byteArrays);
+    for (Map.Entry<String, Object> part : parts.getParameters().entrySet()) {
+        byteArrays.add(separator.getBytes(StandardCharsets.UTF_8));
+        byteArrays.add(("\"" + part.getKey() + "\"\r\n\r\n" + part.getValue() + end).getBytes(StandardCharsets.UTF_8));
     }
 
+    for (Map.Entry<String, MultipartDefinition.MultipartFile> part : parts.getFiles().entrySet()) {
+        byteArrays.add(separator.getBytes(StandardCharsets.UTF_8));
+        byteArrays.add(("\"" + part.getValue().getParameterName() + "\"; filename=\"" + part.getValue().getFilename() + "\"\r\nContent-Type: " + part.getValue().getContentType() + "\r\n\r\n").getBytes(StandardCharsets.UTF_8));
+        byteArrays.add(part.getValue().getBytes());
+        byteArrays.add(end.getBytes(StandardCharsets.UTF_8)); // End of the file content
+    }
+
+    byteArrays.add(("--" + boundary + "--").getBytes(StandardCharsets.UTF_8)); // Final boundary
+    return HttpRequest.BodyPublishers.ofByteArrays(byteArrays);
+}
+
+
     private static URI buildUri(String baseUri, String uri, Map<String, String> parameters) {
-        StringBuilder uriBuilder = baseUri != null ? new StringBuilder(baseUri) : new StringBuilder();
+        StringBuilder uriBuilder = new StringBuilder();
+        if (baseUri != null) {
+            if (baseUri.endsWith("/")) {
+                uriBuilder.append(baseUri, 0, baseUri.length() - 1);
+            } else {
+                uriBuilder.append(baseUri);
+            }
+        }
+
         if (uri != null) {
+            if (baseUri == null && !uri.startsWith("http")) {
+                uriBuilder.append("http://localhost:8080");
+            }
             if (uri.startsWith("/")) {
+                uriBuilder.append(uri);
+            } else if (uri.startsWith("http")) {
                 uriBuilder.append(uri);
             } else {
                 uriBuilder.append("/").append(uri);
             }
         }
+
         if (!parameters.isEmpty()) {
             uriBuilder.append("?");
             appendParameters(parameters, uriBuilder);

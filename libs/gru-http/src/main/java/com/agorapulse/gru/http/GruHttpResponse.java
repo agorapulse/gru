@@ -66,10 +66,10 @@ class GruHttpResponse implements Client.Response {
 
     @Override
     public String getRedirectUrl() {
-        Optional<HttpResponse<String>> priorResponse = response.previousResponse();
-
-        return priorResponse.map(stringHttpResponse -> stringHttpResponse.headers().firstValue("Location").get()).orElse(null);
-
+        return response.previousResponse()
+            .flatMap(r -> r.headers().firstValue("location"))
+            .or(() -> response.headers().firstValue("location"))
+            .orElse(null);
     }
 
     @Override
