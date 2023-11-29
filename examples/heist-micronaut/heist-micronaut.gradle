@@ -49,6 +49,7 @@ dependencies {
     runtimeOnly("org.yaml:snakeyaml")
 
     testImplementation project(':gru-micronaut')
+    testImplementation project(':gru-okhttp')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'io.micronaut.test:micronaut-test-junit5'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
