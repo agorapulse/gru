@@ -37,6 +37,7 @@ dependencies {
 
     compileOnly "org.apache.groovy:groovy"
     compileOnly project(':gru-kotlin')
+    compileOnly project(':gru-http')
 
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-http-server")
