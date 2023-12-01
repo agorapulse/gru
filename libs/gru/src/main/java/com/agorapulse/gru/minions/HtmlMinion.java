@@ -40,6 +40,13 @@ import java.util.List;
 public class HtmlMinion extends AbstractContentMinion<Client> {
     public HtmlMinion() {
         super(Client.class);
+
+        try {
+            Class.forName("org.jsoup.Jsoup");
+            Class.forName("org.xmlunit.builder.DiffBuilder");
+        } catch (ClassNotFoundException e) {
+            throw new IllegalStateException("HtmlMinion requires JSoup and XmlUnit on classpath. Please add org.jsoup:jsoup:1.17.1 and org.xmlunit:xmlunit-core:2.9.1 to your dependencies.");
+        }
     }
 
     protected String normalize(String html) {

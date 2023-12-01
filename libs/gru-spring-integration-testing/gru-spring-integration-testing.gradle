@@ -21,6 +21,9 @@ dependencies {
     compileOnly group: 'org.springframework', name: 'spring-beans', version: springVersion
     compileOnly group: 'org.springframework', name: 'spring-context', version: springVersion
     compileOnly group: 'org.springframework.boot', name: 'spring-boot-autoconfigure', version: springBootVersion
+
+    testImplementation "org.jsoup:jsoup:$jsoupVersion"
+    testImplementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
 }
 
 groovydoc.onlyIf { false }
