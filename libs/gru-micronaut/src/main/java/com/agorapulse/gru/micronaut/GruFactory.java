@@ -20,6 +20,7 @@ package com.agorapulse.gru.micronaut;
 import com.agorapulse.gru.Client;
 import com.agorapulse.gru.Gru;
 import com.agorapulse.gru.http.Http;
+import com.agorapulse.gru.micronaut.http.MicronautHttpClient;
 import com.agorapulse.gru.okhttp.OkHttp;
 import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Bean;
@@ -27,6 +28,7 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 
 import io.micronaut.context.annotation.Secondary;
+import io.micronaut.http.client.HttpClient;
 import jakarta.inject.Singleton;
 
 /**
@@ -47,9 +49,10 @@ public class GruFactory {
     @Singleton
     @Secondary
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public Client client(ApplicationContext context) {
+    public Client client(ApplicationContext context, @io.micronaut.http.client.annotation.Client("gru") HttpClient client) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
-        return Micronaut.createLazy(Http::create,
+        return Micronaut.createLazy(
+            test -> MicronautHttpClient.create(test, client),
             () -> context.getBean(testClass),
             () -> context
         );
@@ -61,6 +64,17 @@ public class GruFactory {
     public Client okHttpClient(ApplicationContext context) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
         return Micronaut.createLazy(OkHttp::create,
+            () -> context.getBean(testClass),
+            () -> context
+        );
+    }
+
+    @Singleton
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Requires(property = "gru.http.client", value = "jdk")
+    public Client jdkHttpClient(ApplicationContext context) {
+        Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
+        return Micronaut.createLazy(Http::create,
             () -> context.getBean(testClass),
             () -> context
         );

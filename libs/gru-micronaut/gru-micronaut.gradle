@@ -41,6 +41,7 @@ dependencies {
 
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-http-server")
+    implementation("io.micronaut:micronaut-http-client")
 
     testImplementation project(':gru-okhttp')
 }
