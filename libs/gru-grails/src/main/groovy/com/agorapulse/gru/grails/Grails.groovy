@@ -39,11 +39,6 @@ class Grails<U extends ControllerUnitTest<?>> extends AbstractClient {
         return new Grails<U>(unitTest)
     }
 
-    @Deprecated
-    static <U extends ControllerUnitTest<?>> Grails<U> steal(U unitTest) {
-        return create(unitTest)
-    }
-
     private GruGrailsRequest request
     private GruGrailsResponse response
 

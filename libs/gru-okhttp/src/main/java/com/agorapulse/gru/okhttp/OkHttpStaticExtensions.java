@@ -28,9 +28,4 @@ public class OkHttpStaticExtensions {
         return OkHttp.create(configuration.getOwner(), ConsumerWithDelegate.create(configuration));
     }
 
-    @Deprecated
-    public static OkHttp steal(OkHttp self, Object unitTest, @DelegatesTo(value = OkHttpClient.Builder.class, strategy = Closure.DELEGATE_FIRST) Closure<OkHttpClient.Builder> configuration) {
-        return OkHttp.create(unitTest, ConsumerWithDelegate.create(configuration));
-    }
-
 }

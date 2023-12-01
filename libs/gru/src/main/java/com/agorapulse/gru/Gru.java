@@ -54,19 +54,6 @@ public class Gru implements Closeable {
         return create().prepare(baseUrl);
     }
 
-    /**
-     * Steals the unit test for himself.
-     * <p>
-     * Typical usage is <code>Gru gru = Gru.create(this)</code>
-     *
-     * @param client unit test being stolen
-     * @return new Gru instance stealing current unit test
-     * @deprecated use {@link #create(Client)} instead
-     */
-    @Deprecated
-    public static Gru equip(Client client) {
-        return create(client);
-    }
 
     /**
      * Creates Gru's instance for a given unit test.

@@ -29,11 +29,6 @@ import java.util.function.Consumer;
 
 public class ApiGatewayProxy extends AbstractClient {
 
-    @Deprecated
-    public static ApiGatewayProxy steal(Object unitTest, Consumer<ApiGatewayConfiguration> configuration) {
-        return create(unitTest, configuration);
-    }
-
     public static ApiGatewayProxy create(Object unitTest, Consumer<ApiGatewayConfiguration> configuration) {
         ApiGatewayConfiguration apiGatewayConfiguration = new ApiGatewayConfiguration();
         configuration.accept(apiGatewayConfiguration);

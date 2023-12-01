@@ -53,16 +53,6 @@ public class OkHttp extends AbstractClient {
         return new OkHttp(unitTestClass, configuration);
     }
 
-    @Deprecated
-    public static OkHttp steal(Object unitTest) {
-        return create(unitTest);
-    }
-
-    @Deprecated
-    public static OkHttp steal(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
-        return create(unitTest, configuration);
-    }
-
     private OkHttp(Object unitTest, Consumer<OkHttpClient.Builder> configuration) {
         super(unitTest);
         request = new GruOkHttpRequest();

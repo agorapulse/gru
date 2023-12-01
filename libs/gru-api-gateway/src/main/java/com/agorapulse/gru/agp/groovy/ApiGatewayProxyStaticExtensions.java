@@ -27,17 +27,6 @@ import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 
 public class ApiGatewayProxyStaticExtensions {
 
-    @Deprecated
-    public static ApiGatewayProxy steal(
-        ApiGatewayProxy self,
-        Object unitTest,
-        @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ApiGatewayConfiguration.class)
-        @ClosureParams(value = FromString.class, options = "com.agorapulse.gru.agp.ApiGatewayConfiguration")
-        Closure<ApiGatewayConfiguration.Mapping> configuration
-    ) {
-        return create(self, configuration);
-    }
-
     public static ApiGatewayProxy create(
         ApiGatewayProxy self,
         @DelegatesTo(strategy = Closure.DELEGATE_FIRST, value = ApiGatewayConfiguration.class)
