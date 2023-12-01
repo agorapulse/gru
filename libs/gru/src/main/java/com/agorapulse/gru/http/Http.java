@@ -51,16 +51,6 @@ public class Http extends AbstractClient {
         return new Http(unitTestClass, configuration);
     }
 
-    @Deprecated
-    public static Http steal(Object unitTest) {
-        return create(unitTest);
-    }
-
-    @Deprecated
-    public static Http steal(Object unitTest, Consumer<HttpClient.Builder> configuration) {
-        return create(unitTest, configuration);
-    }
-
     private final Consumer<HttpClient.Builder> configuration;
 
     private GruHttpRequest request;
