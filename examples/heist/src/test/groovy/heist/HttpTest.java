@@ -23,12 +23,11 @@ import org.junit.Test;
 
 public class HttpTest {
 
-    Gru gru = Gru.create(Http.create(this))                                             // <1>
-                        .prepare("https://despicableme.fandom.com");                    // <2>
+    Gru gru = Gru.create("https://despicableme.fandom.com");                            // <1>
 
     @Test
     public void testGetWiki() throws Throwable {
-        gru.verify(test -> test.get("/wiki/Felonius_Gru"));                             // <3>
+        gru.verify(test -> test.get("/wiki/Felonius_Gru"));                             // <2>
     }
 
 }

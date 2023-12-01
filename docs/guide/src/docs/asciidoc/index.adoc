@@ -18,14 +18,15 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform('com.agorapulse:gru-bom:{project-version}')            // <1>
+    testImplementation platform("com.agorapulse:gru-bom:{project-version}")            // <1>
+
     // pick any of these as you need
-    testImplementation 'com.agorapulse:gru-http'                                        // <2>
-    testImplementation 'com.agorapulse:gru-grails'                                      // <3>
-    testImplementation 'com.agorapulse:gru-spring'                                      // <4>
-    testImplementation 'com.agorapulse:gru-spring-integration-testing'                  // <5>
-    testImplementation 'com.agorapulse:gru-api-gateway'                                 // <6>
-    testImplementation 'com.agorapulse:gru-micronaut'                                   // <7>
+    testImplementation("com.agorapulse:gru-http")                                       // <2>
+    testImplementation("com.agorapulse:gru-grails")                                     // <3>
+    testImplementation("com.agorapulse:gru-spring")                                     // <4>
+    testImplementation("com.agorapulse:gru-spring-integration-testing")                 // <5>
+    testImplementation("com.agorapulse:gru-api-gateway")                                // <6>
+    testImplementation("com.agorapulse:gru-micronaut")                                  // <7>
 }
 ----
 <1> You can use BOM to manage the dependencies
@@ -47,18 +48,24 @@ Grails application running within integration tests.
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/HttpTest.java[lines=18..-1]
 ----
-<1> `Gru` initialized with the specification object
-<2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
-<3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+<1> `Gru` initialized with the base URL `http://despicableme.wikia.com` for HTTP calls
+<2> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Minimal HTTP Usage (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/HttpTest.kt[lines=18..-1]
+----
+<1> `Gru` initialized with the base URL `http://despicableme.wikia.com` for HTTP calls
+<2> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Minimal HTTP Usage (groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=18..-1]
 ----
-<1> `Gru` initialized with the specification object
-<2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
-<3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+<1> `Gru` initialized with the base URL `http://despicableme.wikia.com` for HTTP calls
+<2> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
 TIP: The timeouts are automatically increased to one hour when debug mode is detected.
 
@@ -71,6 +78,14 @@ Micronaut plays well with `@MicronautTest` annotation. If you are using `@Micron
 .Using @Inject with @MicronautTest (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautTest.java[lines=18..-1]
+----
+<1> Annotate your test with `@MicronautTest`
+<2> Inject `Gru`
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Using Injected Instance with @MicronautTest (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/InjectNativeMicronautSpec.kt[lines=18..-1]
 ----
 <1> Annotate your test with `@MicronautTest`
 <2> Inject `Gru`
@@ -92,6 +107,15 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicr
 ----
 <1> Create a simple `Micronaut` client for `Gru`
 <2> Default application context is created and fields can be injected into the test
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Using Default Application Context (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/AutomaticMicronautTest.kt[lines=18..-1]
+----
+<1> Create a simple `Micronaut` client for `Gru`
+<2> Default application context is created and fields can be injected into the test
+
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Using Default Application Context (Groovy)

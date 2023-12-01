@@ -15,21 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist
+package heist.kt
 
-import com.agorapulse.gru.Gru
-import com.agorapulse.gru.http.Http
-import spock.lang.Specification
+import com.agorapulse.gru.kotlin.create
 
-class HttpSpec extends Specification{
+import io.kotest.core.spec.style.StringSpec
 
-    Gru gru = Gru.create('https://despicableme.fandom.com')                             // <1>
+class HttpTest : StringSpec({
 
-    void 'despicable me'() {
-        expect:
-            gru.test {
-                get "/wiki/Felonius_Gru"                                                // <2>
-            }
+    "minimal Gru test" {
+        val gru = create("https://despicableme.fandom.com")                             // <1>
+        gru.verify {
+            get("/wiki/Felonius_Gru")                                                   // <2>
+        }
     }
 
-}
+})

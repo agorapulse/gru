@@ -32,6 +32,7 @@ buildscript {
         classpath group: 'io.github.gradle-nexus',              name: 'publish-plugin',                 version: nexusPluginVersion
 
         classpath group: 'org.jetbrains.kotlin',                name: 'kotlin-gradle-plugin',           version: kotlinVersion
+        classpath group: 'org.jetbrains.kotlin',                name: 'kotlin-allopen',                 version: kotlinVersion
     }
 }
 

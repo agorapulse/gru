@@ -22,6 +22,14 @@ import com.agorapulse.gru.minions.Minion
 import java.io.Closeable
 import com.agorapulse.gru.Gru as JavaGru
 
+fun create(): Gru {
+    return Gru(JavaGru.create())
+}
+
+fun create(baseUri: String): Gru {
+    return Gru(JavaGru.create(baseUri))
+}
+
 fun create(client: Client): Gru {
     return Gru(JavaGru.create(client))
 }

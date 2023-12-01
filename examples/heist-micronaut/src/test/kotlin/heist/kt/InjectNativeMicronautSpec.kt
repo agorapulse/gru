@@ -15,21 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist
+package heist.kt
 
-import com.agorapulse.gru.Gru
-import com.agorapulse.gru.http.Http
-import spock.lang.Specification
+import com.agorapulse.gru.kotlin.Gru
+import io.kotest.core.spec.style.StringSpec
+import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
 
-class HttpSpec extends Specification{
+@MicronautTest                                                                          // <1>
+class InjectNativeMicronautSpec(private val gru: Gru) : StringSpec({                    // <2>
 
-    Gru gru = Gru.create('https://despicableme.fandom.com')                             // <1>
-
-    void 'despicable me'() {
-        expect:
-            gru.test {
-                get "/wiki/Felonius_Gru"                                                // <2>
+    "test it works" {
+        gru.verify {
+            get("/moons/earth/moon")
+            expect {
+                json("moon.json")
             }
+        }
     }
 
-}
+})
