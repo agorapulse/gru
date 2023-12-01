@@ -37,7 +37,7 @@ jobs:
           distribution: zulu
           java-version: 17
           cache: gradle
-      - name: Test with JDK Client
+      - name: Test with Micronaut client
         uses: gradle/gradle-build-action@v2
         with:
           arguments: check --scan --parallel
