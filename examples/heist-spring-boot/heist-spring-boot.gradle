@@ -41,6 +41,9 @@ dependencies {
     testImplementation(project(':gru-spring-integration-testing'))
     testImplementation("org.spockframework:spock-spring:$spockVersion")
     testImplementation("org.spockframework:spock-core:$spockVersion")
+
+    testImplementation "org.jsoup:jsoup:$jsoupVersion"
+    testImplementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
 }
 
 test {

@@ -54,6 +54,8 @@ dependencies {
     testImplementation 'io.micronaut.test:micronaut-test-junit5'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation "org.jsoup:jsoup:$jsoupVersion"
+    testImplementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
 }
 
 

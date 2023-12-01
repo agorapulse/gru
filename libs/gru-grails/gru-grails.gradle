@@ -22,5 +22,9 @@ dependencies {
 
     implementation "org.codehaus.groovy:groovy:$groovyVersion"
 
+    // fails to compile groovy when missing
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    implementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
+
     compileOnly 'org.grails.plugins:views-json:2.3.2'
 }

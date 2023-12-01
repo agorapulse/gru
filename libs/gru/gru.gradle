@@ -20,8 +20,9 @@ dependencies {
     api 'com.agorapulse.testing:fixt:0.2.3'
 
     api "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
-    api group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
-    api group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
+
+    compileOnly group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
+    compileOnly group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
 
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation 'org.hamcrest:hamcrest:2.2'
