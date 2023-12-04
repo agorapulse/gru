@@ -19,22 +19,37 @@ package heist.kt
 
 import com.agorapulse.gru.kotlin.create
 import com.agorapulse.gru.micronaut.Micronaut
-import io.micronaut.context.env.Environment
-import jakarta.inject.Inject
-import org.junit.jupiter.api.Assertions.assertTrue
+import io.micronaut.context.ApplicationContext
+import io.micronaut.runtime.server.EmbeddedServer
+import org.junit.jupiter.api.AfterEach
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class AutomaticMicronautTest {
+class ManualWithSimpleProviderMicronautTest {
 
-    val gru = create(Micronaut.create(this))                                            // <1>
+    private val gru = create(Micronaut.create(this) { context })                        // <1>
 
-    @Inject
-    lateinit var environment: Environment                                               // <2>
+    private lateinit var context: ApplicationContext
+    private lateinit var embeddedServer: EmbeddedServer
+
+    @BeforeEach
+    fun setup() {
+        context = ApplicationContext.builder().build()
+        context.start()
+
+        embeddedServer = context.getBean(EmbeddedServer::class.java)
+        embeddedServer.start()
+    }
+
+    @AfterEach
+    fun cleanUp() {
+        embeddedServer.close()
+        context.close()
+    }
+
 
     @Test
-    fun basicTest() {
-        assertTrue(environment.activeNames.contains("test"))
-
+    fun testMoon() {
         gru.verify {
             get("/moons/earth/moon")
             expect {

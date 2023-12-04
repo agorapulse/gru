@@ -75,7 +75,7 @@ Micronaut plays well with `@MicronautTest` annotation. If you are using `@Micron
 `Gru` instance into your test.
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Using @Inject with @MicronautTest (Java)
+.Using @Inject (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautTest.java[lines=18..-1]
 ----
@@ -83,7 +83,7 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeM
 <2> Inject `Gru`
 
 [source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
-.Using Injected Instance with @MicronautTest (Kotlin)
+.Using @Inject (Kotlin)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/InjectNativeMicronautSpec.kt[lines=18..-1]
 ----
@@ -91,7 +91,7 @@ include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/InjectNati
 <2> Inject `Gru`
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
-.Using @Inject with @MicronautTest (Groovy)
+.Using @Inject (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautSpec.groovy[lines=18..-1]
 ----
@@ -101,7 +101,7 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeM
 Alternatively, you can let `Gru` to create default `ApplicationContext` for you.
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Using Default Application Context (Java)
+.Default Application Context (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicronautTest.java[lines=18..-1]
 ----
@@ -109,7 +109,7 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicr
 <2> Default application context is created and fields can be injected into the test
 
 [source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
-.Using Default Application Context (Kotlin)
+.Default Application Context (Kotlin)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/AutomaticMicronautTest.kt[lines=18..-1]
 ----
@@ -118,7 +118,7 @@ include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/AutomaticM
 
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
-.Using Default Application Context (Groovy)
+.Default Application Context (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicronautSpec.groovy[lines=18..-1]
 ----
@@ -128,14 +128,21 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicr
 If you construct the application context yourself then you need to point `Gru` to the field of type `ApplicationContext`.
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Using a Custom Application Context (Java)
+.Custom Application Context (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/ManualWithSimpleProviderMicronautTest.java[lines=18..-1]
 ----
 <1> Point `Gru` to field `context` holding the custom `ApplicationContext` instance
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Custom Application Context (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/ManualWithSimpleProviderMicronautTest.kt[lines=18..-1]
+----
+<1> Point `Gru` to field `context` holding the custom `ApplicationContext` instance
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
-.Using a Custom Application Context (Groovy)
+.Custom Application Context (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/ManualWithSimpleProviderMicronautSpec.groovy[lines=18..-1]
 ----
@@ -146,7 +153,7 @@ NOTE: As an alternative, you can make your test class implement `io.micronaut.co
 Gru can actually help you create the custom context:
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Creating a Custom Application Context (Java)
+.Custom Application Context (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutomaticMicronautTest.java[lines=18..-1]
 ----
@@ -156,7 +163,18 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutom
 <4> Start the application and injects fields into the test automatically
 <5> The field can be automatically injected
 
-.Creating a Custom Application Context (Groovy)
+.Custom Application Context (Kotlin)
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/AdvancedAutomaticMicronautTest.kt[lines=18..-1]
+----
+<1> Declare any field you want to reference from the context before `Gru` declaration
+<2> Customize the `ApplicationContextBuilder`
+<3> Customize the `ApplicationContext` itself, e.g. register mocks
+<4> Start the application and injects fields into the test automatically
+<5> The field can be automatically injected
+
+.Custom Application Context (Groovy)
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutomaticMicronautSpec.groovy[lines=18..-1]

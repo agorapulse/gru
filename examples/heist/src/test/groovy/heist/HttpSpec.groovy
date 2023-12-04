@@ -18,7 +18,6 @@
 package heist
 
 import com.agorapulse.gru.Gru
-import com.agorapulse.gru.http.Http
 import spock.lang.Specification
 
 class HttpSpec extends Specification{
