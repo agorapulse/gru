@@ -15,19 +15,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt;
+package heist.kt
 
-import com.agorapulse.gru.kotlin.Gru;
-import com.agorapulse.gru.minions.JsonMinion;
-import io.micronaut.test.extensions.junit5.annotation.MicronautTest;
-import jakarta.inject.Inject;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import com.agorapulse.gru.kotlin.Gru
+import com.agorapulse.gru.minions.JsonMinion
+import io.micronaut.test.extensions.junit5.annotation.MicronautTest
+import jakarta.inject.Inject
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
 @MicronautTest
 class CaptureResultTest {
 
-    @Inject lateinit var gru: Gru;
+    @Inject lateinit var gru: Gru
 
     // tag::extractResponseText[]
     @Test
@@ -37,16 +37,16 @@ class CaptureResultTest {
             expect { json("moon.json") }
         }
 
-        gru.verify();                                                                   // <2>
+        gru.verify()                                                                    // <2>
 
         val responseText = gru.squad.ask<JsonMinion, String> {
             responseText                                                                // <3>
         }
 
-        Assertions.assertNotNull(responseText);
-        Assertions.assertTrue(responseText!!.contains("moon"));                         // <4>
+        Assertions.assertNotNull(responseText)
+        Assertions.assertTrue(responseText!!.contains("moon"))                          // <4>
 
-        gru.close();                                                                    // <5>
+        gru.close()                                                                     // <5>
     }
     // end::extractResponseText[]
 
