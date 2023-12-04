@@ -28,13 +28,13 @@ import com.agorapulse.gru.RequestDefinitionBuilder as JavaRequestDefinitionBuild
 /**
  * Prepares the request for controller action.
  */
-class RequestDefinitionBuilder(private val delegate: JavaRequestDefinitionBuilder) : WithContentSupport {
+class RequestDefinitionBuilder(val delegate: JavaRequestDefinitionBuilder) : WithContentSupport {
 
     /**
      * @see Squad.command
      */
-    fun <M : Minion> command(minionType: Class<M>, command: M.() -> Unit): RequestDefinitionBuilder {
-        delegate.command(minionType) { command(it) }
+    inline fun <reified M : Minion> command(noinline command: M.() -> Unit): RequestDefinitionBuilder {
+        delegate.command(M::class.java) { command(it) }
         return this
     }
 

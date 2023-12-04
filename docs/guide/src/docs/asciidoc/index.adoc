@@ -887,6 +887,17 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 <4> Use `that` method to add additional result matchers, the `content()` method is statically imported from
 link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.MockMVC Builders (Kotlin)
+----
+include::{root-dir}/examples/heist-spring-boot/src/test/kotlin/com/agorapulse/gru/spring/heist/kt/MoonControllerTest.kt[tag=mockmvc,ident=0]
+----
+<1> Use `request` method to fine-tune link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/request/MockHttpServletRequestBuilder.html[MockHttpServletRequestBuilder]
+<2> Declare `Accept` header
+<3> Same as `request`, declares desired locale
+<4> Use `that` method to add additional result matchers, the `content()` method is statically imported from
+link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
+
 === Integration Tests
 You use `Http` client to verify controller within `@Integration` test. Once `gru-spring-integration-test` is on the classpath then you can inject `Gru` bean into your tests.
 
