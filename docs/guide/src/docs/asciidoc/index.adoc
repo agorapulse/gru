@@ -1,10 +1,11 @@
-= Gru - Groovy HTTP Testing Framework
+= Gru - HTTP Testing Framework
 
 [.ribbon]
 image::ribbon.png[link={project-url}]
 
-Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway but it can be used with any
-HTTP server framework.
+Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway, but it can be used with any HTTP server framework.
+
+Gru is based on snapshot testing of the payloads. It excels in testing JSON response by leveraging https://github.com/lukas-krecan/JsonUnit[JsonUnit] placeholders to substitute dynamic values such as timestamps or random IDs.
 
 == Installation
 
@@ -232,6 +233,17 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 <3> Initiate `Gru` with `Spring` client
 <4> Issue mock `GET` request to `/moon/earth/moon` and expect it returns `OK(200)` response
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Minimal Spring Usage (Kotlin)
+----
+include::{root-dir}/examples/heist-spring-boot/src/test/kotlin/com/agorapulse/gru/spring/heist/kt/BasicTest.kt[lines=18..-1]
+----
+<1> Use `@WebMvcTest` to properly setup Spring MVC test, see the warning bellow
+<2> Field with type `MockMvc` must exist and must not be `null` during the test execution
+<3> Initiate `Gru` with `Spring` client
+<4> Issue mock `GET` request to `/moon/earth/moon` and expect it returns `OK(200)` response
+
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Minimal Spring Usage (Groovy)
 ----
@@ -251,6 +263,8 @@ overrides the default transitive dependency back to `1.0` so you need to explici
 
 [source,groovy]
 ----
+// use the latest appropriate version, check Maven Central if you are not sure
+// https://central.sonatype.com/artifact/org.spockframework/spock-core
 String spockVersion = '1.1-groovy-2.4'
 testImplementation("org.spockframework:spock-spring:$spockVersion")
 testImplementation("org.spockframework:spock-core:$spockVersion")
@@ -279,6 +293,12 @@ You can specify additional URL parameters
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=stealWithShrinkRay,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Additional URL Parameters (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=stealWithShrinkRay,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Additional URL Parameters (Groovy)
 ----
@@ -295,6 +315,11 @@ You can specify additional HTTP headers sent with the request.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=secretMoon,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Request Headers (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=secretMoon,indent=0]
+----
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Request Headers (Groovy)
 ----
@@ -312,6 +337,11 @@ You can use JSON payload from file.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=newMoon,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Payload (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=newMoon,indent=0]
+----
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .JSON Payload (Groovy)
 ----
@@ -343,6 +373,12 @@ You can use generic payload from file.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=newMoonGeneric,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Generic Payload (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=newMoonGeneric,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Generic Payload (Groovy)
 ----
@@ -351,7 +387,7 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 
 [NOTE]
 Content files are loaded relatively to directory having the same name as the current specification and it is placed
-in the same directory corresponding the package of the the current specification. For example if your specification name
+in the same directory corresponding the package of the current specification. For example if your specification name
 is `org.example.ExampleSpec` then `createNewMoonResponse.json` file's path should be `org/example/ExampleSpec/createNewMoonResponse.json`.
 
 [TIP]
@@ -369,6 +405,15 @@ You can emulate multipart file uploads.
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=fileUpload,indent=0]
 ----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.File Upload (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=fileUpload,indent=0]
+----
+<1> Define upload files and parameters
+<2> You can specify arbitrary parameter (i.g. hidden fields)
+<3> Specify the file to be uploaded with the name of the parameter, original filename, content and content type
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .File Upload (Groovy)
@@ -390,6 +435,15 @@ You can emulate cookies send by the browser or verify they have been set by the 
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=cookies,indent=0]
 ----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Cookies (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=cookies,indent=0]
+----
+<1> Send browser cookies
+<2> Expect cookies sent by the server
+<3> More detailed response cookie expectations
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Cookies (Groovy)
@@ -415,6 +469,12 @@ Default status is `OK(200)` which is asserted within every test. See <<redirect>
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=stealWithShrinkRay,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Status Code (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=stealWithShrinkRay,indent=0]
+
+----
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Status Code (Groovy)
 ----
@@ -430,6 +490,12 @@ You can specify expected response headers.
 .Response Headers (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=jsonHeaders,indent=0]
+----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Response Headers (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=jsonHeaders,indent=0]
 ----
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
@@ -448,6 +514,12 @@ You can specify expected redirection URI. For redirection, default status code i
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=redirect,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Redirection (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=redirect,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Redirection (Groovy)
 ----
@@ -461,6 +533,12 @@ You can specify expected plain text response. The responded JSON is verified jus
 .Plain Text Response (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyText,indent=0]
+----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Plain Text Response (Kotlin)
+----
+include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyText,indent=0]
 ----
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
@@ -482,6 +560,12 @@ You can also specify the text inline. Inline method is also available for JSON a
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyTextInline,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Plain Text Inline Response (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyTextInline,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Plain Text Inline Response (Groovy)
 ----
@@ -495,6 +579,12 @@ You can specify expected JSON response. The responded JSON is verified using htt
 .JSON Response (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyJson,indent=0]
+----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Response (Groovy)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyJson,indent=0]
 ----
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
@@ -517,6 +607,13 @@ You can pass JsonUnit options along with the file name.
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyJson2,indent=0]
 ----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Response with Options (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyJson2,indent=0]
+----
+
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .JSON Response with Options (Groovy)
@@ -567,6 +664,12 @@ You can customize `JsonUnit` fluent assertion within `json` block inside `expect
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=customiseJsonUnit,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JsonUnit Customisation (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=customiseJsonUnit,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .JsonUnit Customisation (Groovy)
 ----
@@ -600,6 +703,12 @@ to ignore the value fo the node.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyHtml,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.HTML Response (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyHtml,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .HTML Response (Groovy)
 ----
@@ -627,6 +736,17 @@ to access the actual response.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/CaptureResultTest.java[tag=extractResponseText,indent=0]
 ----
 <1> use `test` instead of `verify(Consumer)` to keep Gru's internal state
+<2> use `verify` to perform the verification call and populate the response text
+<3> read the response text from `JsonMinion`
+<4> make some assertion using the response text
+<5> don't forget to close/reset the Gru instance manually
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Reading Response Text (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/CaptureResultTest.kt[tag=extractResponseText,indent=0]
+----
+<1> split the verification call between `when` and `then` instead of `expect`
 <2> use `verify` to perform the verification call and populate the response text
 <3> read the response text from `JsonMinion`
 <4> make some assertion using the response text

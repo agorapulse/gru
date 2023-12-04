@@ -41,6 +41,8 @@ fun create(client: Client): Gru {
  */
 class Gru constructor(private val delegate: JavaGru) : Closeable {
 
+    val squad = Squad(delegate.squad)
+
     /**
      * Prepare every test with following configuration.
      *

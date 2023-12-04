@@ -48,6 +48,7 @@ asciidoctor {
         'root-dir': rootDir,
         'project-slug': slug,
         'docinfo': 'shared',
+        'toclevels': 3,
     ]
 
 }
