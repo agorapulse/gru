@@ -3,7 +3,7 @@
 [.ribbon]
 image::ribbon.png[link={project-url}]
 
-Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway, but it can be used with any HTTP server framework.
+Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway, but it can be used with any HTTP server.
 
 Gru is based on snapshot testing of the payloads. It excels in testing JSON response by leveraging https://github.com/lukas-krecan/JsonUnit[JsonUnit] placeholders to substitute dynamic values such as timestamps or random IDs.
 
@@ -19,24 +19,30 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform("com.agorapulse:gru-bom:{project-version}")            // <1>
+    testImplementation platform("com.agorapulse:gru-bom:{project-version}")             // <1>
 
-    // pick any of these as you need
-    testImplementation("com.agorapulse:gru-http")                                       // <2>
-    testImplementation("com.agorapulse:gru-grails")                                     // <3>
-    testImplementation("com.agorapulse:gru-spring")                                     // <4>
-    testImplementation("com.agorapulse:gru-spring-integration-testing")                 // <5>
-    testImplementation("com.agorapulse:gru-api-gateway")                                // <6>
-    testImplementation("com.agorapulse:gru-micronaut")                                  // <7>
+    // the basic dependency including the generic HTTP client
+    testImplementation("com.agorapulse:gru")                                            // <2>
+
+    // pick any of these as you need, see the bullet points below for more details
+    testImplementation("com.agorapulse:gru-kotlin")                                     // <3>
+    testImplementation("com.agorapulse:gru-micronaut")                                  // <4>
+    testImplementation("com.agorapulse:gru-spring")                                     // <5>
+    testImplementation("com.agorapulse:gru-spring-integration-testing")                 // <6>
+    testImplementation("com.agorapulse:gru-grails")                                     // <7>
+    testImplementation("com.agorapulse:gru-api-gateway")                                // <8>
+    testImplementation("com.agorapulse:gru-okhttp")                                     // <9>
 }
 ----
-<1> You can use BOM to manage the dependencies
-<2> HTTP module for any HTTP backend such as Micronaut embedded server
-<3> Grails module to emulate HTTP interaction within Grails Unit tests
-<4> Spring module to emulate HTTP interaction using `MockMvc`
-<5> Spring module for real HTTP calls in integration tests
-<6> AWS API Gateway module for HTTP proxy lambdas
-<7> Micronaut module for running HTTP request against the embedded server
+<1> You can use BOM to manage the dependencies, otherwise include the version number with each dependency
+<2> The basic module including the generic HTTP client
+<3> Kotlin module for Kotlin DSL
+<4> Micronaut module for running HTTP request against the embedded server
+<5> Spring module to emulate HTTP interaction using `MockMvc`
+<6> Spring module for real HTTP calls in integration tests
+<7> Grails module to emulate HTTP interaction within Grails Unit tests
+<8> AWS API Gateway module for HTTP proxy lambdas
+<9> Alternative OkHttp module for real HTTP calls in integration tests
 
 == Setup
 
@@ -98,6 +104,8 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeM
 ----
 <1> Annotate your test with `@MicronautTest`
 <2> Inject `Gru`
+
+TIP: By default, the HTTP client uses Micronaut's `HttpClient` but you can switch to different implementation by setting the property `gru.http.client` to `okhttp` or `jdk`. Using `OkHttp` client requires adding `gru-okhttp` library to the classpath. If you want to provide your own client implementation, you can implement `Client` interface and register it as a `@Primary` bean.
 
 Alternatively, you can let `Gru` to create default `ApplicationContext` for you.
 
@@ -1027,5 +1035,23 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 Creating new client is bit more work but you can check `Http` client which is rather small implementation.
 The core idea is to provide methods to update request and to check the response returned.
 
+== Release Notes
+
+=== 2.0.0
+
+==== Breaking Changes
+
+* The minimal Java version has been set to Java 11
+* The Micronaut module has been upgraded to Micronaut 4.x, Groovy 4.x and Java 17
+* The HTTP module has been removed as the `Http` client is not part of the core `gru` package
+* The original HTTP module has been renamed to `gru-okhttp` and the client accordingly to `OkHttp`
+* The libraries required to evaluate HTML responses has been moved to compile only dependencies
+* Micronaut module now uses `micronaut-http-client` instead of the default HTTP one
+
+
+==== New Features
+
+* Small improvements in the Kotlin DSL
+* No need to specify the reference class when calling `Gru.create()` or `Http.create()`. The class is automatically detected using the stack walker API.
 
 
