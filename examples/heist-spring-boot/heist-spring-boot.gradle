@@ -16,6 +16,9 @@
  * limitations under the License.
  */
 plugins {
+    id "org.jetbrains.kotlin.jvm"
+    id "org.jetbrains.kotlin.kapt"
+    id "org.jetbrains.kotlin.plugin.allopen"
     id 'org.springframework.boot' version '2.4.3'
     id 'io.spring.dependency-management' version '1.0.11.RELEASE'
     id 'groovy'
@@ -39,6 +42,7 @@ dependencies {
 
     testImplementation(project(':gru-spring'))
     testImplementation(project(':gru-spring-integration-testing'))
+    testImplementation(project(':gru-kotlin'))
     testImplementation("org.spockframework:spock-spring:$spockVersion")
     testImplementation("org.spockframework:spock-core:$spockVersion")
 

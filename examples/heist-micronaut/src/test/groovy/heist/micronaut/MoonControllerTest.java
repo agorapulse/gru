@@ -111,7 +111,7 @@ public class MoonControllerTest {
             .get("/moons/setCookie")
             .expect(resp -> resp
                 .cookie("chocolate", "rules")                                           // <2>
-                .cookie(c -> c                                                                      // <3>
+                .cookie(c -> c                                                          // <3>
                     .name("coffee")
                     .value("lover")
                     .secure(true)

@@ -16,6 +16,9 @@
  * limitations under the License.
  */
 plugins {
+    id("org.jetbrains.kotlin.jvm")
+    id("org.jetbrains.kotlin.kapt")
+    id("org.jetbrains.kotlin.plugin.allopen")
     id("groovy")
     id("io.micronaut.application") version "4.2.0"
 }
@@ -48,14 +51,25 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.yaml:snakeyaml")
 
+    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+
     testImplementation project(':gru-micronaut')
     testImplementation project(':gru-okhttp')
+    testImplementation project(':gru-kotlin')
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'io.micronaut.test:micronaut-test-junit5'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
     testImplementation 'org.mockito:mockito-core:4.5.1'
     testImplementation "org.jsoup:jsoup:$jsoupVersion"
     testImplementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
+    testImplementation "org.jsoup:jsoup:$jsoupVersion"
+    testImplementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
+    testImplementation "io.mockk:mockk"
+    testImplementation "io.micronaut.test:micronaut-test-kotest5"
+    testImplementation "io.kotest:kotest-runner-junit5-jvm"
 }
 
 

@@ -30,14 +30,13 @@ import com.agorapulse.gru.ResponseDefinitionBuilder as JavaResponseDefinitionBui
  * Sets expectations for the response after the controller action has been executed.
  *
  */
-class ResponseDefinitionBuilder(private val delegate: JavaResponseDefinitionBuilder) : HttpStatusShortcuts,
-    JsonUnitOptionsShortcuts, WithContentSupport {
+class ResponseDefinitionBuilder(val delegate: JavaResponseDefinitionBuilder) : HttpStatusShortcuts, JsonUnitOptionsShortcuts, WithContentSupport {
 
     /**
      * @see Squad.command
      */
-    fun <M : Minion> command(minionType: Class<M>, command: M.() -> Unit): ResponseDefinitionBuilder {
-        delegate.command(minionType) { command(it) }
+    inline fun <reified M : Minion> command(noinline command: M.() -> Unit): ResponseDefinitionBuilder {
+        delegate.command(M::class.java) { command(it) }
         return this
     }
 

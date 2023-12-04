@@ -15,40 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-plugins {
-    id 'org.kordamp.gradle.guide'
-    id 'org.ajoberstar.git-publish'
-}
+package heist.kt
 
-config {
-    docs {
-        guide {
-            publish {
-                enabled = true
+import com.agorapulse.gru.kotlin.Gru
+import io.kotest.core.spec.style.StringSpec
+import io.micronaut.test.extensions.kotest5.annotation.MicronautTest
+
+@MicronautTest                                                                          // <1>
+class InjectNativeMicronautSpec(private val gru: Gru) : StringSpec({                    // <2>
+
+    "test it works" {
+        gru.verify {
+            get("/moons/earth/moon")
+            expect {
+                json("moon.json")
             }
         }
     }
-}
 
-configurations {
-    asciidoctorExtensions
-}
-
-dependencies {
-    asciidoctorExtensions 'com.bmuschko:asciidoctorj-tabbed-code-extension:0.3'
-}
-
-asciidoctor {
-    configurations 'asciidoctorExtensions'
-    baseDirFollowsSourceDir()
-
-    attributes = [
-        'gradle-version': project.gradle.gradleVersion,
-        'source-highlighter': 'prettify',
-        'root-dir': rootDir,
-        'project-slug': slug,
-        'docinfo': 'shared',
-        'toclevels': 3,
-    ]
-
-}
+})

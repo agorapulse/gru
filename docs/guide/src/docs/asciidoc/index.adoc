@@ -1,10 +1,11 @@
-= Gru - Groovy HTTP Testing Framework
+= Gru - HTTP Testing Framework
 
 [.ribbon]
 image::ribbon.png[link={project-url}]
 
-Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway but it can be used with any
-HTTP server framework.
+Gru is HTTP interaction testing framework with out-of-box support for Micronaut, Grails, Spring MVC, API Gateway, but it can be used with any HTTP server.
+
+Gru is based on snapshot testing of the payloads. It excels in testing JSON response by leveraging https://github.com/lukas-krecan/JsonUnit[JsonUnit] placeholders to substitute dynamic values such as timestamps or random IDs.
 
 == Installation
 
@@ -18,23 +19,30 @@ repositories {
 }
 
 dependencies {
-    testImplementation platform('com.agorapulse:gru-bom:{project-version}')            // <1>
-    // pick any of these as you need
-    testImplementation 'com.agorapulse:gru-http'                                        // <2>
-    testImplementation 'com.agorapulse:gru-grails'                                      // <3>
-    testImplementation 'com.agorapulse:gru-spring'                                      // <4>
-    testImplementation 'com.agorapulse:gru-spring-integration-testing'                  // <5>
-    testImplementation 'com.agorapulse:gru-api-gateway'                                 // <6>
-    testImplementation 'com.agorapulse:gru-micronaut'                                   // <7>
+    testImplementation platform("com.agorapulse:gru-bom:{project-version}")             // <1>
+
+    // the basic dependency including the generic HTTP client
+    testImplementation("com.agorapulse:gru")                                            // <2>
+
+    // pick any of these as you need, see the bullet points below for more details
+    testImplementation("com.agorapulse:gru-kotlin")                                     // <3>
+    testImplementation("com.agorapulse:gru-micronaut")                                  // <4>
+    testImplementation("com.agorapulse:gru-spring")                                     // <5>
+    testImplementation("com.agorapulse:gru-spring-integration-testing")                 // <6>
+    testImplementation("com.agorapulse:gru-grails")                                     // <7>
+    testImplementation("com.agorapulse:gru-api-gateway")                                // <8>
+    testImplementation("com.agorapulse:gru-okhttp")                                     // <9>
 }
 ----
-<1> You can use BOM to manage the dependencies
-<2> HTTP module for any HTTP backend such as Micronaut embedded server
-<3> Grails module to emulate HTTP interaction within Grails Unit tests
-<4> Spring module to emulate HTTP interaction using `MockMvc`
-<5> Spring module for real HTTP calls in integration tests
-<6> AWS API Gateway module for HTTP proxy lambdas
-<7> Micronaut module for running HTTP request against the embedded server
+<1> You can use BOM to manage the dependencies, otherwise include the version number with each dependency
+<2> The basic module including the generic HTTP client
+<3> Kotlin module for Kotlin DSL
+<4> Micronaut module for running HTTP request against the embedded server
+<5> Spring module to emulate HTTP interaction using `MockMvc`
+<6> Spring module for real HTTP calls in integration tests
+<7> Grails module to emulate HTTP interaction within Grails Unit tests
+<8> AWS API Gateway module for HTTP proxy lambdas
+<9> Alternative OkHttp module for real HTTP calls in integration tests
 
 == Setup
 
@@ -47,18 +55,24 @@ Grails application running within integration tests.
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/HttpTest.java[lines=18..-1]
 ----
-<1> `Gru` initialized with the specification object
-<2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
-<3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+<1> `Gru` initialized with the base URL `http://despicableme.wikia.com` for HTTP calls
+<2> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Minimal HTTP Usage (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/HttpTest.kt[lines=18..-1]
+----
+<1> `Gru` initialized with the base URL `http://despicableme.wikia.com` for HTTP calls
+<2> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Minimal HTTP Usage (groovy)
 ----
 include::{root-dir}/examples/heist/src/test/groovy/heist/HttpSpec.groovy[lines=18..-1]
 ----
-<1> `Gru` initialized with the specification object
-<2> Set the base URL `http://despicableme.wikia.com` for HTTP calls
-<3> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
+<1> `Gru` initialized with the base URL `http://despicableme.wikia.com` for HTTP calls
+<2> Execute HTTP GET request on `/wiki/Felonius_Gru` URI and verify it is accessible and returns `OK(200)` status code.
 
 TIP: The timeouts are automatically increased to one hour when debug mode is detected.
 
@@ -68,33 +82,52 @@ Micronaut plays well with `@MicronautTest` annotation. If you are using `@Micron
 `Gru` instance into your test.
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Using @Inject with @MicronautTest (Java)
+.Using @Inject (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautTest.java[lines=18..-1]
 ----
 <1> Annotate your test with `@MicronautTest`
 <2> Inject `Gru`
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Using @Inject (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/InjectNativeMicronautSpec.kt[lines=18..-1]
+----
+<1> Annotate your test with `@MicronautTest`
+<2> Inject `Gru`
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
-.Using @Inject with @MicronautTest (Groovy)
+.Using @Inject (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/InjectNativeMicronautSpec.groovy[lines=18..-1]
 ----
 <1> Annotate your test with `@MicronautTest`
 <2> Inject `Gru`
 
+TIP: By default, the HTTP client uses Micronaut's `HttpClient` but you can switch to different implementation by setting the property `gru.http.client` to `okhttp` or `jdk`. Using `OkHttp` client requires adding `gru-okhttp` library to the classpath. If you want to provide your own client implementation, you can implement `Client` interface and register it as a `@Primary` bean.
+
 Alternatively, you can let `Gru` to create default `ApplicationContext` for you.
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Using Default Application Context (Java)
+.Default Application Context (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicronautTest.java[lines=18..-1]
 ----
 <1> Create a simple `Micronaut` client for `Gru`
 <2> Default application context is created and fields can be injected into the test
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Default Application Context (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/AutomaticMicronautTest.kt[lines=18..-1]
+----
+<1> Create a simple `Micronaut` client for `Gru`
+<2> Default application context is created and fields can be injected into the test
+
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
-.Using Default Application Context (Groovy)
+.Default Application Context (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicronautSpec.groovy[lines=18..-1]
 ----
@@ -104,14 +137,21 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AutomaticMicr
 If you construct the application context yourself then you need to point `Gru` to the field of type `ApplicationContext`.
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Using a Custom Application Context (Java)
+.Custom Application Context (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/ManualWithSimpleProviderMicronautTest.java[lines=18..-1]
 ----
 <1> Point `Gru` to field `context` holding the custom `ApplicationContext` instance
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Custom Application Context (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/ManualWithSimpleProviderMicronautTest.kt[lines=18..-1]
+----
+<1> Point `Gru` to field `context` holding the custom `ApplicationContext` instance
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
-.Using a Custom Application Context (Groovy)
+.Custom Application Context (Groovy)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/ManualWithSimpleProviderMicronautSpec.groovy[lines=18..-1]
 ----
@@ -122,7 +162,7 @@ NOTE: As an alternative, you can make your test class implement `io.micronaut.co
 Gru can actually help you create the custom context:
 
 [source,java,indent=0,role="primary",subs='verbatim,attributes']
-.Creating a Custom Application Context (Java)
+.Custom Application Context (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutomaticMicronautTest.java[lines=18..-1]
 ----
@@ -132,7 +172,18 @@ include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutom
 <4> Start the application and injects fields into the test automatically
 <5> The field can be automatically injected
 
-.Creating a Custom Application Context (Groovy)
+.Custom Application Context (Kotlin)
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/AdvancedAutomaticMicronautTest.kt[lines=18..-1]
+----
+<1> Declare any field you want to reference from the context before `Gru` declaration
+<2> Customize the `ApplicationContextBuilder`
+<3> Customize the `ApplicationContext` itself, e.g. register mocks
+<4> Start the application and injects fields into the test automatically
+<5> The field can be automatically injected
+
+.Custom Application Context (Groovy)
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/AdvancedAutomaticMicronautSpec.groovy[lines=18..-1]
@@ -190,6 +241,17 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 <3> Initiate `Gru` with `Spring` client
 <4> Issue mock `GET` request to `/moon/earth/moon` and expect it returns `OK(200)` response
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Minimal Spring Usage (Kotlin)
+----
+include::{root-dir}/examples/heist-spring-boot/src/test/kotlin/com/agorapulse/gru/spring/heist/kt/BasicTest.kt[lines=18..-1]
+----
+<1> Use `@WebMvcTest` to properly setup Spring MVC test, see the warning bellow
+<2> Field with type `MockMvc` must exist and must not be `null` during the test execution
+<3> Initiate `Gru` with `Spring` client
+<4> Issue mock `GET` request to `/moon/earth/moon` and expect it returns `OK(200)` response
+
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Minimal Spring Usage (Groovy)
 ----
@@ -209,6 +271,8 @@ overrides the default transitive dependency back to `1.0` so you need to explici
 
 [source,groovy]
 ----
+// use the latest appropriate version, check Maven Central if you are not sure
+// https://central.sonatype.com/artifact/org.spockframework/spock-core
 String spockVersion = '1.1-groovy-2.4'
 testImplementation("org.spockframework:spock-spring:$spockVersion")
 testImplementation("org.spockframework:spock-core:$spockVersion")
@@ -237,6 +301,12 @@ You can specify additional URL parameters
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=stealWithShrinkRay,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Additional URL Parameters (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=stealWithShrinkRay,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Additional URL Parameters (Groovy)
 ----
@@ -253,6 +323,11 @@ You can specify additional HTTP headers sent with the request.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=secretMoon,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Request Headers (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=secretMoon,indent=0]
+----
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Request Headers (Groovy)
 ----
@@ -270,6 +345,11 @@ You can use JSON payload from file.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=newMoon,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Payload (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=newMoon,indent=0]
+----
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .JSON Payload (Groovy)
 ----
@@ -301,6 +381,12 @@ You can use generic payload from file.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=newMoonGeneric,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Generic Payload (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=newMoonGeneric,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Generic Payload (Groovy)
 ----
@@ -309,7 +395,7 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 
 [NOTE]
 Content files are loaded relatively to directory having the same name as the current specification and it is placed
-in the same directory corresponding the package of the the current specification. For example if your specification name
+in the same directory corresponding the package of the current specification. For example if your specification name
 is `org.example.ExampleSpec` then `createNewMoonResponse.json` file's path should be `org/example/ExampleSpec/createNewMoonResponse.json`.
 
 [TIP]
@@ -327,6 +413,15 @@ You can emulate multipart file uploads.
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=fileUpload,indent=0]
 ----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.File Upload (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=fileUpload,indent=0]
+----
+<1> Define upload files and parameters
+<2> You can specify arbitrary parameter (i.g. hidden fields)
+<3> Specify the file to be uploaded with the name of the parameter, original filename, content and content type
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .File Upload (Groovy)
@@ -348,6 +443,15 @@ You can emulate cookies send by the browser or verify they have been set by the 
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=cookies,indent=0]
 ----
+
+[source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
+.Cookies (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=cookies,indent=0]
+----
+<1> Send browser cookies
+<2> Expect cookies sent by the server
+<3> More detailed response cookie expectations
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Cookies (Groovy)
@@ -373,6 +477,12 @@ Default status is `OK(200)` which is asserted within every test. See <<redirect>
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=stealWithShrinkRay,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Status Code (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=stealWithShrinkRay,indent=0]
+
+----
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Status Code (Groovy)
 ----
@@ -388,6 +498,12 @@ You can specify expected response headers.
 .Response Headers (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=jsonHeaders,indent=0]
+----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Response Headers (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=jsonHeaders,indent=0]
 ----
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
@@ -406,6 +522,12 @@ You can specify expected redirection URI. For redirection, default status code i
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=redirect,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Redirection (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=redirect,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Redirection (Groovy)
 ----
@@ -419,6 +541,12 @@ You can specify expected plain text response. The responded JSON is verified jus
 .Plain Text Response (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyText,indent=0]
+----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Plain Text Response (Kotlin)
+----
+include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=verifyText,indent=0]
 ----
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
@@ -440,6 +568,12 @@ You can also specify the text inline. Inline method is also available for JSON a
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyTextInline,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Plain Text Inline Response (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyTextInline,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Plain Text Inline Response (Groovy)
 ----
@@ -453,6 +587,12 @@ You can specify expected JSON response. The responded JSON is verified using htt
 .JSON Response (Java)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyJson,indent=0]
+----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Response (Groovy)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyJson,indent=0]
 ----
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
@@ -475,6 +615,13 @@ You can pass JsonUnit options along with the file name.
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyJson2,indent=0]
 ----
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JSON Response with Options (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyJson2,indent=0]
+----
+
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .JSON Response with Options (Groovy)
@@ -525,6 +672,12 @@ You can customize `JsonUnit` fluent assertion within `json` block inside `expect
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=customiseJsonUnit,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.JsonUnit Customisation (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=customiseJsonUnit,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .JsonUnit Customisation (Groovy)
 ----
@@ -558,6 +711,12 @@ to ignore the value fo the node.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/micronaut/MoonControllerTest.java[tag=verifyHtml,indent=0]
 ----
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.HTML Response (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/MoonControllerTest.kt[tag=verifyHtml,indent=0]
+----
+
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .HTML Response (Groovy)
 ----
@@ -585,6 +744,17 @@ to access the actual response.
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/CaptureResultTest.java[tag=extractResponseText,indent=0]
 ----
 <1> use `test` instead of `verify(Consumer)` to keep Gru's internal state
+<2> use `verify` to perform the verification call and populate the response text
+<3> read the response text from `JsonMinion`
+<4> make some assertion using the response text
+<5> don't forget to close/reset the Gru instance manually
+
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.Reading Response Text (Kotlin)
+----
+include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/CaptureResultTest.kt[tag=extractResponseText,indent=0]
+----
+<1> split the verification call between `when` and `then` instead of `expect`
 <2> use `verify` to perform the verification call and populate the response text
 <3> read the response text from `JsonMinion`
 <4> make some assertion using the response text
@@ -725,6 +895,17 @@ include::{root-dir}/examples/heist-spring-boot/src/test/groovy/com/agorapulse/gr
 <4> Use `that` method to add additional result matchers, the `content()` method is statically imported from
 link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
 
+[source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
+.MockMVC Builders (Kotlin)
+----
+include::{root-dir}/examples/heist-spring-boot/src/test/kotlin/com/agorapulse/gru/spring/heist/kt/MoonControllerTest.kt[tag=mockmvc,ident=0]
+----
+<1> Use `request` method to fine-tune link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/request/MockHttpServletRequestBuilder.html[MockHttpServletRequestBuilder]
+<2> Declare `Accept` header
+<3> Same as `request`, declares desired locale
+<4> Use `that` method to add additional result matchers, the `content()` method is statically imported from
+link:https://docs.spring.io/spring/docs/current/javadoc-api/org/springframework/test/web/servlet/result/MockMvcResultMatchers.html[MockMvcResultMatchers] class, asserts the content encoding
+
 === Integration Tests
 You use `Http` client to verify controller within `@Integration` test. Once `gru-spring-integration-test` is on the classpath then you can inject `Gru` bean into your tests.
 
@@ -854,5 +1035,23 @@ include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groo
 Creating new client is bit more work but you can check `Http` client which is rather small implementation.
 The core idea is to provide methods to update request and to check the response returned.
 
+== Release Notes
+
+=== 2.0.0
+
+==== Breaking Changes
+
+* The minimal Java version has been set to Java 11
+* The Micronaut module has been upgraded to Micronaut 4.x, Groovy 4.x and Java 17
+* The HTTP module has been removed as the `Http` client is not part of the core `gru` package
+* The original HTTP module has been renamed to `gru-okhttp` and the client accordingly to `OkHttp`
+* The libraries required to evaluate HTML responses has been moved to compile only dependencies
+* Micronaut module now uses `micronaut-http-client` instead of the default HTTP one
+
+
+==== New Features
+
+* Small improvements in the Kotlin DSL
+* No need to specify the reference class when calling `Gru.create()` or `Http.create()`. The class is automatically detected using the stack walker API.
 
 

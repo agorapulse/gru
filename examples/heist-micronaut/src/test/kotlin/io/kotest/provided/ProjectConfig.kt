@@ -15,19 +15,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist;
+package io.kotest.provided
 
-import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.http.Http;
-import org.junit.Test;
+import io.kotest.core.config.AbstractProjectConfig
+import io.micronaut.test.extensions.kotest5.MicronautKotest5Extension
 
-public class HttpTest {
-
-    Gru gru = Gru.create("https://despicableme.fandom.com");                            // <1>
-
-    @Test
-    public void testGetWiki() throws Throwable {
-        gru.verify(test -> test.get("/wiki/Felonius_Gru"));                             // <2>
-    }
-
+object ProjectConfig : AbstractProjectConfig() {
+    override fun extensions() = listOf(MicronautKotest5Extension)
 }
