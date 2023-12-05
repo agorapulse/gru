@@ -17,21 +17,13 @@
  */
 plugins {
     id("groovy")
-    id("io.micronaut.library") version "4.2.0"
-}
-
-micronaut {
-    importMicronautPlatform = true
-    version("4.2.0")
-    testRuntime("spock2")
-    processing {
-        incremental(true)
-        annotations("heist.*")
-    }
 }
 
 dependencies {
-    annotationProcessor "io.micronaut.validation:micronaut-validation"
+    annotationProcessor platform('io.micronaut.platform:micronaut-platform:4.2.0')
+    annotationProcessor 'io.micronaut.validation:micronaut-validation-processor'
+    annotationProcessor 'io.micronaut.validation:micronaut-validation'
+    annotationProcessor 'io.micronaut:micronaut-inject-java'
 
     api project(':gru')
 
@@ -39,15 +31,19 @@ dependencies {
     compileOnly project(':gru-kotlin')
     compileOnly project(':gru-okhttp')
 
-    implementation("io.micronaut.validation:micronaut-validation")
-    implementation("io.micronaut:micronaut-http-server")
-    implementation("io.micronaut:micronaut-http-client")
-
-    testImplementation project(':gru-okhttp')
+    compileOnly platform('io.micronaut.platform:micronaut-platform:4.2.0')
+    compileOnly 'io.micronaut.validation:micronaut-validation'
+    compileOnly 'io.micronaut:micronaut-http-client'
+    compileOnly 'io.micronaut:micronaut-http-server'
+    compileOnly 'io.micronaut:micronaut-inject'
 }
 
 java {
     toolchain {
         languageVersion.set(JavaLanguageVersion.of(17))
     }
+}
+
+tasks.withType(Test).configureEach {
+    useJUnitPlatform()
 }
