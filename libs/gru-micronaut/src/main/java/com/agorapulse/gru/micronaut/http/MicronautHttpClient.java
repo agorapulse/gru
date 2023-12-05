@@ -22,6 +22,7 @@ import com.agorapulse.gru.GruContext;
 import com.agorapulse.gru.Squad;
 import io.micronaut.http.HttpResponse;
 import io.micronaut.http.client.HttpClient;
+import io.micronaut.http.client.exceptions.HttpClientResponseException;
 
 /**
  * Http Gru client preforms real HTTP calls against given URIs.
@@ -75,10 +76,18 @@ public class MicronautHttpClient extends AbstractClient {
 
     @Override
     public GruContext run(Squad squad, GruContext context) {
-        HttpResponse<?> exchange = client.toBlocking().exchange(request.buildHttpRequest(), String.class);
+        HttpResponse<?> exchange = doRun();
 
         response = new MicronautHttpResponse(exchange);
         return context.withResult(response);
+    }
+
+    private HttpResponse<?> doRun() {
+        try {
+            return client.toBlocking().exchange(request.buildHttpRequest(), String.class);
+        } catch (HttpClientResponseException e) {
+            return e.getResponse();
+        }
     }
 
 }
