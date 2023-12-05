@@ -151,6 +151,10 @@ class MicronautHttpRequest implements Client.Request {
 
         builder.contentType(contentType);
 
+        headers.forEach((name, values) -> {
+            values.forEach(value -> builder.getHeaders().add(name, value));
+        });
+
         cookies.forEach(c -> {
             io.micronaut.http.cookie.Cookie cookie = io.micronaut.http.cookie.Cookie.of(c.getName(), c.getValue());
             cookie.httpOnly(c.getHttpOnly());
