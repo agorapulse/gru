@@ -60,7 +60,8 @@ jobs:
     strategy:
       matrix:
         repository:
-          - agorapulse/agorapulse-bom
+          # temporary disabled until migrated to Micronaut 4.x everywhere
+          # - agorapulse/agorapulse-bom
           - agorapulse/agorapulse-oss
     steps:
       - uses: actions/checkout@v1

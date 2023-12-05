@@ -1043,7 +1043,7 @@ The core idea is to provide methods to update request and to check the response 
 
 * The minimal Java version has been set to Java 11
 * The Micronaut module has been upgraded to Micronaut 4.x, Groovy 4.x and Java 17
-* The HTTP module has been removed as the `Http` client is not part of the core `gru` package
+* The HTTP module has been removed as the `Http` client is now part of the core `gru` package
 * The original HTTP module has been renamed to `gru-okhttp` and the client accordingly to `OkHttp`
 * The libraries required to evaluate HTML responses has been moved to compile only dependencies
 * Micronaut module now uses `micronaut-http-client` instead of the default HTTP one
@@ -1051,6 +1051,8 @@ The core idea is to provide methods to update request and to check the response 
 
 ==== New Features
 
+* New JDK based `Http` client
+* New Microaut HTTP Client based  client
 * Small improvements in the Kotlin DSL
 * No need to specify the reference class when calling `Gru.create()` or `Http.create()`. The class is automatically detected using the stack walker API.
 
