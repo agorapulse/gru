@@ -47,8 +47,8 @@ public class GruFactory {
     }
 
     @Singleton
-    @Secondary
     @SuppressWarnings({"rawtypes", "unchecked"})
+    @Requires(property = "gru.http.client", notEquals = "jdk", classes = HttpClient.class)
     public Client client(ApplicationContext context, @io.micronaut.http.client.annotation.Client("gru") HttpClient client) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
         return Micronaut.createLazy(
@@ -70,8 +70,8 @@ public class GruFactory {
     }
 
     @Singleton
+    @Secondary
     @SuppressWarnings({"rawtypes", "unchecked"})
-    @Requires(property = "gru.http.client", value = "jdk")
     public Client jdkHttpClient(ApplicationContext context) {
         Class testClass = context.getRequiredProperty(TEST_CLASS_PROPERTY_NAME, Class.class);
         return Micronaut.createLazy(Http::create,
