@@ -18,34 +18,34 @@
 package com.agorapulse.gru.micronaut;
 
 import com.agorapulse.gru.Client;
-import com.agorapulse.gru.Gru;
-
+import com.agorapulse.gru.okhttp.OkHttp;
+import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Bean;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.annotation.Requires;
-
 import jakarta.inject.Singleton;
 
 /**
- * Factory which creates Gru instance for the classes annotated with @MicronautTest.
+ * Factory that creates OkHttp implementation of the HTTP client.
  */
 @Factory
 @Requires(property = GruFactory.TEST_CLASS_PROPERTY_NAME)
-public class GruFactory {
+@Requires(classes = OkHttp.class)
+@Replaces(factory = JdkClientFactory.class)
+@Requires(property = "gru.http.client", value = "okhttp", classes = OkHttp.class)
+public class OkHttpClientFactory {
 
-    public static final String TEST_CLASS_PROPERTY_NAME = "micronaut.test.active.spec.clazz";
-
+    @Bean
     @Singleton
-    @Bean(preDestroy = "close")
-    public Gru gru(Client client) {
-        return Gru.create(client);
-    }
-
-    @Singleton
-    @Bean(preDestroy = "close")
-    @Requires(classes = com.agorapulse.gru.kotlin.Gru.class)
-    com.agorapulse.gru.kotlin.Gru kotlinGru(Gru gru) {
-        return new com.agorapulse.gru.kotlin.Gru(gru);
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    @Requires(property = "gru.http.client", value = "okhttp", classes = OkHttp.class)
+    public Client okHttpClient(ApplicationContext context) {
+        Class testClass = context.getRequiredProperty(GruFactory.TEST_CLASS_PROPERTY_NAME, Class.class);
+        return Micronaut.createLazy(OkHttp::create,
+            () -> context.getBean(testClass),
+            () -> context
+        );
     }
 
 }
