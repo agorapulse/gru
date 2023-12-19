@@ -1,0 +1,8 @@
+{
+  "body": "command=/hello",
+  "params": {
+    "query": [
+      "queryValue"
+    ]
+  }
+}

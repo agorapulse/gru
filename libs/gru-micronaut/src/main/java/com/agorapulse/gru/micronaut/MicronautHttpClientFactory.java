@@ -30,6 +30,7 @@ import jakarta.inject.Singleton;
 @Factory
 @Requires(property = GruFactory.TEST_CLASS_PROPERTY_NAME)
 @Requires(classes = HttpClient.class)
+@Requires(missingProperty = "gru.http.client")
 @Replaces(factory = JdkClientFactory.class)
 public class MicronautHttpClientFactory {
 
