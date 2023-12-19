@@ -134,6 +134,9 @@ class MicronautHttpRequest implements Client.Request {
         if (!parameters.isEmpty()) {
             if (TestDefinitionBuilder.HAS_URI_PARAMETERS.contains(method) || body != null) {
                 builder = HttpRequest.create(HttpMethod.parse(method), buildUri(baseUri, uri, parameters).toString());
+                if (body != null) {
+                    builder.body(body);
+                }
             } else {
                 StringBuilder params = new StringBuilder();
                 appendParameters(parameters, params);
