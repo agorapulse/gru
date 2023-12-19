@@ -22,10 +22,12 @@ import com.agorapulse.gru.okhttp.OkHttp
 import io.micronaut.context.annotation.Property
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
+import spock.lang.Requires
 import spock.lang.Specification
 
 @MicronautTest
 @Property(name = 'gru.http.client', value = 'okhttp')
+@Requires({ !System.getenv('GRU_HTTP_CLIENT') || System.getenv('GRU_HTTP_CLIENT') == 'okhttp' })
 class OkHttpClientSelectionSpec extends Specification {
 
     @Inject Gru gru

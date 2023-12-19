@@ -22,10 +22,12 @@ import com.agorapulse.gru.http.Http
 import io.micronaut.context.annotation.Property
 import io.micronaut.test.extensions.spock.annotation.MicronautTest
 import jakarta.inject.Inject
+import spock.lang.Requires
 import spock.lang.Specification
 
 @MicronautTest
 @Property(name = 'gru.http.client', value = 'jdk')
+@Requires({ !System.getenv('GRU_HTTP_CLIENT') || System.getenv('GRU_HTTP_CLIENT') == 'jdk' })
 class JdkClientSelectionSpec extends Specification {
 
     @Inject Gru gru
