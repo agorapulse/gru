@@ -60,8 +60,7 @@ jobs:
     strategy:
       matrix:
         repository:
-          # temporary disabled until migrated to Micronaut 4.x everywhere
-          # - agorapulse/agorapulse-bom
+          - agorapulse/agorapulse-bom
           - agorapulse/agorapulse-oss
     steps:
       - uses: actions/checkout@v1
@@ -74,4 +73,4 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           repository: ${{ matrix.repository }}
           event-type: ap-new-version-released-event
-          client-payload: '{ "group": "com.agorapulse", "module": "gru", "version": "${{ steps.version.outputs.tag }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
+          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [4], "version": "${{ steps.version.outputs.tag }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
