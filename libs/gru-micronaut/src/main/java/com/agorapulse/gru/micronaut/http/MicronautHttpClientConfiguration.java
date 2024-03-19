@@ -17,6 +17,7 @@
  */
 package com.agorapulse.gru.micronaut.http;
 
+import io.micronaut.context.annotation.Secondary;
 import io.micronaut.http.client.DefaultHttpClientConfiguration;
 import io.micronaut.http.client.HttpClientConfiguration;
 import io.micronaut.runtime.ApplicationConfiguration;
@@ -27,6 +28,7 @@ import java.time.temporal.ChronoUnit;
 
 import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 
+@Secondary
 @Named("gru")
 public class MicronautHttpClientConfiguration extends HttpClientConfiguration {
 
@@ -54,15 +56,17 @@ public class MicronautHttpClientConfiguration extends HttpClientConfiguration {
         setFollowRedirects(false);
 
         if (isDebugMode()) {
-            increaseTimeouts();
+            increaseTimeouts(Duration.of(1, ChronoUnit.HOURS));
+        } else {
+            // in case of CI we need to increase the timeouts when Localstack is being pulled
+            increaseTimeouts(Duration.of(1, ChronoUnit.MINUTES));
         }
-
     }
 
-    private void increaseTimeouts() {
-        setConnectTimeout(Duration.of(1, ChronoUnit.HOURS));
-        setReadTimeout(Duration.of(1, ChronoUnit.HOURS));
-        setShutdownTimeout(Duration.of(1, ChronoUnit.HOURS));
+    private void increaseTimeouts(Duration timeout) {
+        setConnectTimeout(timeout);
+        setReadTimeout(timeout);
+        setShutdownTimeout(timeout);
     }
 
     private boolean isDebugMode() {
