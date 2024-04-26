@@ -18,7 +18,6 @@
 package heist;
 
 import com.agorapulse.gru.Gru;
-import com.agorapulse.gru.http.Http;
 import org.junit.Test;
 
 public class HttpTest {

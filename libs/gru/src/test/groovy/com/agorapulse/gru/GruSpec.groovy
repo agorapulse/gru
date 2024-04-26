@@ -41,7 +41,7 @@ class GruSpec extends Specification {
             gru.close()
         then:
             AssertionError e = thrown(AssertionError)
-            e.message?.startsWith('Test wasn\'t verified.')
+            e.message?.startsWith('Exception thrown while verifying the test')
     }
 
 }
