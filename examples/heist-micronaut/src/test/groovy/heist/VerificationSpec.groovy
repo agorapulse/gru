@@ -15,33 +15,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.gru
+package heist
 
+import com.agorapulse.gru.Gru
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import jakarta.inject.Inject
+import spock.lang.PendingFeature
 import spock.lang.Specification
 
-/**
- * Tests for Gru.
- */
-class GruSpec extends Specification {
+@MicronautTest
+class VerificationSpec extends Specification {
 
-    @SuppressWarnings('UnnecessaryGetter')
-    void 'expectations are verified'() {
-        given:
-            Client.Request request = Mock(Client.Request)
-            Client client = Mock(Client) {
-                getInitialSquad() >> []
-                getRequest() >> request
-                run(_, _) >> GruContext.EMPTY
-            }
-            Gru gru = Gru.create(client)
+    @Inject Gru gru
+
+    Runnable mockRunnable = Mock()
+
+    // using pending feature guarantees that the test is executed and the assertion error is expected
+    @PendingFeature
+    void 'test it works'() {
         when:
             gru.test {
-                get '/foo/bar'
+                get '/moons/earth/moon'
+                expect {
+                    json 'moon.json'
+                }
             }
-            gru.close()
         then:
-            AssertionError e = thrown(AssertionError)
-            e.message?.startsWith('Exception thrown while verifying the test')
+            gru.verify()
+
+            1 * mockRunnable.run()
     }
 
 }

@@ -15,18 +15,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist;
+package com.agorapulse.gru.micronaut;
 
 import com.agorapulse.gru.Gru;
-import org.junit.Test;
+import io.micronaut.context.event.ApplicationEventListener;
+import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
+import jakarta.inject.Singleton;
 
-public class HttpTest {
+@Singleton
+public class GruApplicationRefreshListener implements ApplicationEventListener<RefreshEvent> {
 
-    Gru gru = Gru.create("https://despicableme.fandom.com");                            // <1>
+    private final Gru gru;
 
-    @Test
-    public void testGetWiki() throws Throwable {
-        gru.verify(test -> test.get("/wiki/Felonius_Gru"));                             // <2>
+    public GruApplicationRefreshListener(Gru gru) {
+        this.gru = gru;
+    }
+
+    @Override
+    public void onApplicationEvent(RefreshEvent event) {
+        gru.close();
     }
 
 }
