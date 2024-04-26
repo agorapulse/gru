@@ -124,14 +124,22 @@ public class Gru implements Closeable {
      */
     @Override
     public void close() {
-        if (!verified) {
-            context.throwErrorIfPresent();
-            if (definition) {
-                throw new AssertionError("Test wasn't verified. Call assertion.verify() from the then block manually!");
+        try {
+            if (!verified) {
+                context.throwErrorIfPresent();
+                if (definition) {
+                    try {
+                        squad.verify(client, context);
+                    } catch (Throwable e) {
+                        throw new AssertionError("Exception thrown while verifying the test", e);
+                    }
+                    context.throwErrorIfPresent();
+                    throw new AssertionError("Test wasn't verified. Call assertion.verify() from the then block manually!");
+                }
             }
+        } finally {
+            reset(false);
         }
-
-        reset(false);
     }
 
     /**
