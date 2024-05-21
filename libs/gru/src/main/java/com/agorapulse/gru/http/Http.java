@@ -27,6 +27,8 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static java.lang.management.ManagementFactory.getRuntimeMXBean;
 
@@ -44,25 +46,39 @@ public class Http extends AbstractClient {
     }
 
     public static Http create(Object unitTest, Consumer<HttpClient.Builder> configuration) {
-        return new Http(unitTest, configuration);
+        return new Http(unitTest, b -> {
+            configuration.accept(b);
+            return b;
+        });
     }
 
     public static Http create(Class<?> unitTestClass, Consumer<HttpClient.Builder> configuration) {
-        return new Http(unitTestClass, configuration);
+        return new Http(unitTestClass,  b -> {
+            configuration.accept(b);
+            return b;
+        });
     }
 
-    private final Consumer<HttpClient.Builder> configuration;
+    public static Http create(Object unitTest, Supplier<HttpClient.Builder> configuration) {
+        return new Http(unitTest, b -> configuration.get());
+    }
+
+    public static Http create(Class<?> unitTestClass, Supplier<HttpClient.Builder> configuration) {
+        return new Http(unitTestClass, b -> configuration.get());
+    }
+
+    private final Function<HttpClient.Builder, HttpClient.Builder> configuration;
 
     private GruHttpRequest request;
     private GruHttpResponse response;
 
-    private Http(Object unitTest, Consumer<HttpClient.Builder> configuration) {
+    private Http(Object unitTest, Function<HttpClient.Builder, HttpClient.Builder> configuration) {
         super(unitTest);
         this.configuration = configuration;
         reset();
     }
 
-    private Http(Class<?> unitTestClass, Consumer<HttpClient.Builder> configuration) {
+    private Http(Class<?> unitTestClass, Function<HttpClient.Builder, HttpClient.Builder> configuration) {
         super(unitTestClass);
         this.configuration = configuration;
         reset();
@@ -91,11 +107,7 @@ public class Http extends AbstractClient {
     @Override
     public GruContext run(Squad squad, GruContext context) {
         try {
-            HttpClient.Builder builder = HttpClient.newBuilder();
-
-            if (configuration != null) {
-                configuration.accept(builder);
-            }
+            HttpClient.Builder builder = configuration == null ? HttpClient.newBuilder() : configuration.apply(HttpClient.newBuilder());
 
             if (isDebugMode()) {
                 increaseTimeouts(builder);
