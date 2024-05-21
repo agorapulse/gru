@@ -105,7 +105,7 @@ public class OkHttp extends AbstractClient {
     public GruContext run(Squad squad, GruContext context) {
         try {
             okhttp3.Response response = httpClient.newCall(request.buildOkHttpRequest()).execute();
-            this.response = new GruOkHttpResponse(response);
+            this.response = new GruOkHttpResponse(response, httpClient.followRedirects());
             return context.withResult(response);
         } catch (IOException e) {
             throw new AssertionError("Failed to execute request " + request, e);

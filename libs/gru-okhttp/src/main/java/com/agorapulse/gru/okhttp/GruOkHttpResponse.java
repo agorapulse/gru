@@ -31,16 +31,18 @@ import java.util.List;
 class GruOkHttpResponse implements Client.Response {
 
     private final Response response;
+    private final boolean followRedirects;
 
-    public GruOkHttpResponse(Response response) {
+    public GruOkHttpResponse(Response response, boolean followRedirects) {
         this.response = response;
+        this.followRedirects = followRedirects;
     }
 
     @Override
     public int getStatus() {
         Response priorResponse = response.priorResponse();
 
-        if (priorResponse != null && priorResponse.isRedirect()) {
+        if (followRedirects && priorResponse != null && priorResponse.isRedirect()) {
             return priorResponse.code();
         }
 
@@ -49,7 +51,7 @@ class GruOkHttpResponse implements Client.Response {
 
     @Override
     public List<String> getHeaders(String name) {
-        if (response.priorResponse() != null && response.priorResponse().isRedirect()) {
+        if (followRedirects && response.priorResponse() != null && response.priorResponse().isRedirect()) {
             return response.priorResponse().headers(name);
         }
         return response.headers(name);
@@ -67,13 +69,16 @@ class GruOkHttpResponse implements Client.Response {
 
     @Override
     public String getRedirectUrl() {
-        Response priorResponse = response.priorResponse();
-        return priorResponse == null ? null : priorResponse.header("Location");
+        if (followRedirects) {
+            Response priorResponse = response.priorResponse();
+            return priorResponse == null ? null : priorResponse.header("Location");
+        }
+        return response.header("Location");
     }
 
     @Override
     public List<Cookie> getCookies() {
-        if (response.priorResponse() != null && response.priorResponse().isRedirect()) {
+        if (followRedirects && response.priorResponse() != null && response.priorResponse().isRedirect()) {
             return Cookie.parseAll(response.priorResponse().headers("Set-Cookie"));
         }
         return Client.Response.super.getCookies();
