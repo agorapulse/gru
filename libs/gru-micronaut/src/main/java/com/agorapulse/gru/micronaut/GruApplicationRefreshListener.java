@@ -19,10 +19,12 @@ package com.agorapulse.gru.micronaut;
 
 import com.agorapulse.gru.Gru;
 import io.micronaut.context.event.ApplicationEventListener;
+import io.micronaut.runtime.context.scope.Refreshable;
 import io.micronaut.runtime.context.scope.refresh.RefreshEvent;
 import jakarta.inject.Singleton;
 
 @Singleton
+@Refreshable
 public class GruApplicationRefreshListener implements ApplicationEventListener<RefreshEvent> {
 
     private final Gru gru;
