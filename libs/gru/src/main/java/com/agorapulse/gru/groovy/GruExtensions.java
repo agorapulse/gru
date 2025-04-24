@@ -25,7 +25,7 @@ import groovy.lang.DelegatesTo;
 import groovy.transform.stc.ClosureParams;
 import groovy.transform.stc.FromString;
 import groovy.transform.stc.SimpleType;
-import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import net.javacrumbs.jsonunit.assertj.JsonAssert;
 import org.intellij.lang.annotations.Language;
 import space.jasan.support.groovy.closure.ConsumerWithDelegate;
 import space.jasan.support.groovy.closure.FunctionWithDelegate;
@@ -131,13 +131,14 @@ public class GruExtensions {
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
+    @Deprecated
     public static ResponseDefinitionBuilder json(
         ResponseDefinitionBuilder self,
-        @DelegatesTo(value = JsonFluentAssert.ConfigurableJsonFluentAssert.class, strategy = Closure.DELEGATE_FIRST)
-        @ClosureParams(value = SimpleType.class, options = "net.javacrumbs.jsonunit.fluent.JsonFluentAssert.ConfigurableJsonFluentAssert")
-        Closure<JsonFluentAssert.ConfigurableJsonFluentAssert> additionalConfiguration
+        @DelegatesTo(value = JsonAssert.ConfigurableJsonAssert.class, strategy = Closure.DELEGATE_FIRST)
+        @ClosureParams(value = SimpleType.class, options = "net.javacrumbs.jsonunit.assertj.JsonAssert.ConfigurableJsonAssert")
+        Closure<JsonAssert.ConfigurableJsonAssert> additionalConfiguration
     ) {
-        return self.json(FunctionWithDelegate.create(additionalConfiguration));
+        return self.json(c -> FunctionWithDelegate.create(additionalConfiguration).apply(c));
     }
 
 

@@ -19,7 +19,7 @@ dependencies {
     api 'space.jasan:groovy-closure-support:0.6.3'
     api 'com.agorapulse.testing:fixt:0.2.3'
 
-    api "net.javacrumbs.json-unit:json-unit-fluent:$jsonUnitVersion"
+    api "net.javacrumbs.json-unit:json-unit-assertj:$jsonUnitVersion"
 
     compileOnly group: 'org.xmlunit', name: 'xmlunit-core', version: xmlUnitVersion
     compileOnly group: 'org.jsoup', name: 'jsoup', version: jsoupVersion
