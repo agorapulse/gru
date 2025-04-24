@@ -26,7 +26,8 @@ import com.agorapulse.gru.jsonunit.MatchesPattern;
 import com.agorapulse.gru.jsonunit.MatchesUrl;
 import com.agorapulse.gru.content.ContentUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
+import net.javacrumbs.jsonunit.assertj.JsonAssert;
+import net.javacrumbs.jsonunit.assertj.JsonAssertions;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -38,7 +39,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Minion responsible for JSON requests and responses.
@@ -46,7 +47,7 @@ import java.util.function.Function;
 public class JsonMinion extends AbstractContentMinion<Client> {
 
     private Content requestJsonContent;
-    private Function<JsonFluentAssert.ConfigurableJsonFluentAssert, JsonFluentAssert.ConfigurableJsonFluentAssert> jsonUnitConfiguration = jsonFluentAssert -> jsonFluentAssert;
+    private UnaryOperator<JsonAssert.ConfigurableJsonAssert> jsonUnitConfiguration = jsonFluentAssert -> jsonFluentAssert;
 
     public JsonMinion() {
         super(Client.class);
@@ -81,13 +82,12 @@ public class JsonMinion extends AbstractContentMinion<Client> {
         this.requestJsonContent = requestJsonContent;
     }
 
-    public void setJsonUnitConfiguration(Function<JsonFluentAssert.ConfigurableJsonFluentAssert, JsonFluentAssert.ConfigurableJsonFluentAssert> jsonUnitConfiguration) {
+    public void setJsonUnitConfiguration(UnaryOperator<JsonAssert.ConfigurableJsonAssert> jsonUnitConfiguration) {
         this.jsonUnitConfiguration = jsonUnitConfiguration;
     }
 
     protected void similar(String actual, String expected) throws AssertionError {
-        JsonFluentAssert.ConfigurableJsonFluentAssert fluentAssert = JsonFluentAssert
-            .assertThatJson(actual)
+        JsonAssert.ConfigurableJsonAssert fluentAssert = JsonAssertions.assertThatJson(actual)
             .as("Response must match " + getResponseContent() + " content")
             .withMatcher("isoDate", MatchesPattern.ISO_DATE)
             .withMatcher("isoDateNow", MatchesIsoDateNow.INSTANCE)

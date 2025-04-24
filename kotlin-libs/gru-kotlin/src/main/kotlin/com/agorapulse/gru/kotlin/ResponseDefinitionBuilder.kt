@@ -19,9 +19,9 @@ package com.agorapulse.gru.kotlin
 
 import com.agorapulse.gru.*
 import com.agorapulse.gru.minions.Minion
+import net.javacrumbs.jsonunit.assertj.JsonAssert.ConfigurableJsonAssert
 import net.javacrumbs.jsonunit.core.Option
 import net.javacrumbs.jsonunit.core.internal.JsonUtils
-import net.javacrumbs.jsonunit.fluent.JsonFluentAssert.ConfigurableJsonFluentAssert
 import org.intellij.lang.annotations.Language
 import java.util.*
 import com.agorapulse.gru.ResponseDefinitionBuilder as JavaResponseDefinitionBuilder
@@ -169,7 +169,7 @@ class ResponseDefinitionBuilder(val delegate: JavaResponseDefinitionBuilder) : H
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    fun json(additionalConfiguration: ConfigurableJsonFluentAssert.() -> ConfigurableJsonFluentAssert): ResponseDefinitionBuilder {
+    fun json(additionalConfiguration: ConfigurableJsonAssert.() -> ConfigurableJsonAssert): ResponseDefinitionBuilder {
         delegate.json { additionalConfiguration(it) }
         return this
     }

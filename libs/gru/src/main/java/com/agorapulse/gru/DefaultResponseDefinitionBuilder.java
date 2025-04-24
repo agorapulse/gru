@@ -26,12 +26,12 @@ import com.agorapulse.gru.minions.HttpMinion;
 import com.agorapulse.gru.minions.JsonMinion;
 import com.agorapulse.gru.minions.Minion;
 import com.agorapulse.gru.minions.TextMinion;
+import net.javacrumbs.jsonunit.assertj.JsonAssert;
 import net.javacrumbs.jsonunit.core.Option;
-import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 import org.hamcrest.Matcher;
 
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Sets expectations for the response after the controller action has been executed.
@@ -107,7 +107,7 @@ public class DefaultResponseDefinitionBuilder implements ResponseDefinitionBuild
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    public DefaultResponseDefinitionBuilder json(Function<JsonFluentAssert.ConfigurableJsonFluentAssert, JsonFluentAssert.ConfigurableJsonFluentAssert> additionalConfiguration) {
+    public DefaultResponseDefinitionBuilder json(UnaryOperator<JsonAssert.ConfigurableJsonAssert> additionalConfiguration) {
         return command(JsonMinion.class, minion -> minion.setJsonUnitConfiguration(additionalConfiguration));
     }
 

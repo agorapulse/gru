@@ -19,9 +19,9 @@ package com.agorapulse.gru;
 
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
+import net.javacrumbs.jsonunit.assertj.JsonAssert;
 import net.javacrumbs.jsonunit.core.Option;
 import net.javacrumbs.jsonunit.core.internal.JsonUtils;
-import net.javacrumbs.jsonunit.fluent.JsonFluentAssert;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.intellij.lang.annotations.Language;
@@ -29,7 +29,7 @@ import org.intellij.lang.annotations.Language;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * Sets expectations for the response after the controller action has been executed.
@@ -148,7 +148,7 @@ public interface ResponseDefinitionBuilder extends HttpStatusShortcuts, JsonUnit
      * @param additionalConfiguration additional assertions and configuration for JsonFluentAssert instance
      * @return self
      */
-    ResponseDefinitionBuilder json(Function<JsonFluentAssert.ConfigurableJsonFluentAssert, JsonFluentAssert.ConfigurableJsonFluentAssert> additionalConfiguration);
+    ResponseDefinitionBuilder json(UnaryOperator<JsonAssert.ConfigurableJsonAssert> additionalConfiguration);
 
     /**
      * Adds HTTP headers which are expected to be returned after action execution.
