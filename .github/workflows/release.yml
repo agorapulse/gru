@@ -28,16 +28,13 @@ jobs:
     env:
       GRADLE_OPTS: "-Xmx6g -Xms4g"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
       - name: Setup Java 17
         uses: actions/setup-java@v3
         with:
           distribution: zulu
           java-version: 17
           cache: gradle
-      - name: Semantic Version
-        id: version
-        uses: ncipollo/semantic-version-action@v1
       - name: Decode PGP
         id: write_file
         uses: timheuer/base64-to-file@v1
@@ -52,7 +49,7 @@ jobs:
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_SECRET_KEY_PATH: ${{ steps.write_file.outputs.filePath }}
         with:
-          arguments: gitPublishPush publishToSonatype closeAndReleaseSonatypeStagingRepository -Pversion=${{ steps.version.outputs.tag }} -Prelease=true -Dorg.ajoberstar.grgit.auth.username=${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }} --scan
+          arguments: gitPublishPush publishToSonatype closeAndReleaseSonatypeStagingRepository -Pversion=${{ github.ref_name }} -Prelease=true -Dorg.ajoberstar.grgit.auth.username=${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }} --scan
   ping:
     name: Notify Upstream Repositories
     runs-on: ubuntu-latest
@@ -63,14 +60,11 @@ jobs:
           - agorapulse/agorapulse-bom
           - agorapulse/agorapulse-oss
     steps:
-      - uses: actions/checkout@v1
-      - name: Semantic Version
-        id: version
-        uses: ncipollo/semantic-version-action@v1
+      - uses: actions/checkout@v4
       - name: Dispatch to ${{ matrix.repository }}
         uses: peter-evans/repository-dispatch@v1
         with:
           token: ${{ secrets.PERSONAL_TOKEN }}
           repository: ${{ matrix.repository }}
           event-type: ap-new-version-released-event
-          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [4], "version": "${{ steps.version.outputs.tag }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
+          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [4], "version": "${{ github.ref_name }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
