@@ -138,7 +138,9 @@ public class Gru implements Closeable {
                     throw new AssertionError("Test wasn't verified. Call assertion.verify() from the then block manually!");
                 }
             }
+
         } finally {
+            lastResponseBody = findLastResponseBody();
             reset(false);
         }
     }
@@ -257,9 +259,12 @@ public class Gru implements Closeable {
     }
 
     private String findLastResponseBody() {
-        for (Minion minion : client.getInitialSquad()) {
-            if (minion instanceof AbstractContentMinion<?>) {
-                String content = ((AbstractContentMinion<?>) minion).getResponseText();
+        for (Class<? extends Minion> minionType: squad.getMinionTypes()) {
+            if (AbstractContentMinion.class.isAssignableFrom(minionType)) {
+                String content = squad.ask(minionType, minion ->
+                    ((AbstractContentMinion<?>) minion).getResponseText()
+                );
+
                 if (content != null) {
                     return content;
                 }

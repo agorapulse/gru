@@ -34,6 +34,8 @@ public class CaptureResultTest {
     // tag::extractResponseText[]
     @Test
     public void testGet() throws Throwable {
+        Assertions.assertNull(gru.getLastResponseBody());
+
         gru.verify(test -> test                                                         // <1>
             .get("/moons/earth/moon")
             .expect(response -> response.json("moon.json"))
