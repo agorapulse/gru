@@ -43,7 +43,7 @@ class CaptureResultSpec extends Specification {
             gru.verify()                                                                // <2>
 
         when:
-            String responseText = gru.squad.ask(JsonMinion) { responseText }            // <3>
+            String responseText = gru.lastResponseBody                                  // <3>
         then:
             responseText.contains('moon')                                               // <4>
     }

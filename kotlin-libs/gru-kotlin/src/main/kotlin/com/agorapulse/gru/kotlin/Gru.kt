@@ -137,4 +137,9 @@ class Gru constructor(private val delegate: JavaGru) : Closeable {
         return this
     }
 
+    @JvmOverloads
+    fun getLastResponseBody(): String {
+        return delegate.lastResponseBody
+    }
+
 }

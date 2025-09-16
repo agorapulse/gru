@@ -18,6 +18,7 @@
 package com.agorapulse.gru;
 
 import com.agorapulse.gru.http.Http;
+import com.agorapulse.gru.minions.AbstractContentMinion;
 import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.HttpMinion;
 import com.agorapulse.gru.minions.Minion;
@@ -137,7 +138,9 @@ public class Gru implements Closeable {
                     throw new AssertionError("Test wasn't verified. Call assertion.verify() from the then block manually!");
                 }
             }
+
         } finally {
+            lastResponseBody = findLastResponseBody();
             reset(false);
         }
     }
@@ -215,6 +218,8 @@ public class Gru implements Closeable {
 
         squad.verify(client, context);
 
+        lastResponseBody = findLastResponseBody();
+
         return verificationResult = true;
     }
 
@@ -244,11 +249,32 @@ public class Gru implements Closeable {
         squad = new Squad();
         client.reset();
 
+        // last verification body is kept
+
         if (resetConfigurations) {
             configurations.clear();
         }
 
         return this;
+    }
+
+    private String findLastResponseBody() {
+        for (Class<? extends Minion> minionType: squad.getMinionTypes()) {
+            if (AbstractContentMinion.class.isAssignableFrom(minionType)) {
+                String content = squad.ask(minionType, minion ->
+                    ((AbstractContentMinion<?>) minion).getResponseText()
+                );
+
+                if (content != null) {
+                    return content;
+                }
+            }
+        }
+        return null;
+    }
+
+    public String getLastResponseBody() {
+        return lastResponseBody;
     }
 
     private final Client client;
@@ -278,6 +304,11 @@ public class Gru implements Closeable {
      * IF test method has been called
      */
     private boolean definition;
+
+    /**
+     * Body of the last response processed during the test.
+     */
+    private String lastResponseBody;
 
     private static Class<?> getCallerClass() {
         return StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE)

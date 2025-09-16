@@ -743,22 +743,18 @@ to access the actual response.
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/groovy/heist/CaptureResultTest.java[tag=extractResponseText,indent=0]
 ----
-<1> use `test` instead of `verify(Consumer)` to keep Gru's internal state
-<2> use `verify` to perform the verification call and populate the response text
-<3> read the response text from `JsonMinion`
-<4> make some assertion using the response text
-<5> don't forget to close/reset the Gru instance manually
+<1> verify the HTTP interaction
+<2> read the response text from `Gru`
+<3> make some assertion using the response text
 
 [source,kotlin,indent=0,role="secondary",subs='verbatim,attributes']
 .Reading Response Text (Kotlin)
 ----
 include::{root-dir}/examples/heist-micronaut/src/test/kotlin/heist/kt/CaptureResultTest.kt[tag=extractResponseText,indent=0]
 ----
-<1> split the verification call between `when` and `then` instead of `expect`
-<2> use `verify` to perform the verification call and populate the response text
-<3> read the response text from `JsonMinion`
-<4> make some assertion using the response text
-<5> don't forget to close/reset the Gru instance manually
+<1> verify the HTTP interaction
+<2> read the response text from `Gru`
+<3> make some assertion using the response text
 
 [source,groovy,indent=0,role="secondary",subs='verbatim,attributes']
 .Reading Response Text (Groovy)
