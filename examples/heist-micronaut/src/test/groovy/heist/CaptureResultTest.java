@@ -34,19 +34,13 @@ public class CaptureResultTest {
     // tag::extractResponseText[]
     @Test
     public void testGet() throws Throwable {
-        gru.test(test -> test                                                           // <1>
+        gru.verify(test -> test                                                         // <1>
             .get("/moons/earth/moon")
             .expect(response -> response.json("moon.json"))
         );
 
-        gru.verify();                                                                   // <2>
-
-        String responseText = gru.getSquad()
-            .ask(JsonMinion.class, AbstractContentMinion::getResponseText);             // <3>
-
-        Assertions.assertTrue(responseText.contains("moon"));                           // <4>
-
-        gru.close();                                                                    // <5>
+        Assertions.assertNotNull(gru.getLastResponseBody());                            // <2>
+        Assertions.assertTrue(gru.getLastResponseBody().contains("moon"));              // <3>
     }
     // end::extractResponseText[]
 

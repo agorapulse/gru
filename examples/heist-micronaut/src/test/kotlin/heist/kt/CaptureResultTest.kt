@@ -32,21 +32,13 @@ class CaptureResultTest {
     // tag::extractResponseText[]
     @Test
     fun testGet() {
-        gru.test {                                                                      // <1>
+        gru.verify {                                                                      // <1>
             get("/moons/earth/moon")
             expect { json("moon.json") }
         }
 
-        gru.verify()                                                                    // <2>
-
-        val responseText = gru.squad.ask<JsonMinion, String> {
-            responseText                                                                // <3>
-        }
-
-        Assertions.assertNotNull(responseText)
-        Assertions.assertTrue(responseText!!.contains("moon"))                          // <4>
-
-        gru.close()                                                                     // <5>
+        Assertions.assertNotNull(gru.getLastResponseBody())                             // <2>
+        Assertions.assertTrue(gru.getLastResponseBody().contains("moon"))               // <3>
     }
     // end::extractResponseText[]
 

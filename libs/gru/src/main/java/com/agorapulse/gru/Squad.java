@@ -22,12 +22,7 @@ import com.agorapulse.gru.minions.Command;
 import com.agorapulse.gru.minions.Minion;
 
 import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -116,6 +111,10 @@ public class Squad {
             ctx = minion.afterRun(client, this, ctx);
         }
         return ctx;
+    }
+
+    Collection<Class<? extends Minion>> getMinionTypes() {
+        return minions.keySet();
     }
 
     void verify(Client client, GruContext context) throws Throwable {
