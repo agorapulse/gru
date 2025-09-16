@@ -20,14 +20,13 @@ plugins {
     id 'org.kordamp.gradle.checkstyle'
     id 'org.kordamp.gradle.codenarc'
     id 'org.kordamp.gradle.coveralls'
-    id 'io.github.gradle-nexus.publish-plugin'
 }
 
-if (!project.hasProperty('ossrhUsername'))      ext.ossrhUsername       = System.getenv('SONATYPE_USERNAME') ?: '**UNDEFINED**'
-if (!project.hasProperty('ossrhPassword'))      ext.ossrhPassword       = System.getenv('SONATYPE_PASSWORD') ?: '**UNDEFINED**'
-if (!project.hasProperty('signingKeyId'))       ext.signingKeyId        = System.getenv('SIGNING_KEY_ID') ?: '**UNDEFINED**'
-if (!project.hasProperty('signingPassword'))    ext.signingPassword     = System.getenv('SIGNING_PASSWORD') ?: '**UNDEFINED**'
-if (!project.hasProperty('signingSecretKey'))   ext.signingSecretKey    = System.getenv('SIGNING_SECRET_KEY_PATH') ? rootProject.file(System.getenv('SIGNING_SECRET_KEY_PATH')).text : '**UNDEFINED**'
+if (!project.hasProperty('mavenCentralUsername'))       ext.mavenCentralUsername            = System.getenv('MAVEN_CENTRAL_USERNAME') ?: '**UNDEFINED**'
+if (!project.hasProperty('mavenCentralPassword'))       ext.mavenCentralPassword            = System.getenv('MAVEN_CENTRAL_PASSWORD') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingInMemoryKeyId'))       ext.signingInMemoryKeyId            = System.getenv('SIGNING_KEY_ID') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingInMemoryKeyPassword')) ext.signingInMemoryKeyPassword      = System.getenv('SIGNING_PASSWORD') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingInMemoryKey'))         ext.signingInMemoryKey              = System.getenv('SIGNING_SECRET_KEY_PATH') ? rootProject.file(System.getenv('SIGNING_SECRET_KEY_PATH')).text : '**UNDEFINED**'
 
 config {
     release = (rootProject.findProperty('release') ?: false).toBoolean()
@@ -74,13 +73,14 @@ config {
     publishing {
         enabled = false
         signing {
-            enabled =  true
-            keyId = signingKeyId
-            secretKey = signingSecretKey
-            password = signingPassword
+            enabled = false
         }
-        releasesRepository = 'localRelease'
-        snapshotsRepository = 'localSnapshot'
+    }
+
+    artifacts {
+        source {
+            enabled = false
+        }
     }
 
     quality {
@@ -104,6 +104,7 @@ config {
 
     docs {
         javadoc {
+            enabled = false
             autoLinks {
                 enabled = false
             }
@@ -121,16 +122,6 @@ config {
 
 }
 
-nexusPublishing {
-    repositories {
-        sonatype {
-            nexusUrl = uri('https://s01.oss.sonatype.org/service/local/')
-            snapshotRepositoryUrl = uri('https://s01.oss.sonatype.org/content/repositories/snapshots/')
-            username = ossrhUsername
-            password = ossrhPassword
-        }
-    }
-}
 
 allprojects {
     repositories {
@@ -180,6 +171,44 @@ gradleProjects {
             }
         }
 
+        dirs(['libs', 'platforms', 'kotlin-libs']) {
+            mavenPublishing {
+                publishToMavenCentral(true)
+                signAllPublications()
+
+                pom {
+                    name = "Gru"
+                    description = 'HTTP Testing Framework'
+                    inceptionYear = "2018"
+                    url = "https://github.com/${slug}"
+                    licenses {
+                        license {
+                            name = "The Apache License, Version 2.0"
+                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                            distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = "musketyr"
+                            name = "Vladimir Orany"
+                            url = "https://github.com/musketyr/"
+                        }
+                    }
+                    scm {
+                        url = "https://github.com/${slug}.git"
+                        connection = "scm:git:git://github.com/${slug}.git"
+                        developerConnection = "scm:git:ssh://git@github.com/${slug}.git"
+                    }
+                }
+            }
+
+            signing {
+                useInMemoryPgpKeys(rootProject.ext.signingInMemoryKey, rootProject.ext.signingInMemoryKeyPassword)
+                sign publishing.publications
+            }
+        }
+
         dir('libs') {
             processResources {
                 filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
@@ -189,12 +218,6 @@ gradleProjects {
 
             jar {
                 manifest.attributes provider: 'gradle'
-            }
-
-            config {
-                publishing {
-                    enabled = true
-                }
             }
 
             dependencies {
@@ -220,11 +243,6 @@ gradleProjects {
         }
 
         dir('platforms') {
-            config {
-                publishing {
-                    enabled = true
-                }
-            }
             // fix for NullPointerException in Kordamp PublishingPlugin
             publishing {
                 publications {
@@ -254,12 +272,6 @@ gradleProjects {
 
             jar {
                 manifest.attributes provider: 'gradle'
-            }
-
-            config {
-                publishing {
-                    enabled = true
-                }
             }
 
             tasks.withType(Test) {
