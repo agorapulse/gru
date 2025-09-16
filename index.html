@@ -91,7 +91,7 @@ $(addBlockSwitches);
 <div id="header">
 <h1>Gru - HTTP Testing Framework</h1>
 <div class="details">
-<span id="revnumber">version 2.2.0</span>
+<span id="revnumber">version 2.2.1</span>
 </div>
 <div id="toc" class="toc2">
 <div id="toctitle">Table of Contents</div>
@@ -208,7 +208,7 @@ $(addBlockSwitches);
 }
 
 dependencies {
-    testImplementation platform("com.agorapulse:gru-bom:2.2.0")             <i class="conum" data-value="1"></i><b>(1)</b>
+    testImplementation platform("com.agorapulse:gru-bom:2.2.1")             <i class="conum" data-value="1"></i><b>(1)</b>
 
     // the basic dependency including the generic HTTP client
     testImplementation("com.agorapulse:gru")                                            <i class="conum" data-value="2"></i><b>(2)</b>
@@ -2497,19 +2497,15 @@ to access the actual response.</p>
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="java">@Test
 public void testGet() throws Throwable {
-    gru.test(test -&gt; test                                                           <i class="conum" data-value="1"></i><b>(1)</b>
+    Assertions.assertNull(gru.getLastResponseBody());
+
+    gru.verify(test -&gt; test                                                         <i class="conum" data-value="1"></i><b>(1)</b>
         .get("/moons/earth/moon")
         .expect(response -&gt; response.json("moon.json"))
     );
 
-    gru.verify();                                                                   <i class="conum" data-value="2"></i><b>(2)</b>
-
-    String responseText = gru.getSquad()
-        .ask(JsonMinion.class, AbstractContentMinion::getResponseText);             <i class="conum" data-value="3"></i><b>(3)</b>
-
-    Assertions.assertTrue(responseText.contains("moon"));                           <i class="conum" data-value="4"></i><b>(4)</b>
-
-    gru.close();                                                                    <i class="conum" data-value="5"></i><b>(5)</b>
+    Assertions.assertNotNull(gru.getLastResponseBody());                            <i class="conum" data-value="2"></i><b>(2)</b>
+    Assertions.assertTrue(gru.getLastResponseBody().contains("moon"));              <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -2517,23 +2513,15 @@ public void testGet() throws Throwable {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>use <code>test</code> instead of <code>verify(Consumer)</code> to keep Gru&#8217;s internal state</td>
+<td>verify the HTTP interaction</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>use <code>verify</code> to perform the verification call and populate the response text</td>
+<td>read the response text from <code>Gru</code></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>read the response text from <code>JsonMinion</code></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>make some assertion using the response text</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>don&#8217;t forget to close/reset the Gru instance manually</td>
 </tr>
 </table>
 </div>
@@ -2542,21 +2530,13 @@ public void testGet() throws Throwable {
 <div class="content">
 <pre class="prettyprint highlight"><code data-lang="kotlin">@Test
 fun testGet() {
-    gru.test {                                                                      <i class="conum" data-value="1"></i><b>(1)</b>
+    gru.verify {                                                                      <i class="conum" data-value="1"></i><b>(1)</b>
         get("/moons/earth/moon")
         expect { json("moon.json") }
     }
 
-    gru.verify()                                                                    <i class="conum" data-value="2"></i><b>(2)</b>
-
-    val responseText = gru.squad.ask&lt;JsonMinion, String&gt; {
-        responseText                                                                <i class="conum" data-value="3"></i><b>(3)</b>
-    }
-
-    Assertions.assertNotNull(responseText)
-    Assertions.assertTrue(responseText!!.contains("moon"))                          <i class="conum" data-value="4"></i><b>(4)</b>
-
-    gru.close()                                                                     <i class="conum" data-value="5"></i><b>(5)</b>
+    Assertions.assertNotNull(gru.getLastResponseBody())                             <i class="conum" data-value="2"></i><b>(2)</b>
+    Assertions.assertTrue(gru.getLastResponseBody().contains("moon"))               <i class="conum" data-value="3"></i><b>(3)</b>
 }</code></pre>
 </div>
 </div>
@@ -2564,23 +2544,15 @@ fun testGet() {
 <table>
 <tr>
 <td><i class="conum" data-value="1"></i><b>1</b></td>
-<td>split the verification call between <code>when</code> and <code>then</code> instead of <code>expect</code></td>
+<td>verify the HTTP interaction</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="2"></i><b>2</b></td>
-<td>use <code>verify</code> to perform the verification call and populate the response text</td>
+<td>read the response text from <code>Gru</code></td>
 </tr>
 <tr>
 <td><i class="conum" data-value="3"></i><b>3</b></td>
-<td>read the response text from <code>JsonMinion</code></td>
-</tr>
-<tr>
-<td><i class="conum" data-value="4"></i><b>4</b></td>
 <td>make some assertion using the response text</td>
-</tr>
-<tr>
-<td><i class="conum" data-value="5"></i><b>5</b></td>
-<td>don&#8217;t forget to close/reset the Gru instance manually</td>
 </tr>
 </table>
 </div>
@@ -2600,7 +2572,7 @@ fun testGet() {
         gru.verify()                                                                <i class="conum" data-value="2"></i><b>(2)</b>
 
     when:
-        String responseText = gru.squad.ask(JsonMinion) { responseText }            <i class="conum" data-value="3"></i><b>(3)</b>
+        String responseText = gru.lastResponseBody                                  <i class="conum" data-value="3"></i><b>(3)</b>
     then:
         responseText.contains('moon')                                               <i class="conum" data-value="4"></i><b>(4)</b>
 }</code></pre>
@@ -3532,8 +3504,8 @@ The core idea is to provide methods to update request and to check the response 
 </div>
 <div id="footer">
 <div id="footer-text">
-Version 2.2.0<br>
-Last updated 2025-04-25 06:57:15 UTC
+Version 2.2.1<br>
+Last updated 2025-09-16 11:13:24 UTC
 </div>
 </div>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prettify/r298/prettify.min.css">
