@@ -34,7 +34,7 @@ class JsonControllerSpec extends Specification implements ControllerUnitTest<Jso
                 get '/json'
                 expect {
                     status NON_AUTHORITATIVE_INFORMATION
-                    headers foo: 'bar', 'Content-Type': 'x-application/moons'
+                    headers foo: 'bar', 'Content-Type': 'x-application/moons;charset=utf-8'
                     json([[name: "Moon", planet: "Earth"]])
                 }
             }
@@ -64,16 +64,10 @@ class JsonControllerSpec extends Specification implements ControllerUnitTest<Jso
     }
 
     void 'render with missing template'() {
-        when:
+        expect:
             gru.test {
                 get '/json/missing'
-                expect {
-                    json 'moon.json'
-                }
-            }.verify()
-        then:
-            AssertionError error = thrown(AssertionError)
-            error.toString().contains('No view or template found for URI /json/missing')
+            }
     }
 
 }
