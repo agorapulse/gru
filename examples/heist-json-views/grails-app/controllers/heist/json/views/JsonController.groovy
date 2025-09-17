@@ -22,7 +22,9 @@ import grails.converters.JSON
 class JsonController {
 
     def index() {
-         [moons: [[name: 'Moon', planet: 'Earth']]]
+        response.status = 203
+        response.setHeader('foo', 'bar')
+        render(contentType: 'x-application/moons', text: ([[name: 'Moon', planet: 'Earth']] as JSON).toString())
     }
 
     def show() {
@@ -30,11 +32,13 @@ class JsonController {
             render([name: 'Moon', planet: 'Earth'] as JSON)
             return
         }
-        [moon: [name: 'Moon', planet: 'Earth']]
+        response.status = 200
+        render([name: 'Moon', planet: 'Earth'] as JSON)
     }
 
     def missing() {
-        [moon: [name: 'Moon', planet: 'Earth']]
+        // This should try to render a view that doesn't exist
+        render(view: 'nonExistentView', model: [moon: [name: 'Moon', planet: 'Earth']])
     }
 
 }
