@@ -251,14 +251,6 @@ gradleProjects {
                             properties = [
                                 'gru.version': version,
                             ]
-
-                            withXml {
-                                def root = asNode()
-
-                                // Add properties to the POM.
-                                def propertiesNode = root.appendNode('properties')
-                                propertiesNode.appendNode('gru.version', version)
-                            }
                         }
                     }
                 }
