@@ -1,4 +1,4 @@
- /*
+/*
  * SPDX-License-Identifier: Apache-2.0
  *
  * Copyright 2018-2025 Agorapulse.
@@ -15,3 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+dependencies {
+    compileOnly platform("org.apache.grails:grails-bom:$grails7Version")
+    api project(':gru')
+    compileOnly "org.apache.grails:grails-testing-support-web"
+
+    compileOnly "org.apache.groovy:groovy"
+
+    // fails to compile groovy when missing
+    implementation "org.jsoup:jsoup:$jsoupVersion"
+    implementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
+
+    compileOnly "org.apache.grails:grails-views-gson"
+}

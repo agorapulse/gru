@@ -162,12 +162,13 @@ gradleProjects {
         dirs(['libs', 'examples']) { Project subproject ->
             java {
                 toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(11))
+                    languageVersion.set(JavaLanguageVersion.of(subproject.name == 'gru-grails7' ? 17: 11))
                 }
             }
 
             repositories {
                 mavenCentral()
+                maven { url 'https://repo1.maven.org/maven2/' }
             }
 
             tasks.withType(JavaCompile) {
