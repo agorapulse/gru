@@ -20,7 +20,7 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor platform('io.micronaut.platform:micronaut-platform:4.2.0')
+    annotationProcessor platform('io.micronaut.platform:micronaut-platform:4.9.3')
     annotationProcessor 'io.micronaut.validation:micronaut-validation-processor'
     annotationProcessor 'io.micronaut.validation:micronaut-validation'
     annotationProcessor 'io.micronaut:micronaut-inject-java'
@@ -31,7 +31,7 @@ dependencies {
     compileOnly project(':gru-kotlin')
     compileOnly project(':gru-okhttp')
 
-    compileOnly platform('io.micronaut.platform:micronaut-platform:4.2.0')
+    compileOnly platform('io.micronaut.platform:micronaut-platform:4.9.3')
     compileOnly 'io.micronaut.validation:micronaut-validation'
     compileOnly 'io.micronaut:micronaut-http-client'
     compileOnly 'io.micronaut:micronaut-http-server'

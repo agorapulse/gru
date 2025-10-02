@@ -23,7 +23,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.multipart.MultipartFile
 import org.springframework.web.servlet.ModelAndView
 
-import javax.servlet.http.Cookie
+import jakarta.servlet.http.Cookie
 
 class MoonController {
 

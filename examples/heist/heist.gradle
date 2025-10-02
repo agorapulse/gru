@@ -17,13 +17,15 @@
  */
 buildscript {
     repositories {
+        mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
         maven { url "https://repo.grails.org/grails/core" }
+        maven { url "https://repo.grails.org/grails/libs-milestones-local" }
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-        classpath "org.grails.plugins:hibernate5:8.0.0"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.4.7"
+        classpath "org.apache.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
+        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:4.5.1"
+        classpath "io.spring.gradle:dependency-management-plugin:1.1.7"
     }
 }
 
@@ -33,13 +35,23 @@ group "heist"
 apply plugin:"eclipse"
 apply plugin:"idea"
 apply plugin:"war"
-apply plugin:"org.grails.grails-web"
-apply plugin:"org.grails.grails-gsp"
+apply plugin:"org.apache.grails.grails-web"
+apply plugin:"org.apache.grails.grails-gsp"
 apply plugin:"com.bertramlabs.asset-pipeline"
+apply plugin:"io.spring.dependency-management"
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.boot:spring-boot-dependencies:$springBootVersion"
+        mavenBom "org.apache.grails:grails-bom:$grailsVersion"
+    }
+    applyMavenExclusions = false
+}
 
 repositories {
     mavenCentral()
     maven { url "https://repo.grails.org/grails/core" }
+    maven { url "https://repo.grails.org/grails/libs-milestones-local" }
 }
 
 configurations {
@@ -47,48 +59,52 @@ configurations {
     runtimeClasspath {
         extendsFrom developmentOnly
     }
+    all {
+        resolutionStrategy.dependencySubstitution {
+            substitute module('org.apache.grails:grails-plugin-url-mappings') using module("org.apache.grails:grails-url-mappings:$grailsVersion")
+            substitute module('org.apache.grails:grails-core') using module("org.apache.grails:grails-core:$grailsVersion")
+            substitute module('org.apache.grails:grails-web-boot') using module("org.apache.grails:grails-web-boot:$grailsVersion")
+            substitute module('org.apache.grails:grails-logging') using module("org.apache.grails:grails-logging:$grailsVersion")
+        }
+    }
 }
 
 dependencies {
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    compileOnly "io.micronaut:micronaut-inject-groovy"
-    console "org.grails:grails-console"
-    implementation "org.springframework.boot:spring-boot-starter-logging"
-    implementation "org.springframework.boot:spring-boot-starter-validation"
-    implementation "org.springframework.boot:spring-boot-autoconfigure"
-    implementation "org.grails:grails-core"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-tomcat"
-    implementation "org.grails:grails-web-boot"
-    implementation "org.grails:grails-logging"
-    implementation "org.grails:grails-plugin-rest"
-    implementation "org.grails:grails-plugin-databinding"
-    implementation "org.grails:grails-plugin-i18n"
-    implementation "org.grails:grails-plugin-services"
-    implementation "org.grails:grails-plugin-url-mappings"
-    implementation "org.grails:grails-plugin-interceptors"
-    implementation "org.grails.plugins:async"
-    implementation "org.grails.plugins:scaffolding"
-    implementation "org.grails.plugins:hibernate5"
-    implementation "org.hibernate:hibernate-core:5.6.15.Final"
-    implementation "org.grails.plugins:events"
-    implementation "org.grails.plugins:gsp"
-    profile "org.grails.profiles:web"
+    developmentOnly "org.springframework.boot:spring-boot-devtools:$springBootVersion"
+    console "org.apache.grails:grails-console:$grailsVersion"
+    implementation "org.springframework.boot:spring-boot-starter-logging:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-validation:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-autoconfigure:$springBootVersion"
+    implementation "org.apache.grails:grails-core:$grailsVersion"
+    implementation "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    implementation "org.springframework.boot:spring-boot-starter-tomcat:$springBootVersion"
+    implementation "org.apache.grails:grails-web-boot:$grailsVersion"
+    implementation "org.apache.grails:grails-logging:$grailsVersion"
+    implementation "org.apache.grails:grails-databinding:$grailsVersion"
+    implementation "org.apache.grails:grails-i18n:$grailsVersion"
+    implementation "org.apache.grails:grails-services:$grailsVersion"
+    implementation "org.apache.grails:grails-url-mappings:$grailsVersion"
+    implementation "org.apache.grails:grails-interceptors:$grailsVersion"
+    implementation "org.apache.grails:grails-async:$grailsVersion"
+    implementation "org.apache.grails:grails-scaffolding:$grailsVersion"
+    implementation "org.apache.grails:grails-data-hibernate5:$grailsVersion"
+    implementation "org.hibernate.orm:hibernate-core:6.6.5.Final"
+    implementation "org.apache.grails:grails-events:$grailsVersion"
+    implementation "org.apache.grails:grails-gsp:$grailsVersion"
+    profile "org.apache.grails.profiles:web:$grailsVersion"
     runtimeOnly "org.glassfish.web:el-impl:2.2.1-b05"
     runtimeOnly "com.h2database:h2"
     runtimeOnly "org.apache.tomcat:tomcat-jdbc"
-    runtimeOnly "javax.xml.bind:jaxb-api:2.3.1"
-    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:3.4.7"
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "org.grails:grails-gorm-testing-support"
+    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:4.5.1"
+    testImplementation "org.apache.grails:grails-gorm-testing-support:$grailsVersion"
     testImplementation "org.mockito:mockito-core"
-    testImplementation "org.grails:grails-web-testing-support"
-    testImplementation "org.grails.plugins:geb"
-    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:4.0.0"
-    testImplementation "org.seleniumhq.selenium:selenium-api:4.0.0"
-    testImplementation "org.seleniumhq.selenium:selenium-support:4.0.0"
-    testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:4.0.0"
-    testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:4.0.0"
+    testImplementation "org.apache.grails:grails-web-testing-support:$grailsVersion"
+    testImplementation "org.apache.grails.plugins:geb:$grailsVersion"
+    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:4.28.0"
+    testImplementation "org.seleniumhq.selenium:selenium-api:4.28.0"
+    testImplementation "org.seleniumhq.selenium:selenium-support:4.28.0"
+    testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:4.28.0"
+    testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:4.28.0"
 
     testImplementation project(':gru-grails')
 }

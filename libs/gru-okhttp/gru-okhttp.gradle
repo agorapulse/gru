@@ -20,7 +20,7 @@ dependencies {
     // must be api because of the configuration block in the Http constructor
     api "com.squareup.okhttp3:okhttp:${okHttpVersion}"
 
-    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.apache.groovy:groovy:$groovyVersion"
 
     testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion"
     testImplementation "io.undertow:undertow-core:$undertowVersion"

@@ -21,7 +21,7 @@ import com.agorapulse.gru.Client
 import com.agorapulse.gru.MultipartDefinition
 import com.agorapulse.gru.cookie.Cookie
 import grails.testing.web.controllers.ControllerUnitTest
-import org.grails.plugins.testing.GrailsMockHttpServletRequest
+import org.apache.grails.plugins.testing.GrailsMockHttpServletRequest
 import org.springframework.mock.web.MockMultipartFile
 
 /**

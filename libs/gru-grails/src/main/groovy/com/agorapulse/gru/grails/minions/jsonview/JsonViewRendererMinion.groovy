@@ -39,10 +39,10 @@ import groovy.text.Template
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
-import org.grails.datastore.mapping.keyvalue.mapping.config.KeyValueMappingContext
-import org.grails.datastore.mapping.model.MappingContext
-import org.grails.web.mapping.DefaultLinkGenerator
-import org.grails.web.mapping.UrlMappingsHolderFactoryBean
+import org.apache.grails.datastore.mapping.keyvalue.mapping.config.KeyValueMappingContext
+import org.apache.grails.datastore.mapping.model.MappingContext
+import org.apache.grails.web.mapping.DefaultLinkGenerator
+import org.apache.grails.web.mapping.UrlMappingsHolderFactoryBean
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 

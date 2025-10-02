@@ -19,7 +19,7 @@ package com.agorapulse.gru.grails
 
 import com.agorapulse.gru.Client
 import com.agorapulse.gru.cookie.Cookie
-import org.grails.plugins.testing.GrailsMockHttpServletResponse
+import org.apache.grails.plugins.testing.GrailsMockHttpServletResponse
 
 /**
  * Wrapper around mock Grails response.

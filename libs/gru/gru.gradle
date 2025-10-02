@@ -27,7 +27,7 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation 'org.hamcrest:hamcrest:2.2'
 
-    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.apache.groovy:groovy:$groovyVersion"
     compileOnly 'org.jetbrains:annotations:13.0'
     compileOnly "org.spockframework:spock-core:$spockVersion"
 

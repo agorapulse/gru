@@ -29,26 +29,26 @@ jobs:
       COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Setup Java 17
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: zulu
           java-version: 17
           cache: gradle
       - name: Test with Micronaut client
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v4
         with:
           arguments: check --scan --parallel
       - name: Test with JDK Client
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v4
         env:
           GRU_HTTP_CLIENT: okhttp
         with:
           arguments: :heist-micronaut:clean check coveralls --scan --parallel
       - name: Test with OkHttp Client
-        uses: gradle/gradle-build-action@v2
+        uses: gradle/actions/setup-gradle@v4
         env:
           GRU_HTTP_CLIENT: jdk
         with:

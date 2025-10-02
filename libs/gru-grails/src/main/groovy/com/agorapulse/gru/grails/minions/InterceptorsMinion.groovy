@@ -25,9 +25,9 @@ import grails.artefact.Interceptor
 import grails.core.GrailsClass
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
-import org.grails.plugins.web.interceptors.GrailsInterceptorHandlerInterceptorAdapter
-import org.grails.plugins.web.interceptors.InterceptorArtefactHandler
-import org.grails.web.util.GrailsApplicationAttributes
+import org.apache.grails.plugins.web.interceptors.GrailsInterceptorHandlerInterceptorAdapter
+import org.apache.grails.plugins.web.interceptors.InterceptorArtefactHandler
+import org.apache.grails.web.util.GrailsApplicationAttributes
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory
 import org.springframework.web.servlet.ModelAndView
 
