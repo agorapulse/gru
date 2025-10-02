@@ -68,14 +68,14 @@ class GruGrailsRequest implements Client.Request {
 
     @Override
     void addCookie(Cookie cookie) {
-        List<javax.servlet.http.Cookie> cookies = request.cookies ? request.cookies.toList() : []
+        List<jakarta.servlet.http.Cookie> cookies = request.cookies ? request.cookies.toList() : []
 
         // request cookies only contain name and value
-        javax.servlet.http.Cookie servletCookie = new javax.servlet.http.Cookie(cookie.name, cookie.value)
+        jakarta.servlet.http.Cookie servletCookie = new jakarta.servlet.http.Cookie(cookie.name, cookie.value)
 
         cookies.add(servletCookie)
 
-        request.cookies = cookies.toArray(new javax.servlet.http.Cookie[cookies.size()])
+        request.cookies = cookies.toArray(new jakarta.servlet.http.Cookie[cookies.size()])
     }
 
     @Override

@@ -54,7 +54,7 @@ class GruGrailsResponse implements Client.Response {
 
     @Override
     List<Cookie> getCookies() {
-        List<javax.servlet.http.Cookie> cookies = response.cookies ? response.cookies.toList() : []
+        List<jakarta .servlet.http.Cookie> cookies = response.cookies ? response.cookies.toList() : []
 
         return cookies.collect {
             Cookie.Builder builder = new Cookie.Builder()
