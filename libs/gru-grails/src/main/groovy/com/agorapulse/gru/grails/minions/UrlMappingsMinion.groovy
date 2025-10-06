@@ -32,12 +32,12 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import javassist.util.proxy.ProxyObject
 import org.codehaus.groovy.runtime.MethodClosure
-import org.apache.grails.core.artefact.ControllerArtefactHandler
-import org.apache.grails.core.artefact.UrlMappingsArtefactHandler
-import org.apache.grails.web.mapping.UrlMappingsHolderFactoryBean
-import org.apache.grails.web.mapping.mvc.GrailsControllerUrlMappings
+import org.grails.core.artefact.ControllerArtefactHandler
+import org.grails.core.artefact.UrlMappingsArtefactHandler
+import org.grails.web.mapping.UrlMappingsHolderFactoryBean
+import org.grails.web.mapping.mvc.GrailsControllerUrlMappings
 
-import static org.apache.grails.web.servlet.mvc.GrailsWebRequest.ID_PARAMETER
+import static org.grails.web.servlet.mvc.GrailsWebRequest.ID_PARAMETER
 
 /**
  * Minion responsible for url mappings.
