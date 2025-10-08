@@ -20,7 +20,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.allopen")
     id("groovy")
-    id("io.micronaut.application") version "4.2.0"
+    id("io.micronaut.application") version "4.5.4"
 }
 
 version = "0.1"
@@ -30,7 +30,7 @@ graalvmNative.toolchainDetection = false
 
 micronaut {
     importMicronautPlatform = true
-    version("4.2.0")
+    version("4.9.3")
     runtime("netty")
     testRuntime("spock2")
     processing {
