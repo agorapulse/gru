@@ -90,7 +90,7 @@ config {
         }
 
         codenarc {
-            toolVersion = '1.5'
+            toolVersion = '3.6.0-groovy-4.0'
             maxPriority2Violations = 19
             maxPriority3Violations = 91
         }
@@ -143,8 +143,15 @@ allprojects {
 
 subprojects {
     dependencies {
-        codenarc "org.codenarc:CodeNarc:${config.quality.codenarc.toolVersion}"
+        codenarc("org.codenarc:CodeNarc:${config.quality.codenarc.toolVersion}") {
+            exclude group: 'org.codehaus.groovy'
+        }
+        codenarc "org.apache.groovy:groovy:$groovyVersion"
         codenarc "org.apache.groovy:groovy-templates:$groovyVersion"
+        codenarc "org.apache.groovy:groovy-xml:$groovyVersion"
+        codenarc "org.apache.groovy:groovy-groovydoc:$groovyVersion"
+        codenarc "org.apache.groovy:groovy-json:$groovyVersion"
+        codenarc "org.apache.groovy:groovy-ant:$groovyVersion"
     }
 }
 

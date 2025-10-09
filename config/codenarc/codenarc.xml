@@ -5,7 +5,9 @@
 
     <description>Sample rule set</description>
 
-    <ruleset-ref path="rulesets/basic.xml"/>
+    <ruleset-ref path="rulesets/basic.xml">
+        <exclude name="EqualsAndHashCode"/>
+    </ruleset-ref>
     <ruleset-ref path="rulesets/braces.xml">
         <rule-config name="IfStatementBraces">
             <property name="priority" value="3"/>
