@@ -22,7 +22,6 @@ jobs:
         with:
           owner: agorapulse
           repo: gru
+      - uses: gradle/actions/setup-gradle@v4
       - name: Publish GitHub Pages
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          arguments: gitPublishPush -Pversion=${{ steps.latest_version.outputs.latest_tag }} -Prelease=true -Dorg.ajoberstar.grgit.auth.username=${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }} --scan
+        run: ./gradlew gitPublishPush -Pversion=${{ steps.latest_version.outputs.latest_tag }} -Prelease=true -Dorg.ajoberstar.grgit.auth.username=${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }} --scan

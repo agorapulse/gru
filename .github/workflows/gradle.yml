@@ -37,19 +37,14 @@ jobs:
           distribution: zulu
           java-version: 17
           cache: gradle
+      - uses: gradle/actions/setup-gradle@v4
       - name: Test with Micronaut client
-        uses: gradle/actions/setup-gradle@v4
-        with:
-          arguments: check --scan --parallel
+        run: ./gradlew check --scan --parallel
       - name: Test with JDK Client
-        uses: gradle/actions/setup-gradle@v4
         env:
           GRU_HTTP_CLIENT: okhttp
-        with:
-          arguments: :heist-micronaut:clean check coveralls --scan --parallel
+        run: ./gradlew :heist-micronaut:clean check coveralls --scan --parallel
       - name: Test with OkHttp Client
-        uses: gradle/actions/setup-gradle@v4
         env:
           GRU_HTTP_CLIENT: jdk
-        with:
-          arguments: :heist-micronaut:clean check coveralls --scan --parallel
+        run: ./gradlew :heist-micronaut:clean check coveralls --scan --parallel
