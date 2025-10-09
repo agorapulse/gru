@@ -33,7 +33,7 @@ dependencies {
 
     testImplementation "joda-time:joda-time:${jodaTimeVersion}"
     testImplementation 'org.assertj:assertj-core:3.11.0'
-    testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    testImplementation 'org.junit.jupiter:junit-jupiter-api'
 
     testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion", {
         exclude group: 'org.codehaus.groovy'
