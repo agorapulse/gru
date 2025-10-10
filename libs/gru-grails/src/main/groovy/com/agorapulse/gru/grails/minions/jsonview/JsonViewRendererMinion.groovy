@@ -25,7 +25,6 @@ import com.agorapulse.gru.minions.AbstractMinion
 import com.agorapulse.gru.minions.JsonMinion
 import grails.core.GrailsApplication
 import grails.plugin.json.view.JsonViewConfiguration
-import grails.plugin.json.view.JsonViewGrailsPlugin
 import grails.plugin.json.view.JsonViewTemplateEngine
 import grails.plugin.json.view.api.JsonView
 import grails.plugin.json.view.api.jsonapi.DefaultJsonApiIdRenderer
@@ -39,10 +38,10 @@ import groovy.text.Template
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Log
-import org.grails.datastore.mapping.keyvalue.mapping.config.KeyValueMappingContext
 import org.grails.datastore.mapping.model.MappingContext
 import org.grails.web.mapping.DefaultLinkGenerator
 import org.grails.web.mapping.UrlMappingsHolderFactoryBean
+import org.grails.datastore.mapping.keyvalue.mapping.config.KeyValueMappingContext
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.i18n.SessionLocaleResolver
 

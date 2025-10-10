@@ -18,7 +18,7 @@
 package com.agorapulse.gru.okhttp
 
 import com.agorapulse.gru.Gru
-import com.stehno.ersatz.ContentType
+import com.stehno.ersatz.cfg.ContentType
 import com.stehno.ersatz.ErsatzServer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -36,7 +36,7 @@ class HttpNotFollowRedirectSpec extends Specification {
 
     void setup() {
         server.expectations {
-            get('/test') {
+            GET('/test') {
                 responds()
                     .cookie('Test-Cookie', 'true')
                     .header('Location', '/test/1')
@@ -44,7 +44,7 @@ class HttpNotFollowRedirectSpec extends Specification {
                     .body('')
 
             }
-            get('/test/1') {
+            GET('/test/1') {
                 responds()
                     .code(200)
                     .body('{"message":"OK"}', ContentType.APPLICATION_JSON)

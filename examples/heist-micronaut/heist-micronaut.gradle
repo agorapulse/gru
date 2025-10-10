@@ -20,7 +20,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.allopen")
     id("groovy")
-    id("io.micronaut.application") version "4.2.0"
+    id("io.micronaut.application") version "4.5.4"
 }
 
 version = "0.1"
@@ -30,7 +30,7 @@ graalvmNative.toolchainDetection = false
 
 micronaut {
     importMicronautPlatform = true
-    version("4.2.0")
+    version("4.9.3")
     runtime("netty")
     testRuntime("spock2")
     processing {
@@ -53,7 +53,7 @@ dependencies {
 
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:${kotlinVersion}")
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     testImplementation project(':gru-micronaut')

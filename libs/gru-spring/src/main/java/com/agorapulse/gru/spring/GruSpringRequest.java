@@ -109,6 +109,6 @@ public class GruSpringRequest implements Client.Request {
 
     @Override
     public void addCookie(Cookie c) {
-        addBuildStep(b -> b.cookie(new javax.servlet.http.Cookie(c.getName(), c.getValue())));
+        addBuildStep(b -> b.cookie(new jakarta.servlet.http.Cookie(c.getName(), c.getValue())));
     }
 }

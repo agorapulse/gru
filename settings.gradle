@@ -18,10 +18,11 @@
 buildscript {
     repositories {
         mavenCentral()
+        maven { url "https://repo.grails.org/grails/core/" }
         gradlePluginPortal()
     }
     dependencies {
-        classpath platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
+        classpath platform("org.apache.groovy:groovy-bom:$groovyVersion")
 
         classpath group: 'org.kordamp.gradle',                  name: 'checkstyle-gradle-plugin',       version: kordampPluginVersion
         classpath group: 'org.kordamp.gradle',                  name: 'codenarc-gradle-plugin',         version: kordampPluginVersion

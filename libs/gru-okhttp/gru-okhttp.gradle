@@ -20,9 +20,11 @@ dependencies {
     // must be api because of the configuration block in the Http constructor
     api "com.squareup.okhttp3:okhttp:${okHttpVersion}"
 
-    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.apache.groovy:groovy:$groovyVersion"
 
-    testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion"
+    testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion", {
+        exclude group: 'org.codehaus.groovy'
+    }
     testImplementation "io.undertow:undertow-core:$undertowVersion"
     testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
     testImplementation 'javax.activation:activation:1.1.1'

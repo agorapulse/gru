@@ -20,6 +20,7 @@ package com.agorapulse.gru.spring;
 import com.agorapulse.gru.AbstractClient;
 import com.agorapulse.gru.GruContext;
 import com.agorapulse.gru.Squad;
+import org.springframework.http.HttpMethod;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -30,7 +31,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
 /**
@@ -69,7 +70,7 @@ public class Spring extends AbstractClient {
     @Override
     public GruContext run(Squad squad, GruContext context) {
         MockMvc mockMvc = findMockMvc();
-        MockHttpServletRequestBuilder builder = request.getMultipart() != null ? fileUpload(getRequestURI()) : request(request.getMethod(), getRequestURI());
+        MockHttpServletRequestBuilder builder = request.getMultipart() != null ? multipart(getRequestURI()) : request(HttpMethod.valueOf(request.getMethod()), getRequestURI());
 
         for (Consumer<MockHttpServletRequestBuilder> step : request.getSteps()) {
             step.accept(builder);

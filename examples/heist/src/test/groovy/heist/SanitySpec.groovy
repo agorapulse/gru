@@ -22,7 +22,7 @@ import grails.boot.GrailsApp
 import spock.lang.Specification
 import spock.util.mop.ConfineMetaClassChanges
 
-import javax.servlet.ServletContext
+import jakarta.servlet.ServletContext
 
 /**
  * Trying to test untestable.
