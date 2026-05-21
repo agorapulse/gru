@@ -72,4 +72,4 @@ jobs:
           token: ${{ secrets.PERSONAL_TOKEN }}
           repository: ${{ matrix.repository }}
           event-type: ap-new-version-released-event
-          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [4, 5], "version": "${{ github.ref_name }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
+          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [5], "version": "${{ github.ref_name }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
