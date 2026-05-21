@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2025 Agorapulse.
+ * Copyright 2018-2026 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,16 +23,16 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Post;
 import io.micronaut.http.multipart.PartData;
 import io.micronaut.http.multipart.StreamingFileUpload;
-import io.reactivex.Flowable;
-import io.reactivex.Maybe;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Controller("/upload")
 public class UploadController {
 
     @SingleResult
     @Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA, produces = MediaType.TEXT_PLAIN)
-    Maybe<Integer> countBytes(StreamingFileUpload theFile) {
-        return Flowable.fromPublisher(theFile)
+    Mono<Integer> countBytes(StreamingFileUpload theFile) {
+        return Flux.from(theFile)
             .map(PartData::getBytes)
             .doOnNext(bytes -> System.out.println("Received: " + new String(bytes)))
             .map(bytes -> bytes.length)
