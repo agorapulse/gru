@@ -73,7 +73,7 @@ jobs:
       - name: Dispatch to ${{ matrix.repository }}
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }}
           repository: ${{ matrix.repository }}
           event-type: ap-new-version-released-event
-          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [4], "version": "${{ github.ref_name }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
+          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [5], "version": "${{ github.ref_name }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
