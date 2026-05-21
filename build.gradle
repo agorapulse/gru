@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 plugins {
+    id 'lifecycle-base'
     id 'org.jetbrains.kotlin.jvm'            version "${kotlinVersion}" apply false
     id 'org.jetbrains.kotlin.kapt'           version "${kotlinVersion}" apply false
     id 'org.jetbrains.kotlin.plugin.allopen' version "${kotlinVersion}" apply false
