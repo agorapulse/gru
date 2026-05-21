@@ -20,7 +20,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.allopen")
     id("groovy")
-    id("io.micronaut.application") version "4.2.0"
+    id("io.micronaut.application") version "5.0.0"
 }
 
 version = "0.1"
@@ -30,7 +30,7 @@ graalvmNative.toolchainDetection = false
 
 micronaut {
     importMicronautPlatform = true
-    version("4.2.0")
+    version(micronautVersion)
     runtime("netty")
     testRuntime("spock2")
     processing {
@@ -46,7 +46,7 @@ repositories {
 dependencies {
     implementation("io.micronaut.validation:micronaut-validation")
     implementation("io.micronaut:micronaut-http-client")
-    implementation("io.micronaut.rxjava2:micronaut-rxjava2")
+    implementation("io.micronaut.rxjava3:micronaut-rxjava3")
     implementation("io.micronaut:micronaut-jackson-databind")
     runtimeOnly("ch.qos.logback:logback-classic")
     runtimeOnly("org.yaml:snakeyaml")
@@ -62,7 +62,7 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter-api'
     testImplementation 'io.micronaut.test:micronaut-test-junit5'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine'
-    testImplementation 'org.mockito:mockito-core:4.5.1'
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
     testImplementation "org.jsoup:jsoup:$jsoupVersion"
     testImplementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
     testImplementation "org.jsoup:jsoup:$jsoupVersion"
@@ -79,7 +79,7 @@ application {
 
 java {
     toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
+        languageVersion.set(JavaLanguageVersion.of(25))
     }
 }
 
