@@ -15,66 +15,42 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-buildscript {
+pluginManagement {
     repositories {
-        mavenCentral()
         gradlePluginPortal()
-    }
-    dependencies {
-        classpath platform("org.codehaus.groovy:groovy-bom:$groovyVersion")
-
-        classpath group: 'org.kordamp.gradle',                  name: 'checkstyle-gradle-plugin',       version: kordampPluginVersion
-        classpath group: 'org.kordamp.gradle',                  name: 'codenarc-gradle-plugin',         version: kordampPluginVersion
-        classpath group: 'org.kordamp.gradle',                  name: 'groovy-project-gradle-plugin',   version: kordampPluginVersion
-        classpath group: 'org.kordamp.gradle',                  name: 'guide-gradle-plugin',            version: kordampPluginVersion
-        classpath group: 'org.kordamp.gradle',                  name: 'settings-gradle-plugin',         version: kordampPluginVersion
-
-        classpath group: 'org.ajoberstar',                      name: 'gradle-git-publish',             version: '2.1.3'
-        classpath group: 'com.vanniktech',                      name: 'gradle-maven-publish-plugin',    version: '0.34.0'
-
-        classpath group: 'org.jetbrains.kotlin',                name: 'kotlin-gradle-plugin',           version: kotlinVersion
-        classpath group: 'org.jetbrains.kotlin',                name: 'kotlin-allopen',                 version: kotlinVersion
+        maven { url 'https://agorapulse.jfrog.io/agorapulse/gradle-plugins-releases-local/' }
+        mavenCentral()
     }
 }
 
 plugins {
-    id("com.gradle.enterprise") version("3.15.1")
-}
-
-apply plugin: 'org.kordamp.gradle.settings'
-
-gradleEnterprise {
-    buildScan {
-        termsOfServiceUrl = "https://gradle.com/terms-of-service"
-        termsOfServiceAgree = "yes"
-    }
+    id 'com.agorapulse.gradle.settings'                 version "${agorapulseGradlePluginsVersion}"
+    id 'com.agorapulse.gradle.gradle-enterprise'        version "${agorapulseGradlePluginsVersion}"
+    id 'com.agorapulse.gradle.remote-cache'             version "${agorapulseGradlePluginsVersion}"
+    id 'com.agorapulse.gradle.internal-version-catalog' version "${agorapulseGradlePluginsVersion}"
 }
 
 rootProject.name = 'gru-root'
 
-projects {
-    cache = false
-    directories = ['docs', 'libs', 'examples', 'platforms', 'kotlin-libs']
-
-    plugins {
-        dir('docs') {
-            id 'org.kordamp.gradle.guide'
-            id 'org.ajoberstar.git-publish'
-        }
-        dirs(['libs', 'examples']) {
-            id 'java-library'
-            id 'groovy'
-        }
-        dirs(['libs', 'platforms', 'kotlin-libs']) {
-            id 'com.vanniktech.maven.publish'
-        }
-        dir('platforms') {
-            id 'java-platform'
-        }
-        dir('kotlin-libs') {
-            id 'org.jetbrains.kotlin.jvm'
-        }
-    }
-
+// Flat project naming (preserves :gru, :gru-bom, :gru-micronaut, ... references used across build scripts).
+def modulePaths = [
+    'docs/guide',
+    'libs/gru',
+    'libs/gru-okhttp',
+    'libs/gru-api-gateway',
+    'libs/gru-grails',
+    'libs/gru-micronaut',
+    'libs/gru-spring',
+    'libs/gru-spring-integration-testing',
+    'examples/heist',
+    'examples/heist-json-views',
+    'examples/heist-spring-boot',
+    'examples/heist-micronaut',
+    'platforms/gru-bom',
+    'kotlin-libs/gru-kotlin',
+]
+modulePaths.each { String path ->
+    String name = path.tokenize('/').last()
+    include ":$name"
+    project(":$name").projectDir = file(path)
 }
-

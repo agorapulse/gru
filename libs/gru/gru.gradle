@@ -15,6 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+plugins {
+    id 'java-library'
+    id 'groovy'
+    id 'com.agorapulse.gradle.groovy-common-configuration'
+    id 'com.agorapulse.gradle.error-prone'
+    id 'com.vanniktech.maven.publish'
+}
+
 dependencies {
     api 'space.jasan:groovy-closure-support:0.6.3'
     api 'com.agorapulse.testing:fixt:0.2.3'

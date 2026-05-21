@@ -16,18 +16,8 @@
  * limitations under the License.
  */
 plugins {
-    id 'org.kordamp.gradle.guide'
+    id 'com.agorapulse.gradle.guide'
     id 'org.ajoberstar.git-publish'
-}
-
-config {
-    docs {
-        guide {
-            publish {
-                enabled = true
-            }
-        }
-    }
 }
 
 configurations {

@@ -16,7 +16,12 @@
  * limitations under the License.
  */
 plugins {
-    id("groovy")
+    id 'groovy'
+    id 'com.agorapulse.gradle.micronaut-library'
+    id 'com.agorapulse.gradle.groovy-common-configuration'
+    id 'com.agorapulse.gradle.micronaut-compatibility'
+    id 'com.agorapulse.gradle.error-prone'
+    id 'com.vanniktech.maven.publish'
 }
 
 dependencies {
@@ -36,14 +41,4 @@ dependencies {
     compileOnly 'io.micronaut:micronaut-http-client'
     compileOnly 'io.micronaut:micronaut-http-server'
     compileOnly 'io.micronaut:micronaut-inject'
-}
-
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(25))
-    }
-}
-
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
 }

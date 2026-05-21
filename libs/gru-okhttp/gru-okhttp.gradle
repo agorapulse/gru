@@ -15,6 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+plugins {
+    id 'java-library'
+    id 'groovy'
+    id 'com.agorapulse.gradle.groovy-common-configuration'
+    id 'com.agorapulse.gradle.error-prone'
+    id 'com.vanniktech.maven.publish'
+}
+
 dependencies {
     api project(':gru')
     // must be api because of the configuration block in the Http constructor

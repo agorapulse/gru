@@ -16,10 +16,12 @@
  * limitations under the License.
  */
 plugins {
-    id 'org.kordamp.gradle.groovy-project'
-    id 'org.kordamp.gradle.checkstyle'
-    id 'org.kordamp.gradle.codenarc'
-    id 'org.kordamp.gradle.coveralls'
+    id 'com.agorapulse.gradle.aggregate-checkstyle-reports' version "${agorapulseGradlePluginsVersion}"
+    id 'org.jetbrains.kotlin.jvm'            version "${kotlinVersion}" apply false
+    id 'org.jetbrains.kotlin.kapt'           version "${kotlinVersion}" apply false
+    id 'org.jetbrains.kotlin.plugin.allopen' version "${kotlinVersion}" apply false
+    id 'com.vanniktech.maven.publish'        version '0.34.0'           apply false
+    id 'org.ajoberstar.git-publish'          version '2.1.3'            apply false
 }
 
 if (!project.hasProperty('mavenCentralUsername'))       ext.mavenCentralUsername            = System.getenv('MAVEN_CENTRAL_USERNAME') ?: '**UNDEFINED**'
@@ -28,249 +30,138 @@ if (!project.hasProperty('signingInMemoryKeyId'))       ext.signingInMemoryKeyId
 if (!project.hasProperty('signingInMemoryKeyPassword')) ext.signingInMemoryKeyPassword      = System.getenv('SIGNING_PASSWORD') ?: '**UNDEFINED**'
 if (!project.hasProperty('signingInMemoryKey'))         ext.signingInMemoryKey              = System.getenv('SIGNING_SECRET_KEY_PATH') ? rootProject.file(System.getenv('SIGNING_SECRET_KEY_PATH')).text : '**UNDEFINED**'
 
-config {
-    release = (rootProject.findProperty('release') ?: false).toBoolean()
-
-    info {
-        name = 'Gru'
-        vendor = 'Agorapulse'
-        description = 'HTTP Testing Framework'
-
-        links {
-            website = "https://github.com/${slug}"
-            issueTracker = "https://github.com/${slug}/issues"
-            scm = "https://github.com/${slug}.git"
-        }
-
-        people {
-            person {
-                id = 'musketyr'
-                name = 'Vladimir Orany'
-                roles = ['developer']
-            }
-        }
-
-        repositories {
-            repository {
-                name = 'localRelease'
-                url = "${project.rootProject.buildDir}/repos/local/release"
-            }
-            repository {
-                name = 'localSnapshot'
-                url = "${project.rootProject.buildDir}/repos/local/snapshot"
-            }
-        }
-    }
-
-    licensing {
-        licenses {
-            license {
-                id = 'Apache-2.0'
-            }
-        }
-    }
-
-    publishing {
-        enabled = false
-        signing {
-            enabled = false
-        }
-    }
-
-    artifacts {
-        source {
-            enabled = false
-        }
-    }
-
-    quality {
-        checkstyle {
-            toolVersion = '8.27'
-            maxErrors = 12
-        }
-
-        codenarc {
-            toolVersion = '1.5'
-            maxPriority2Violations = 19
-            maxPriority3Violations = 91
-        }
-    }
-
-    coverage {
-        coveralls {
-            enabled = true
-        }
-    }
-
-    docs {
-        javadoc {
-            enabled = false
-            autoLinks {
-                enabled = false
-            }
-            aggregate {
-                enabled = false
-            }
-        }
-        groovydoc {
-            enabled = false
-            aggregate {
-                enabled = false
-            }
-        }
-    }
-
-}
-
-
 allprojects {
     repositories {
         mavenCentral()
         maven { url 'https://repo1.maven.org/maven2/' }
-        maven { url "https://repo.grails.org/grails/core" }
+        maven { url 'https://repo.grails.org/grails/core' }
         maven { url 'https://repo.spring.io/release/' }
     }
-
-    license {
-        exclude '**/*.json'
-        exclude '**/*.yml'
-        exclude '**/*.txt'
-        exclude '**/*.html'
-        exclude '**/*.dtd'
-    }
 }
 
+def isInDir = { Project p, String dirName -> p.projectDir.parentFile?.name == dirName }
+def libsProjects       = subprojects.findAll { isInDir(it, 'libs') }
+def examplesProjects   = subprojects.findAll { isInDir(it, 'examples') }
+def kotlinLibsProjects = subprojects.findAll { isInDir(it, 'kotlin-libs') }
+def platformsProjects  = subprojects.findAll { isInDir(it, 'platforms') }
+
+configure(libsProjects + examplesProjects) {
+    plugins.withId('java') {
+        java {
+            toolchain {
+                languageVersion.set(JavaLanguageVersion.of(25))
+            }
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = 'UTF-8'
+        options.compilerArgs.add('-parameters')
+    }
+
+    tasks.withType(GroovyCompile).configureEach {
+        groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+    }
+}
 
 subprojects {
-    dependencies {
-        codenarc "org.codenarc:CodeNarc:${config.quality.codenarc.toolVersion}"
-        codenarc "org.codehaus.groovy:groovy-templates:$groovyVersion"
+    plugins.withId('com.vanniktech.maven.publish') {
+        mavenPublishing {
+            publishToMavenCentral(true)
+            signAllPublications()
+
+            pom {
+                name = 'Gru'
+                description = 'HTTP Testing Framework'
+                inceptionYear = '2018'
+                url = "https://github.com/${slug}"
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'musketyr'
+                        name = 'Vladimir Orany'
+                        url = 'https://github.com/musketyr/'
+                    }
+                }
+                scm {
+                    url = "https://github.com/${slug}.git"
+                    connection = "scm:git:git://github.com/${slug}.git"
+                    developerConnection = "scm:git:ssh://git@github.com/${slug}.git"
+                }
+            }
+        }
+
+        signing {
+            useInMemoryPgpKeys(rootProject.ext.signingInMemoryKey, rootProject.ext.signingInMemoryKeyPassword)
+            sign publishing.publications
+        }
     }
 }
 
-gradleProjects {
-    subprojects {
-        dirs(['libs', 'examples']) { Project subproject ->
-            java {
-                toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(25))
-                }
-            }
+configure(libsProjects) {
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
 
-            repositories {
-                mavenCentral()
-            }
-
-            tasks.withType(JavaCompile) {
-                options.encoding = "UTF-8"
-                options.compilerArgs.add('-parameters')
-            }
-
-            tasks.withType(GroovyCompile) {
-                groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+    plugins.withId('java') {
+        processResources {
+            filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version])
             }
         }
 
-        dirs(['libs', 'platforms', 'kotlin-libs']) {
-            mavenPublishing {
-                publishToMavenCentral(true)
-                signAllPublications()
-
-                pom {
-                    name = "Gru"
-                    description = 'HTTP Testing Framework'
-                    inceptionYear = "2018"
-                    url = "https://github.com/${slug}"
-                    licenses {
-                        license {
-                            name = "The Apache License, Version 2.0"
-                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                            distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                        }
-                    }
-                    developers {
-                        developer {
-                            id = "musketyr"
-                            name = "Vladimir Orany"
-                            url = "https://github.com/musketyr/"
-                        }
-                    }
-                    scm {
-                        url = "https://github.com/${slug}.git"
-                        connection = "scm:git:git://github.com/${slug}.git"
-                        developerConnection = "scm:git:ssh://git@github.com/${slug}.git"
-                    }
-                }
-            }
-
-            signing {
-                useInMemoryPgpKeys(rootProject.ext.signingInMemoryKey, rootProject.ext.signingInMemoryKeyPassword)
-                sign publishing.publications
-            }
+        jar {
+            manifest.attributes provider: 'gradle'
         }
 
-        dir('libs') {
-            processResources {
-                filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
-                    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version])
-                }
-            }
-
-            jar {
-                manifest.attributes provider: 'gradle'
-            }
-
-            dependencies {
-                testImplementation "org.spockframework:spock-core:$spockVersion"
-            }
-
-            tasks.withType(Test) {
-                useJUnitPlatform()
-            }
-
-            project(':gru-bom').dependencies.constraints.api it
+        dependencies {
+            testImplementation "org.spockframework:spock-core:$spockVersion"
         }
+    }
+}
 
-        dir ('examples') {
-            groovydoc.onlyIf { false }
-            config {
-                quality {
-                    codenarc {
-                        enabled = false
+configure(kotlinLibsProjects) {
+    tasks.withType(Test).configureEach {
+        useJUnitPlatform()
+    }
+
+    plugins.withId('java') {
+        jar {
+            manifest.attributes provider: 'gradle'
+        }
+    }
+}
+
+configure(platformsProjects) {
+    plugins.withId('java-platform') {
+        publishing {
+            publications {
+                main(MavenPublication) {
+                    pom {
+                        properties = [
+                            'gru.version': version,
+                        ]
                     }
                 }
             }
         }
+    }
+}
 
-        dir('platforms') {
-            // fix for NullPointerException in Kordamp PublishingPlugin
-            publishing {
-                publications {
-                    main(MavenPublication) {
-                        pom {
-                            properties = [
-                                'gru.version': version,
-                            ]
-                        }
-                    }
-                }
+// Wire the gru-bom platform once every published library has been included via settings.gradle.
+gradle.projectsEvaluated {
+    def bom = rootProject.findProject(':gru-bom')
+    if (bom != null) {
+        bom.dependencies.constraints {
+            (libsProjects + kotlinLibsProjects).each { Project lib ->
+                api lib
             }
-        }
-
-        dir('kotlin-libs') {
-            repositories {
-                mavenCentral()
-            }
-
-            jar {
-                manifest.attributes provider: 'gradle'
-            }
-
-            tasks.withType(Test) {
-                useJUnitPlatform()
-            }
-
-            project(':gru-bom').dependencies.constraints.api it
         }
     }
 }
