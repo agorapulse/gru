@@ -63,7 +63,7 @@ develocity {
 rootProject.name = 'gru-root'
 
 gradleProjects {
-    directories = ['docs', 'libs', 'examples', 'platforms', 'kotlin-libs']
+    directories = ['docs', 'libs', 'platforms', 'kotlin-libs']
 
     plugins {
         dirs(['libs']) {
@@ -82,3 +82,18 @@ gradleProjects {
         }
     }
 }
+
+// All example apps under examples/ are temporarily excluded from the build:
+// - heist + heist-json-views run on Grails 6.x which is not compatible with
+//   Gradle 9 (the `console` configuration was removed). Reviving them needs
+//   a migration to Apache Grails 7.1.1 (`org.apache.grails:*` coordinates,
+//   `org.apache.grails.gradle.*` plugin IDs) which in turn requires Groovy
+//   4.0.31; that's a separate effort because the rest of the gru libs are
+//   still on Groovy 3.
+// - heist-micronaut applies io.micronaut.application 5.0.0, whose
+//   MicronautGraalPlugin crashes on Java 25 with NoSuchMethodError on
+//   GraalUtil.supportsSharedArenaSupport(int). Needs a Micronaut Gradle
+//   plugin patch bump once one is published.
+// - heist-spring-boot is pinned to Spring Boot 2.4.3 / Kotlin 1.9 which
+//   pre-dates Gradle 9 and Java 25 baseline.
+// None of the example apps are required by any of the published libs.
