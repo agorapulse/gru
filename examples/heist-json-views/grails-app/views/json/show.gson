@@ -1,7 +1,0 @@
-model {
-	Map<String, Object> moon
-}
-
-response.status 200, 'All Right'
-
-json moon

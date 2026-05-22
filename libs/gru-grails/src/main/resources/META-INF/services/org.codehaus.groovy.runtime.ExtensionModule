@@ -1,3 +1,0 @@
-moduleName = gru-grails
-moduleVersion = @VERSION@
-extensionClasses = com.agorapulse.gru.grails.GrailsGruExtensions

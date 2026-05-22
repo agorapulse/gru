@@ -29,9 +29,8 @@ dependencies {
     testImplementation("com.agorapulse:gru-micronaut")                                  // <4>
     testImplementation("com.agorapulse:gru-spring")                                     // <5>
     testImplementation("com.agorapulse:gru-spring-integration-testing")                 // <6>
-    testImplementation("com.agorapulse:gru-grails")                                     // <7>
-    testImplementation("com.agorapulse:gru-api-gateway")                                // <8>
-    testImplementation("com.agorapulse:gru-okhttp")                                     // <9>
+    testImplementation("com.agorapulse:gru-api-gateway")                                // <7>
+    testImplementation("com.agorapulse:gru-okhttp")                                     // <8>
 }
 ----
 <1> You can use BOM to manage the dependencies, otherwise include the version number with each dependency
@@ -40,9 +39,8 @@ dependencies {
 <4> Micronaut module for running HTTP request against the embedded server
 <5> Spring module to emulate HTTP interaction using `MockMvc`
 <6> Spring module for real HTTP calls in integration tests
-<7> Grails module to emulate HTTP interaction within Grails Unit tests
-<8> AWS API Gateway module for HTTP proxy lambdas
-<9> Alternative OkHttp module for real HTTP calls in integration tests
+<7> AWS API Gateway module for HTTP proxy lambdas
+<8> Alternative OkHttp module for real HTTP calls in integration tests
 
 == Setup
 
@@ -966,65 +964,13 @@ requires several methods to be implemented to intercept the test flow.
 include::{root-dir}/libs/gru/src/main/java/com/agorapulse/gru/minions/Minion.java[tag=methods,indent=0]
 ----
 
-`Client` represents the current client such as `Http` or `Grails`.
+`Client` represents the current client such as `Http`.
 
 `Squad` is group of minions used in current test.
 
 `GruContext` is immutable object which holds any error been thrown during the execution phase and also the result of the execution.
 
-Grails implementation provides various example of extending the DSL. `ModelMinion` is responsible for checking the model
-returned from the controller.
-
-.ModelMinion.groovy
-[source,groovy]
-----
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/minions/ModelMinion.groovy[lines=18..-1]
-----
-<1> `AbstractMinion` guarantees type safety and allows to implements just some of the methods of the interface
-<2> `beforeRun` and `verify` methods are executed sorted by ascending order by the `index`, `afterRun` in descending order
-<3> Internal state of the minion, at most one instance of the minion exists per test
-<4> Type token to ensure type safety
-<5> Type-safe method to verify the result of the execution
-
-.Engaging Minion
-[source,groovy]
-----
-include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=modelEngage,indent=0]
-----
-
-Although it is possible to use use `engage` method to add new minion, it is more convenient to enhance the DSL with new
-method. As our minion is enhancing the request definition, we simply add new extension method to `RequestDefinitionBuilder` object:
-
-.Extension Class
-[source,groovy]
-----
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=header]
-
-    // ...
-
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=model]
-
-    // ...
-
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=footer]
-----
-<1> New extension method `model` will be added to `ResponseDefinitionBuilder` class
-<2> `command` method will add new minion to the squad if not already present and it allows to do additional configuration such as storing the model's value, there is its counterpart `ask` if you want to get information from another minion from the squad
-
-You have to create extensions class descriptor in order to make the extension methods available in the code:
-
-.src/main/resources/META-INF/services/org.codehaus.groovy.runtime.ExtensionModule
-----
-include::{root-dir}/libs/gru-grails/src/main/resources/META-INF/services/org.codehaus.groovy.runtime.ExtensionModule[]
-----
-
-After that the new extension method can be used in any test
-
-.Using Method from Extension
-[source,groovy]
-----
-include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=model,indent=0]
-----
+Implement `AbstractMinion<C>` to get type safety and to implement only the methods you need. Engage the minion with `gru.engage(new YourMinion())` inside the test, or expose it through a Groovy `category`/extension class so callers can configure it with a single DSL method instead of a manual `engage` call.
 
 === Creating New Client
 
