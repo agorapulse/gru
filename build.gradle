@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 plugins {
-    id 'lifecycle-base'
+    id 'com.agorapulse.gradle.root-project'
 }
 
 if (!project.hasProperty('mavenCentralUsername'))       ext.mavenCentralUsername       = System.getenv('MAVEN_CENTRAL_USERNAME') ?: '**UNDEFINED**'
@@ -33,80 +33,81 @@ allprojects {
     }
 }
 
-subprojects {
-    plugins.withId('com.agorapulse.gradle.micronaut-library') {
-        micronaut {
-            importMicronautPlatform = true
-            testRuntime 'spock'
-            processing {
-                incremental false
+gradleProjects {
+    subprojects {
+        dirs(['libs']) {
+            plugins.withId('com.agorapulse.gradle.micronaut-library') {
+                micronaut {
+                    importMicronautPlatform = true
+                    testRuntime 'spock'
+                    processing {
+                        incremental false
+                    }
+                }
             }
         }
-    }
 
-    plugins.withId('com.vanniktech.maven.publish') {
-        mavenPublishing {
-            publishToMavenCentral(true)
-            signAllPublications()
+        dirs(['libs', 'platforms', 'kotlin-libs']) {
+            mavenPublishing {
+                publishToMavenCentral(true)
+                signAllPublications()
 
-            pom {
-                name = project.name
-                description = 'HTTP Interactions Test Framework'
-                inceptionYear = '2018'
-                url = "https://github.com/${rootProject.slug}"
-                licenses {
-                    license {
-                        name = 'The Apache Software License, Version 2.0'
-                        url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution = 'repo'
-                    }
-                }
-                developers {
-                    developer {
-                        id = 'musketyr'
-                        name = 'Vladimir Orany'
-                        url = 'https://github.com/musketyr/'
-                    }
-                }
-                scm {
+                pom {
+                    name = project.name
+                    description = 'HTTP Interactions Test Framework'
+                    inceptionYear = '2018'
                     url = "https://github.com/${rootProject.slug}"
-                    connection = "scm:git:https://github.com/${rootProject.slug}.git"
-                    developerConnection = "scm:git:git@github.com:${rootProject.slug}.git"
+                    licenses {
+                        license {
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution = 'repo'
+                        }
+                    }
+                    developers {
+                        developer {
+                            id = 'musketyr'
+                            name = 'Vladimir Orany'
+                            url = 'https://github.com/musketyr/'
+                        }
+                    }
+                    scm {
+                        url = "https://github.com/${rootProject.slug}"
+                        connection = "scm:git:https://github.com/${rootProject.slug}.git"
+                        developerConnection = "scm:git:git@github.com:${rootProject.slug}.git"
+                    }
+                    issueManagement {
+                        system = 'GitHub'
+                        url = "https://github.com/${rootProject.slug}/issues"
+                    }
                 }
-                issueManagement {
-                    system = 'GitHub'
-                    url = "https://github.com/${rootProject.slug}/issues"
-                }
+            }
+
+            signing {
+                useInMemoryPgpKeys(rootProject.ext.signingInMemoryKey, rootProject.ext.signingInMemoryKeyPassword)
+                sign publishing.publications
             }
         }
 
-        signing {
-            useInMemoryPgpKeys(rootProject.ext.signingInMemoryKey, rootProject.ext.signingInMemoryKeyPassword)
-            sign publishing.publications
-        }
-    }
-}
+        dirs(['libs', 'kotlin-libs']) {
+            afterEvaluate {
+                if (plugins.hasPlugin('java')) {
+                    tasks.named('jar').configure {
+                        manifest.attributes provider: 'gradle'
+                    }
+                }
 
-// Wire the gru-bom platform to track every published library as a constraint.
-configure(subprojects.findAll { it.projectDir.parentFile?.name in ['libs', 'kotlin-libs'] }) { Project sub ->
-    sub.afterEvaluate {
-        if (sub.plugins.hasPlugin('java')) {
-            sub.tasks.named('jar').configure {
-                manifest.attributes provider: 'gradle'
-            }
-        }
+                tasks.withType(Test).configureEach {
+                    useJUnitPlatform()
+                }
 
-        sub.tasks.withType(Test).configureEach {
-            useJUnitPlatform()
-        }
+                rootProject.project(':gru-bom').dependencies.constraints.api project
 
-        rootProject.project(':gru-bom').dependencies.constraints.api sub
-    }
-
-    sub.afterEvaluate {
-        sub.tasks.findByName('processResources')?.with {
-            filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
-                filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: sub.version.toString()])
+                tasks.findByName('processResources')?.with {
+                    filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+                        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: project.version.toString()])
+                    }
+                }
             }
         }
     }

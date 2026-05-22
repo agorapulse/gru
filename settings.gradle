@@ -22,6 +22,7 @@ pluginManagement {
         mavenCentral()
     }
     plugins {
+        id 'com.agorapulse.gradle.root-project'                version "${agorapulseGradlePluginsVersion}"
         id 'com.agorapulse.gradle.micronaut-library'           version "${agorapulseGradlePluginsVersion}"
         id 'com.agorapulse.gradle.groovy-common-configuration' version "${agorapulseGradlePluginsVersion}"
         id 'com.agorapulse.gradle.micronaut-compatibility'     version "${agorapulseGradlePluginsVersion}"
@@ -67,6 +68,7 @@ gradleProjects {
     plugins {
         dirs(['libs']) {
             id 'groovy'
+            id 'java-library'
             id 'com.agorapulse.gradle.groovy-common-configuration'
             id 'com.vanniktech.maven.publish'
         }
