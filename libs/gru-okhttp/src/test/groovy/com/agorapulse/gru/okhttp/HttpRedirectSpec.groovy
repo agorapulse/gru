@@ -18,8 +18,8 @@
 package com.agorapulse.gru.okhttp
 
 import com.agorapulse.gru.Gru
-import com.stehno.ersatz.ContentType
-import com.stehno.ersatz.ErsatzServer
+import io.github.cjstehno.ersatz.cfg.ContentType
+import io.github.cjstehno.ersatz.ErsatzServer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
