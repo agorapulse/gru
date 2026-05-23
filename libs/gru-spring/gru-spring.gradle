@@ -18,7 +18,7 @@
 dependencies {
     api project(':gru')
 
-    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.apache.groovy:groovy:$groovyVersion"
 
     compileOnly group: 'org.springframework', name: 'spring-webmvc', version: springVersion
     compileOnly group: 'org.springframework', name: 'spring-test', version: springVersion
