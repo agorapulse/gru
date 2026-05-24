@@ -15,19 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist;
 
-import com.agorapulse.gru.kotlin.create
+public class VectorMessage {
 
-import io.kotest.core.spec.style.StringSpec
+    private final String message;
 
-class HttpTest : StringSpec({
-
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    public VectorMessage(String message) {
+        this.message = message;
     }
 
-})
+    public String getMessage() {
+        return message;
+    }
+
+}

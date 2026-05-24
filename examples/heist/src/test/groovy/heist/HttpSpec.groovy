@@ -15,19 +15,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
+import com.agorapulse.gru.Gru
+import spock.lang.Specification
 
-import io.kotest.core.spec.style.StringSpec
+class HttpSpec extends Specification{
 
-class HttpTest : StringSpec({
+    Gru gru = Gru.create('https://example.com')                                         // <1>
 
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    void 'example get'() {
+        expect:
+            gru.test {
+                get '/'                                                                 // <2>
+            }
     }
 
-})
+}

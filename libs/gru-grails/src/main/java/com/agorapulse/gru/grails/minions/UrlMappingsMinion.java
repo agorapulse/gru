@@ -168,8 +168,13 @@ public class UrlMappingsMinion extends AbstractMinion<Grails> {
             throw new IllegalStateException("Application context is not a BeanDefinitionRegistry: " + ctx);
         }
         BeanDefinitionRegistry registry = (BeanDefinitionRegistry) ctx;
+        // Always re-register so newly-added UrlMappings classes are picked up.
         if (registry.containsBeanDefinition(URL_MAPPINGS_HOLDER_BEAN)) {
-            return;
+            registry.removeBeanDefinition(URL_MAPPINGS_HOLDER_BEAN);
+        }
+        if (ctx.getBeanFactory().containsSingleton(URL_MAPPINGS_HOLDER_BEAN)) {
+            ((org.springframework.beans.factory.support.DefaultSingletonBeanRegistry) ctx.getBeanFactory())
+                .destroySingleton(URL_MAPPINGS_HOLDER_BEAN);
         }
         GenericBeanDefinition def = new GenericBeanDefinition();
         def.setBeanClass(UrlMappingsHolderFactoryBean.class);
@@ -195,6 +200,23 @@ public class UrlMappingsMinion extends AbstractMinion<Grails> {
         if (matches != null) {
             for (UrlMappingInfo i : matches) {
                 mappingInfos.add(i);
+            }
+        }
+
+        // Apache Grails 7 excludes generic catch-all mappings (e.g. /$controller/$action) from matchAll().
+        // Fall back to match() so requests against unknown URLs can still resolve the catch-all and
+        // surface the original "controller not mocked" / "action does not exist" error messages.
+        // match() ignores HTTP method, so we manually filter: accept only if the matched mapping's
+        // method is "*" (any) or matches the request method.
+        if (mappingInfos.isEmpty()) {
+            UrlMappingInfo fallback = mappingsHolder.match(requestURI);
+            if (fallback != null) {
+                String mappedMethod = fallback.getHttpMethod();
+                if (mappedMethod == null
+                    || UrlMapping.ANY_HTTP_METHOD.equals(mappedMethod)
+                    || mappedMethod.equalsIgnoreCase(httpMethod)) {
+                    mappingInfos.add(fallback);
+                }
             }
         }
 

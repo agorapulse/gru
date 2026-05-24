@@ -15,19 +15,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist;
 
-import com.agorapulse.gru.kotlin.create
+import com.agorapulse.gru.Gru;
+import org.junit.Test;
 
-import io.kotest.core.spec.style.StringSpec
+public class HttpTest {
 
-class HttpTest : StringSpec({
+    Gru gru = Gru.create("https://example.com");                                        // <1>
 
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    @Test
+    public void testGetWiki() throws Throwable {
+        gru.verify(test -> test.get("/"));                                              // <2>
     }
 
-})
+}

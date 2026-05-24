@@ -1005,6 +1005,7 @@ Grails module:
 
 * `gru-grails` now targets Apache Grails 7.1.1 (coordinates: `org.apache.grails:grails-*`) instead of legacy Grails 6 (`org.grails:grails-*`). The Servlet API moved with it: `javax.servlet.http.Cookie` is replaced with `jakarta.servlet.http.Cookie`. Consumers must be on Apache Grails 7.x.
 * The module has been rewritten from Groovy to Java internally so the published jar contains no Groovy-version-specific bytecode and can safely sit on a Groovy 4 (Apache Grails 7) consumer classpath even though the rest of gru is built against Groovy 5. The user-facing DSL (`include`, `model`, `forward`, `executes` extension methods on the gru test builders) is unchanged.
+* Apache Grails 7's `UrlMappingsHolder.matchAll(uri, method)` no longer returns generic catch-all mappings (e.g. `/$controller/$action?/$id?`). `gru-grails` now falls back to `match(uri)` and filters the result by HTTP method, preserving the previous `"controller is not mocked"` and `"action does not exist"` assertion paths when a test `include`s a catch-all `UrlMappings` class.
 
 Testing helpers:
 

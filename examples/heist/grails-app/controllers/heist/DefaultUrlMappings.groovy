@@ -15,19 +15,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
-
-import io.kotest.core.spec.style.StringSpec
-
-class HttpTest : StringSpec({
-
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
+class DefaultUrlMappings {
+    static mappings = {
+        "/$controller/$action?/$id?" {
+            constraints {
+                // apply constraints here
+            }
         }
     }
-
-})
+}

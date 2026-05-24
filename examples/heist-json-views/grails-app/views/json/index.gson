@@ -1,0 +1,9 @@
+model {
+	List<Map<String, Object>> moons
+}
+
+response.status 203
+response.header('foo', 'bar')
+response.contentType 'x-application/moons'
+
+json moons

@@ -90,3 +90,11 @@ project(':heist-micronaut').buildFileName = 'heist-micronaut.gradle'
 include ':heist-spring-boot'
 project(':heist-spring-boot').projectDir = file('examples/heist-spring-boot')
 project(':heist-spring-boot').buildFileName = 'heist-spring-boot.gradle'
+
+include ':heist'
+project(':heist').projectDir = file('examples/heist')
+project(':heist').buildFileName = 'heist.gradle'
+
+include ':heist-json-views'
+project(':heist-json-views').projectDir = file('examples/heist-json-views')
+project(':heist-json-views').buildFileName = 'heist-json-views.gradle'

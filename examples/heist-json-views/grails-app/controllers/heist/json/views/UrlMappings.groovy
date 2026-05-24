@@ -15,19 +15,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist.json.views
 
-import com.agorapulse.gru.kotlin.create
+class UrlMappings {
 
-import io.kotest.core.spec.style.StringSpec
+    static mappings = {
+        get "/json/missing"(controller: 'json', action: 'missing')
 
-class HttpTest : StringSpec({
+        delete "/$controller/$id(.$format)?"(action:"delete")
+        get "/$controller(.$format)?"(action:"index")
+        get "/$controller/$id(.$format)?"(action:"show")
+        post "/$controller(.$format)?"(action:"save")
+        put "/$controller/$id(.$format)?"(action:"update")
+        patch "/$controller/$id(.$format)?"(action:"patch")
 
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+        "/"(controller: 'application', action:'index')
+        "500"(view: '/error')
+        "404"(view: '/notFound')
     }
-
-})
+}

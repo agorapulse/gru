@@ -15,19 +15,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
+class BootStrap {
 
-import io.kotest.core.spec.style.StringSpec
-
-class HttpTest : StringSpec({
-
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    def init = { servletContext ->
     }
-
-})
+    def destroy = {
+    }
+}

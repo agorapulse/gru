@@ -15,19 +15,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
+class UglyInterceptor {
 
-import io.kotest.core.spec.style.StringSpec
-
-class HttpTest : StringSpec({
-
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    UglyInterceptor() {
+        match(uri: '/moons/ugly/interceptor')
     }
 
-})
+    boolean before() {
+        response.addHeader('X-Bad-Message', 'This will not proceed after run!')
+        return true
+    }
+
+    boolean after() {
+        return false
+    }
+
+    void afterView() {
+        // no-op
+    }
+}

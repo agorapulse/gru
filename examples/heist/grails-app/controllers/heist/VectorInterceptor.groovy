@@ -15,19 +15,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
+import org.springframework.http.HttpStatus
 
-import io.kotest.core.spec.style.StringSpec
 
-class HttpTest : StringSpec({
+class VectorInterceptor {
 
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    VectorMessage vectorMessage
+
+    VectorInterceptor() {
+        match(uri: "/api/**")
     }
 
-})
+    boolean before() {
+        response.status = HttpStatus.NOT_FOUND.value()
+        response.addHeader('X-Message', vectorMessage ? vectorMessage.message : "Vector was here")
+        return false
+    }
+
+    boolean after() { true } // $COVERAGE-IGNORE$
+
+    void afterView() {
+        // no-op
+    }
+}

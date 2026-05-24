@@ -15,19 +15,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
+import grails.boot.GrailsApp
+import grails.boot.config.GrailsAutoConfiguration
+import org.springframework.context.ConfigurableApplicationContext
 
-import io.kotest.core.spec.style.StringSpec
+import groovy.transform.CompileStatic
 
-class HttpTest : StringSpec({
+@CompileStatic
+class Application extends GrailsAutoConfiguration {
 
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    // for testing only
+    private static ConfigurableApplicationContext context
+
+    static void main(String[] args) {
+        context = GrailsApp.run(Application, args)
     }
-
-})
+}

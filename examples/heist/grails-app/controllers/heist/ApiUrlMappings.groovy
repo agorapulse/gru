@@ -15,19 +15,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
+import org.springframework.http.HttpMethod
 
-import io.kotest.core.spec.style.StringSpec
+class ApiUrlMappings {
 
-class HttpTest : StringSpec({
-
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    static mappings = {
+        "/api/v1/moons/$planet"(controller: "moon", action: "all", method: HttpMethod.GET)
+        "/api/v1/moons/$planet"(controller: "moon", action: "create", method: HttpMethod.POST)
+        "/api/v1/moons/$planet/$moon"(controller: "moon", action: "moon", method: HttpMethod.GET)
+        "/api/v1/moons/$planet/$moon"(controller: "moon", action: "steal", method: HttpMethod.DELETE)
     }
-
-})
+}

@@ -15,19 +15,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package heist.kt
+package heist
 
-import com.agorapulse.gru.kotlin.create
+import com.agorapulse.gru.Gru
+import com.agorapulse.gru.grails.Grails
+import grails.testing.web.controllers.ControllerUnitTest
+import spock.lang.Specification
 
-import io.kotest.core.spec.style.StringSpec
+class IncludeUrlMappingsNoAutowireSpec extends Specification implements ControllerUnitTest<MoonController> {
 
-class HttpTest : StringSpec({
-
-    "minimal Gru test" {
-        val gru = create("https://example.com")                                         // <1>
-        gru.verify {
-            get("/")                                                                    // <2>
-        }
+    void "cannot autowire url mappings"() {
+        when:
+            Gru.create(Grails.create(this)).prepare {
+                include ApiUrlMappings, true
+            }. test {
+                get '/api/moons/earth/moon'
+            }.verify()
+        then:
+            thrown(IllegalArgumentException)
     }
-
-})
+}
