@@ -1,0 +1,41 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Copyright 2018-2026 Agorapulse.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+dependencies {
+    api project(':gru')
+
+    // Apache Grails 7.1.1 still ships against Groovy 4.0.31; consumers bring
+    // their own Groovy at runtime via Grails.
+    compileOnly "org.apache.groovy:groovy:$apacheGroovyVersion"
+
+    compileOnly "org.apache.grails:grails-core:$apacheGrailsVersion"
+    compileOnly "org.apache.grails:grails-controllers:$apacheGrailsVersion"
+    compileOnly "org.apache.grails:grails-url-mappings:$apacheGrailsVersion"
+    compileOnly "org.apache.grails:grails-interceptors:$apacheGrailsVersion"
+    compileOnly "org.apache.grails:grails-spring:$apacheGrailsVersion"
+    compileOnly "org.apache.grails:grails-testing-support-web:$apacheGrailsVersion"
+    compileOnly "org.apache.grails.testing:grails-test-core:$apacheGrailsVersion"
+    compileOnly "org.apache.grails.web:grails-web-common:$apacheGrailsVersion"
+    compileOnly "org.apache.grails.web:grails-web-mvc:$apacheGrailsVersion"
+    compileOnly "org.apache.grails.web:grails-web-url-mappings:$apacheGrailsVersion"
+    compileOnly "org.apache.grails:grails-views-gson:$apacheGrailsVersion"
+    compileOnly "org.springframework:spring-webmvc:$springVersion"
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+
+    // optional: keep the json-views integration available; consumers wire it via Grails
+    compileOnly "org.apache.grails:grails-views-gson:$apacheGrailsVersion"
+}
