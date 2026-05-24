@@ -77,7 +77,7 @@ public class GruSpringRequest implements Client.Request {
 
     @Override
     public void setJson(String jsonText) {
-        addBuildStep(b -> b.contentType(MediaType.APPLICATION_JSON_UTF8).content(jsonText));
+        addBuildStep(b -> b.contentType(MediaType.APPLICATION_JSON).content(jsonText));
     }
 
     @Override
@@ -109,6 +109,6 @@ public class GruSpringRequest implements Client.Request {
 
     @Override
     public void addCookie(Cookie c) {
-        addBuildStep(b -> b.cookie(new javax.servlet.http.Cookie(c.getName(), c.getValue())));
+        addBuildStep(b -> b.cookie(new jakarta.servlet.http.Cookie(c.getName(), c.getValue())));
     }
 }

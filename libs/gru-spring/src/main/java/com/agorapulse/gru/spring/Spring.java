@@ -30,7 +30,7 @@ import java.net.URI;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.fileUpload;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.request;
 
 /**
@@ -69,7 +69,7 @@ public class Spring extends AbstractClient {
     @Override
     public GruContext run(Squad squad, GruContext context) {
         MockMvc mockMvc = findMockMvc();
-        MockHttpServletRequestBuilder builder = request.getMultipart() != null ? fileUpload(getRequestURI()) : request(request.getMethod(), getRequestURI());
+        MockHttpServletRequestBuilder builder = request.getMultipart() != null ? multipart(getRequestURI()) : request(request.getMethod(), getRequestURI());
 
         for (Consumer<MockHttpServletRequestBuilder> step : request.getSteps()) {
             step.accept(builder);
@@ -78,7 +78,7 @@ public class Spring extends AbstractClient {
         if (request.getMultipart() != null) {
             MockMultipartHttpServletRequestBuilder upload = (MockMultipartHttpServletRequestBuilder) builder;
             request.getMultipart().getParameters().forEach((k, v) -> {
-                builder.param(k, v == null ? null :String.valueOf(v));
+                builder.param(k, v == null ? null : String.valueOf(v));
             });
             request.getMultipart().getFiles().forEach((k, f) -> {
                 upload.file(new MockMultipartFile(

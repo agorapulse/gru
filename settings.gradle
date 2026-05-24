@@ -83,8 +83,10 @@ gradleProjects {
     }
 }
 
-// heist-spring-boot remains excluded - it is pinned to Spring Boot 2.4.3 /
-// Kotlin 1.9 which pre-dates Gradle 9 and the Java 25 baseline.
 include ':heist-micronaut'
 project(':heist-micronaut').projectDir = file('examples/heist-micronaut')
 project(':heist-micronaut').buildFileName = 'heist-micronaut.gradle'
+
+include ':heist-spring-boot'
+project(':heist-spring-boot').projectDir = file('examples/heist-spring-boot')
+project(':heist-spring-boot').buildFileName = 'heist-spring-boot.gradle'

@@ -41,17 +41,17 @@ class MoonControllerSpec extends Specification {
             gru.test {
                 get '/moons/earth/moon', {
                     request {                                                           // <1>
-                        accept(MediaType.APPLICATION_JSON_UTF8)                         // <2>
+                        accept(MediaType.APPLICATION_JSON)                         // <2>
                     }
                     and {                                                               // <3>
                         locale(Locale.CANADA)
                     }
                 }
                 expect {
-                    headers 'Content-Type': 'application/json;charset=UTF-8'
+                    headers 'Content-Type': 'application/json'
                     json 'moonResponse.json'
                     that content().encoding('UTF-8')                                    // <4>
-                    and content().contentType(MediaType.APPLICATION_JSON_UTF8)          // <5>
+                    and content().contentType(MediaType.APPLICATION_JSON)          // <5>
                 }
             }
     }

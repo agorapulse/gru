@@ -1,0 +1,2 @@
+com.agorapulse.gru.spring.itest.GruIntegrationTestConfiguration
+com.agorapulse.gru.spring.itest.GruKotlinIntegrationTestConfiguration
