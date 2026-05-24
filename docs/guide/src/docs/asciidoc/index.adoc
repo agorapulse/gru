@@ -979,6 +979,38 @@ The core idea is to provide methods to update request and to check the response 
 
 == Release Notes
 
+=== 3.0.0
+
+==== Breaking Changes
+
+Baseline:
+
+* Minimum Java raised to Java 25; Gradle 9.5 required to build.
+* Groovy bumped from 3.x to 5.0.x. The published Maven coordinate also moved from `org.codehaus.groovy:groovy` to `org.apache.groovy:groovy`. Consumers on Groovy 3 will need to upgrade.
+* Spock test dependency bumped from `2.3-groovy-3.0` to `2.4-groovy-5.0`.
+* Kotlin baseline raised to 2.3.21 (required for the JVM-25 target).
+
+Micronaut module:
+
+* `gru-micronaut` is now compiled against Micronaut 5.x. Consumers must be on Micronaut 5 (`io.micronaut:micronaut-core:5.x`).
+
+Spring module:
+
+* `gru-spring` now compiles against Spring Framework 6.2.x and Servlet 6 (`jakarta.servlet`). The legacy `javax.servlet` dependency has been dropped. Consumers must be on Spring 6+ / Spring Boot 3+.
+* The deprecated `MediaType.APPLICATION_JSON_UTF8` is no longer used; Spring 6 no longer appends `;charset=UTF-8` to `application/json` responses. Tests asserting on the literal `application/json;charset=UTF-8` content type must be updated to `application/json`.
+* `MockMvcRequestBuilders.fileUpload(...)` was removed in Spring 6; `gru-spring` now uses `MockMvcRequestBuilders.multipart(...)` internally. Custom code building multipart requests directly should do the same.
+* `gru-spring-integration-testing` now publishes its auto-configuration via `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` (Spring Boot 3+). The legacy `META-INF/spring.factories` is kept for back-compatibility.
+
+Grails module:
+
+* `gru-grails` has been removed. Grails 6 is not compatible with Gradle 9, and migrating to Apache Grails 7+ requires Groovy 4 + a series of breaking API changes that would force a separate major-version release of the module. Consumers on Grails should pin to gru `2.x` until a dedicated Apache-Grails port lands.
+
+Testing helpers:
+
+* `fixt` bumped to `1.0.0.RC5+`; system properties now take precedence over environment variables when resolving the test resources folder (fixes the case where `Gradle's test.environment(...)` was silently overriding an in-test `System.setProperty` redirect).
+* `com.stehno.ersatz:ersatz:1.9.0` is no longer used. Consumers extending the gru-okhttp test base (or wiring an Ersatz mock server themselves) should switch to `io.github.cjstehno.ersatz:ersatz:4.x` and, for the Groovy DSL, also depend on `io.github.cjstehno.ersatz:ersatz-groovy:4.x`. The ersatz 4.x DSL renames HTTP-method blocks from lowercase (`get`, `post`) to uppercase (`GET`, `POST`).
+* Gradle 9's `jvm-test-suite` plugin no longer launches JUnit Platform without `org.junit.platform:junit-platform-launcher` on the test runtime classpath. Add it as `testRuntimeOnly` to any project that runs Spock or JUnit 5 tests.
+
 === 2.0.0
 
 ==== Breaking Changes

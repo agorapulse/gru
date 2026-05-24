@@ -22,6 +22,5 @@ import io.kotest.core.extensions.Extension
 import io.micronaut.test.extensions.kotest5.MicronautKotest5Extension
 
 object ProjectConfig : AbstractProjectConfig() {
-    // Kotest 6 turned `extensions()` (function) into the `extensions` val property.
     override val extensions: List<Extension> = listOf(MicronautKotest5Extension)
 }

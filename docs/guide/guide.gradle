@@ -19,32 +19,20 @@ plugins {
     id 'com.agorapulse.gradle.guide'
 }
 
-// gradle-git-publish 5.x no longer reads GRGIT_USER / GRGIT_PASS env vars
-// (or the org.ajoberstar.grgit.auth.* system properties). HTTPS push
-// credentials must be set on the gitPublish extension directly.
 gitPublish {
     username = providers.environmentVariable('GIT_PUBLISH_USERNAME').orElse('')
     password = providers.environmentVariable('GIT_PUBLISH_PASSWORD').orElse('')
 }
 
-configurations {
-    asciidoctorExtensions
-}
-
-dependencies {
-    asciidoctorExtensions 'com.bmuschko:asciidoctorj-tabbed-code-extension:0.3'
-}
-
 asciidoctor {
-    configurations 'asciidoctorExtensions'
     baseDirFollowsSourceDir()
 
     attributes = [
-        'gradle-version': project.gradle.gradleVersion,
+        'gradle-version'    : project.gradle.gradleVersion,
         'source-highlighter': 'prettify',
-        'root-dir': rootDir,
-        'project-slug': slug,
-        'docinfo': 'shared',
-        'toclevels': 3,
+        'root-dir'          : rootDir,
+        'project-slug'      : slug,
+        'docinfo'           : 'shared',
+        'toclevels'         : 3,
     ]
 }

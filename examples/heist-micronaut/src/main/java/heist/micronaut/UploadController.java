@@ -31,9 +31,6 @@ public class UploadController {
     @SingleResult
     @Post(value = "/", consumes = MediaType.MULTIPART_FORM_DATA, produces = MediaType.TEXT_PLAIN)
     Mono<Integer> countBytes(StreamingFileUpload theFile) {
-        // Micronaut 5 dropped StreamingFileUpload's Publisher<PartData> shape.
-        // The upload body is now a CloseableByteBody whose toByteArrayPublisher()
-        // emits chunks as raw byte[].
         return Flux.from(theFile.streamingBody().toByteArrayPublisher())
             .doOnNext(bytes -> System.out.println("Received: " + new String(bytes)))
             .map(bytes -> bytes.length)
