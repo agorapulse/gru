@@ -20,13 +20,18 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("org.jetbrains.kotlin.plugin.allopen")
     id("groovy")
-    id("io.micronaut.application") version "${micronautGradlePluginVersion}"
+    // io.micronaut.application (5.0.0) applies the GraalVM plugin, which
+    // crashes on Java 25 with NoSuchMethodError on GraalUtil
+    // .supportsSharedArenaSupport(int) - micronaut-graalvm-plugin 5.0.0
+    // calls a GraalUtil method that the stale shadow copy bundled in
+    // micronaut-minimal-plugin 5.0.0 does not have. We do not need GraalVM
+    // here (this app is only a real-server integration test for gru), so
+    // use the minimal variant which skips the graalvm plugin entirely.
+    id("io.micronaut.minimal.application")
 }
 
 version = "0.1"
 group = "heist"
-
-graalvmNative.toolchainDetection = false
 
 micronaut {
     importMicronautPlatform = true

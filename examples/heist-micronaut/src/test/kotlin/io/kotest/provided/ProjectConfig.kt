@@ -18,8 +18,10 @@
 package io.kotest.provided
 
 import io.kotest.core.config.AbstractProjectConfig
+import io.kotest.core.extensions.Extension
 import io.micronaut.test.extensions.kotest5.MicronautKotest5Extension
 
 object ProjectConfig : AbstractProjectConfig() {
-    override fun extensions() = listOf(MicronautKotest5Extension)
+    // Kotest 6 turned `extensions()` (function) into the `extensions` val property.
+    override val extensions: List<Extension> = listOf(MicronautKotest5Extension)
 }

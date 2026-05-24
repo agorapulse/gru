@@ -24,9 +24,12 @@ import io.kotest.core.spec.style.StringSpec
 class HttpTest : StringSpec({
 
     "minimal Gru test" {
-        val gru = create("https://despicableme.fandom.com")                             // <1>
+        // example.com is RFC 2606 reserved for documentation use and reliably
+        // returns HTTP 200 for any path. The previous despicableme.fandom.com
+        // URL started getting blocked by Cloudflare bot protection.
+        val gru = create("https://example.com")                                         // <1>
         gru.verify {
-            get("/wiki/Felonius_Gru")                                                   // <2>
+            get("/")                                                                    // <2>
         }
     }
 
