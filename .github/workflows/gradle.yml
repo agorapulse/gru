@@ -35,12 +35,13 @@ jobs:
           distribution: zulu
           java-version: 25
       - uses: gradle/actions/setup-gradle@v5
-      - name: Check
+      - name: Test with Micronaut client
         run: ./gradlew check --parallel
-        # The previous matrix steps (`:heist-micronaut:clean check` with
-        # GRU_HTTP_CLIENT=okhttp / GRU_HTTP_CLIENT=jdk) re-ran heist-micronaut's
-        # integration tests against different HTTP client backends. heist-
-        # micronaut is currently excluded from the build (its
-        # io.micronaut.application 5.0.0 plugin trips a NoSuchMethodError on
-        # Java 25), and no other test consumes GRU_HTTP_CLIENT, so the extra
-        # steps are dropped until heist-micronaut comes back.
+      - name: Test with JDK Client
+        env:
+          GRU_HTTP_CLIENT: okhttp
+        run: ./gradlew :heist-micronaut:clean check --parallel
+      - name: Test with OkHttp Client
+        env:
+          GRU_HTTP_CLIENT: jdk
+        run: ./gradlew :heist-micronaut:clean check --parallel
