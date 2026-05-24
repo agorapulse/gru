@@ -29,8 +29,9 @@ dependencies {
     testImplementation("com.agorapulse:gru-micronaut")                                  // <4>
     testImplementation("com.agorapulse:gru-spring")                                     // <5>
     testImplementation("com.agorapulse:gru-spring-integration-testing")                 // <6>
-    testImplementation("com.agorapulse:gru-api-gateway")                                // <7>
-    testImplementation("com.agorapulse:gru-okhttp")                                     // <8>
+    testImplementation("com.agorapulse:gru-grails")                                     // <7>
+    testImplementation("com.agorapulse:gru-api-gateway")                                // <8>
+    testImplementation("com.agorapulse:gru-okhttp")                                     // <9>
 }
 ----
 <1> You can use BOM to manage the dependencies, otherwise include the version number with each dependency
@@ -39,8 +40,9 @@ dependencies {
 <4> Micronaut module for running HTTP request against the embedded server
 <5> Spring module to emulate HTTP interaction using `MockMvc`
 <6> Spring module for real HTTP calls in integration tests
-<7> AWS API Gateway module for HTTP proxy lambdas
-<8> Alternative OkHttp module for real HTTP calls in integration tests
+<7> Grails module to emulate HTTP interaction within Grails Unit tests
+<8> AWS API Gateway module for HTTP proxy lambdas
+<9> Alternative OkHttp module for real HTTP calls in integration tests
 
 == Setup
 
