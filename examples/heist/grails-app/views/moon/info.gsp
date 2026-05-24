@@ -21,7 +21,6 @@
 <html>
 <head>
   <title>${moon.name}'s Info</title>
-  <meta name="layout" content="main">
 </head>
 <body>
   <h1>${moon.name}</h1>

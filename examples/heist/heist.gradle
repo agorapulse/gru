@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2025 Agorapulse.
+ * Copyright 2018-2026 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,106 +17,49 @@
  */
 buildscript {
     repositories {
+        mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
-        maven { url "https://repo.grails.org/grails/core" }
     }
     dependencies {
-        classpath "org.grails:grails-gradle-plugin:$grailsGradlePluginVersion"
-        classpath "org.grails.plugins:hibernate5:8.0.0"
-        classpath "com.bertramlabs.plugins:asset-pipeline-gradle:3.4.7"
+        classpath "org.apache.grails:grails-gradle-plugins:$grailsGradlePluginVersion"
     }
 }
 
 version "0.1"
 group "heist"
 
-apply plugin:"eclipse"
-apply plugin:"idea"
-apply plugin:"war"
-apply plugin:"org.grails.grails-web"
-apply plugin:"org.grails.grails-gsp"
-apply plugin:"com.bertramlabs.asset-pipeline"
+apply plugin: "groovy"
+apply plugin: "eclipse"
+apply plugin: "idea"
+apply plugin: "war"
+apply plugin: "org.apache.grails.gradle.grails-web"
+apply plugin: "org.apache.grails.gradle.grails-gsp"
 
 repositories {
     mavenCentral()
-    maven { url "https://repo.grails.org/grails/core" }
-}
-
-configurations {
-    developmentOnly
-    runtimeClasspath {
-        extendsFrom developmentOnly
-    }
 }
 
 dependencies {
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
-    compileOnly "io.micronaut:micronaut-inject-groovy"
-    console "org.grails:grails-console"
-    implementation "org.springframework.boot:spring-boot-starter-logging"
-    implementation "org.springframework.boot:spring-boot-starter-validation"
-    implementation "org.springframework.boot:spring-boot-autoconfigure"
-    implementation "org.grails:grails-core"
-    implementation "org.springframework.boot:spring-boot-starter-actuator"
-    implementation "org.springframework.boot:spring-boot-starter-tomcat"
-    implementation "org.grails:grails-web-boot"
-    implementation "org.grails:grails-logging"
-    implementation "org.grails:grails-plugin-rest"
-    implementation "org.grails:grails-plugin-databinding"
-    implementation "org.grails:grails-plugin-i18n"
-    implementation "org.grails:grails-plugin-services"
-    implementation "org.grails:grails-plugin-url-mappings"
-    implementation "org.grails:grails-plugin-interceptors"
-    implementation "org.grails.plugins:async"
-    implementation "org.grails.plugins:scaffolding"
-    implementation "org.grails.plugins:hibernate5"
-    implementation "org.hibernate:hibernate-core:5.6.15.Final"
-    implementation "org.grails.plugins:events"
-    implementation "org.grails.plugins:gsp"
-    profile "org.grails.profiles:web"
-    runtimeOnly "org.glassfish.web:el-impl:2.2.1-b05"
+    implementation enforcedPlatform("org.apache.grails:grails-bom:$grailsVersion")
+
+    implementation "org.apache.grails:grails-dependencies-starter-web"
+    implementation "org.apache.grails:grails-data-hibernate5-spring-boot"
+
     runtimeOnly "com.h2database:h2"
-    runtimeOnly "org.apache.tomcat:tomcat-jdbc"
-    runtimeOnly "javax.xml.bind:jaxb-api:2.3.1"
-    runtimeOnly "com.bertramlabs.plugins:asset-pipeline-grails:3.4.7"
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation "org.grails:grails-gorm-testing-support"
-    testImplementation "org.mockito:mockito-core"
-    testImplementation "org.grails:grails-web-testing-support"
-    testImplementation "org.grails.plugins:geb"
-    testImplementation "org.seleniumhq.selenium:selenium-remote-driver:4.0.0"
-    testImplementation "org.seleniumhq.selenium:selenium-api:4.0.0"
-    testImplementation "org.seleniumhq.selenium:selenium-support:4.0.0"
-    testRuntimeOnly "org.seleniumhq.selenium:selenium-chrome-driver:4.0.0"
-    testRuntimeOnly "org.seleniumhq.selenium:selenium-firefox-driver:4.0.0"
+
+    testImplementation "org.apache.grails:grails-dependencies-test"
+    testImplementation "org.apache.grails:grails-testing-support-datamapping"
+    testImplementation "org.jsoup:jsoup:$jsoupVersion"
+    testImplementation "org.xmlunit:xmlunit-core:$xmlUnitVersion"
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
     testImplementation project(':gru-grails')
 }
 
-bootRun {
-    ignoreExitValue true
-    jvmArgs(
-        '-Dspring.output.ansi.enabled=always',
-        '-noverify',
-        '-XX:TieredStopAtLevel=1',
-        '-Xmx1024m')
-    sourceResources sourceSets.main
-    String springProfilesActive = 'spring.profiles.active'
-    systemProperty springProfilesActive, System.getProperty(springProfilesActive)
+tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.forkOptions.jvmArgs.add('-Xmx1024m')
 }
 
-tasks.withType(GroovyCompile) {
-    configure(groovyOptions) {
-        forkOptions.jvmArgs = ['-Xmx1024m']
-    }
-}
-
-tasks.withType(Test) {
+tasks.withType(Test).configureEach {
     useJUnitPlatform()
-}
-
-
-assets {
-    minifyJs = true
-    minifyCss = true
 }

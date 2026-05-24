@@ -24,9 +24,9 @@ import io.kotest.core.spec.style.StringSpec
 class HttpTest : StringSpec({
 
     "minimal Gru test" {
-        val gru = create("https://despicableme.fandom.com")                             // <1>
+        val gru = create("https://example.com")                                         // <1>
         gru.verify {
-            get("/wiki/Felonius_Gru")                                                   // <2>
+            get("/")                                                                    // <2>
         }
     }
 

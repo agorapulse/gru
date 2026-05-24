@@ -31,9 +31,9 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.multipart.MultipartFile
 
-import javax.servlet.http.Cookie
-import javax.servlet.http.HttpServletRequest
-import javax.servlet.http.HttpServletResponse
+import jakarta.servlet.http.Cookie
+import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 
 
 @Controller
@@ -50,17 +50,17 @@ class MoonController {
         return 'redirect:/moons/earth/moon'
     }
 
-    @RequestMapping(value = '/params-echo', produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = '/params-echo', produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody Map paramsEcho(@RequestParam Map params) {
         return params
     }
 
-    @RequestMapping(value = '/headers-echo', produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = '/headers-echo', produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody Map headersEcho(@RequestHeader Map<String, String> headers) {
         return headers
     }
 
-    @RequestMapping(value = '/json-echo', produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value = '/json-echo', produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody Map jsonEcho(@RequestBody Map<String, Object> body) {
         return body
     }
@@ -71,7 +71,7 @@ class MoonController {
         return "greeting"
     }
 
-    @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @PostMapping(value = "/upload", produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     Map handleFileUpload(
         @RequestParam("theFile") MultipartFile file,

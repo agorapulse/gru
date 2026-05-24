@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2025 Agorapulse.
+ * Copyright 2018-2026 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,26 +15,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.agorapulse.gru.grails.minions.jsonview
+package com.agorapulse.gru.grails.minions.jsonview;
 
 /**
- * JsonViewGrailsPlugin class holder.
+ * Detects whether the JSON views plugin is on the classpath so the optional
+ * {@link JsonViewRendererMinion} can be activated.
  */
-@SuppressWarnings(['ClassForName', 'PublicMethodsBeforeNonPublicMethods'])
-class JsonViewSupport {
+public final class JsonViewSupport {
 
-    public static final Class JSON_VIEWS_PLUGIN_TYPE
+    public static final Class<?> JSON_VIEWS_PLUGIN_TYPE;
 
     static {
+        Class<?> type;
         try {
-            JSON_VIEWS_PLUGIN_TYPE = Class.forName('grails.plugin.json.view.JsonViewGrailsPlugin')
+            type = Class.forName("grails.plugin.json.view.JsonViewGrailsPlugin");
         } catch (ClassNotFoundException ignored) {
-            JSON_VIEWS_PLUGIN_TYPE = null
+            type = null;
         }
+        JSON_VIEWS_PLUGIN_TYPE = type;
     }
 
-    static boolean isEnabled() {
-        JSON_VIEWS_PLUGIN_TYPE != null
+    private JsonViewSupport() {
     }
 
+    public static boolean isEnabled() {
+        return JSON_VIEWS_PLUGIN_TYPE != null;
+    }
 }

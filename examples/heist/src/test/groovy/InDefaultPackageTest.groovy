@@ -25,12 +25,12 @@ class InDefaultPackageTest extends Specification {
 
     Gru gru = Gru.create(Http.create {
         readTimeout(10, TimeUnit.SECONDS)
-    }).prepare('https://despicableme.fandom.com')
+    }).prepare('https://example.com')
 
-    void 'despicable me'() {
+    void 'example get'() {
         expect:
             gru.test {
-                get "/wiki/Felonius_Gru"
+                get '/'
             }
     }
 

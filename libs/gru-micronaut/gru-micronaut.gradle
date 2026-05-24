@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2025 Agorapulse.
+ * Copyright 2018-2026 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,10 @@
  * limitations under the License.
  */
 plugins {
-    id("groovy")
+    id 'com.agorapulse.gradle.micronaut-library'
 }
 
 dependencies {
-    annotationProcessor platform('io.micronaut.platform:micronaut-platform:4.2.0')
     annotationProcessor 'io.micronaut.validation:micronaut-validation-processor'
     annotationProcessor 'io.micronaut.validation:micronaut-validation'
     annotationProcessor 'io.micronaut:micronaut-inject-java'
@@ -31,19 +30,10 @@ dependencies {
     compileOnly project(':gru-kotlin')
     compileOnly project(':gru-okhttp')
 
-    compileOnly platform('io.micronaut.platform:micronaut-platform:4.2.0')
     compileOnly 'io.micronaut.validation:micronaut-validation'
     compileOnly 'io.micronaut:micronaut-http-client'
     compileOnly 'io.micronaut:micronaut-http-server'
     compileOnly 'io.micronaut:micronaut-inject'
-}
 
-java {
-    toolchain {
-        languageVersion.set(JavaLanguageVersion.of(17))
-    }
-}
-
-tasks.withType(Test).configureEach {
-    useJUnitPlatform()
+    testImplementation "org.spockframework:spock-core:$spockVersion"
 }

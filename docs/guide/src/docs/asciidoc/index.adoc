@@ -966,65 +966,13 @@ requires several methods to be implemented to intercept the test flow.
 include::{root-dir}/libs/gru/src/main/java/com/agorapulse/gru/minions/Minion.java[tag=methods,indent=0]
 ----
 
-`Client` represents the current client such as `Http` or `Grails`.
+`Client` represents the current client such as `Http`.
 
 `Squad` is group of minions used in current test.
 
 `GruContext` is immutable object which holds any error been thrown during the execution phase and also the result of the execution.
 
-Grails implementation provides various example of extending the DSL. `ModelMinion` is responsible for checking the model
-returned from the controller.
-
-.ModelMinion.groovy
-[source,groovy]
-----
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/minions/ModelMinion.groovy[lines=18..-1]
-----
-<1> `AbstractMinion` guarantees type safety and allows to implements just some of the methods of the interface
-<2> `beforeRun` and `verify` methods are executed sorted by ascending order by the `index`, `afterRun` in descending order
-<3> Internal state of the minion, at most one instance of the minion exists per test
-<4> Type token to ensure type safety
-<5> Type-safe method to verify the result of the execution
-
-.Engaging Minion
-[source,groovy]
-----
-include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=modelEngage,indent=0]
-----
-
-Although it is possible to use use `engage` method to add new minion, it is more convenient to enhance the DSL with new
-method. As our minion is enhancing the request definition, we simply add new extension method to `RequestDefinitionBuilder` object:
-
-.Extension Class
-[source,groovy]
-----
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=header]
-
-    // ...
-
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=model]
-
-    // ...
-
-include::{root-dir}/libs/gru-grails/src/main/groovy/com/agorapulse/gru/grails/GrailsGruExtensions.groovy[tag=footer]
-----
-<1> New extension method `model` will be added to `ResponseDefinitionBuilder` class
-<2> `command` method will add new minion to the squad if not already present and it allows to do additional configuration such as storing the model's value, there is its counterpart `ask` if you want to get information from another minion from the squad
-
-You have to create extensions class descriptor in order to make the extension methods available in the code:
-
-.src/main/resources/META-INF/services/org.codehaus.groovy.runtime.ExtensionModule
-----
-include::{root-dir}/libs/gru-grails/src/main/resources/META-INF/services/org.codehaus.groovy.runtime.ExtensionModule[]
-----
-
-After that the new extension method can be used in any test
-
-.Using Method from Extension
-[source,groovy]
-----
-include::{root-dir}/examples/heist/src/test/groovy/heist/MoonControllerSpec.groovy[tag=model,indent=0]
-----
+Implement `AbstractMinion<C>` to get type safety and to implement only the methods you need. Engage the minion with `gru.engage(new YourMinion())` inside the test, or expose it through a Groovy `category`/extension class so callers can configure it with a single DSL method instead of a manual `engage` call.
 
 === Creating New Client
 
@@ -1032,6 +980,40 @@ Creating new client is bit more work but you can check `Http` client which is ra
 The core idea is to provide methods to update request and to check the response returned.
 
 == Release Notes
+
+=== 3.0.0
+
+==== Breaking Changes
+
+Baseline:
+
+* Minimum Java raised to Java 25; Gradle 9.5 required to build.
+* Groovy bumped from 3.x to 5.0.x. The published Maven coordinate also moved from `org.codehaus.groovy:groovy` to `org.apache.groovy:groovy`. Consumers on Groovy 3 will need to upgrade.
+* Spock test dependency bumped from `2.3-groovy-3.0` to `2.4-groovy-5.0`.
+* Kotlin baseline raised to 2.3.21 (required for the JVM-25 target).
+
+Micronaut module:
+
+* `gru-micronaut` is now compiled against Micronaut 5.x. Consumers must be on Micronaut 5 (`io.micronaut:micronaut-core:5.x`).
+
+Spring module:
+
+* `gru-spring` now compiles against Spring Framework 6.2.x and Servlet 6 (`jakarta.servlet`). The legacy `javax.servlet` dependency has been dropped. Consumers must be on Spring 6+ / Spring Boot 3+.
+* The deprecated `MediaType.APPLICATION_JSON_UTF8` is no longer used; Spring 6 no longer appends `;charset=UTF-8` to `application/json` responses. Tests asserting on the literal `application/json;charset=UTF-8` content type must be updated to `application/json`.
+* `MockMvcRequestBuilders.fileUpload(...)` was removed in Spring 6; `gru-spring` now uses `MockMvcRequestBuilders.multipart(...)` internally. Custom code building multipart requests directly should do the same.
+* `gru-spring-integration-testing` now publishes its auto-configuration via `META-INF/spring/org.springframework.boot.autoconfigure.AutoConfiguration.imports` (Spring Boot 3+). The legacy `META-INF/spring.factories` is kept for back-compatibility.
+
+Grails module:
+
+* `gru-grails` now targets Apache Grails 7.1.1 (coordinates: `org.apache.grails:grails-*`) instead of legacy Grails 6 (`org.grails:grails-*`). The Servlet API moved with it: `javax.servlet.http.Cookie` is replaced with `jakarta.servlet.http.Cookie`. Consumers must be on Apache Grails 7.x.
+* The module has been rewritten from Groovy to Java internally so the published jar contains no Groovy-version-specific bytecode and can safely sit on a Groovy 4 (Apache Grails 7) consumer classpath even though the rest of gru is built against Groovy 5. The user-facing DSL (`include`, `model`, `forward`, `executes` extension methods on the gru test builders) is unchanged.
+* Apache Grails 7's `UrlMappingsHolder.matchAll(uri, method)` no longer returns generic catch-all mappings (e.g. `/$controller/$action?/$id?`). `gru-grails` now falls back to `match(uri)` and filters the result by HTTP method, preserving the previous `"controller is not mocked"` and `"action does not exist"` assertion paths when a test `include`s a catch-all `UrlMappings` class.
+
+Testing helpers:
+
+* `fixt` bumped to `1.0.0.RC5+`; system properties now take precedence over environment variables when resolving the test resources folder (fixes the case where `Gradle's test.environment(...)` was silently overriding an in-test `System.setProperty` redirect).
+* `com.stehno.ersatz:ersatz:1.9.0` is no longer used. Consumers extending the gru-okhttp test base (or wiring an Ersatz mock server themselves) should switch to `io.github.cjstehno.ersatz:ersatz:4.x` and, for the Groovy DSL, also depend on `io.github.cjstehno.ersatz:ersatz-groovy:4.x`. The ersatz 4.x DSL renames HTTP-method blocks from lowercase (`get`, `post`) to uppercase (`GET`, `POST`).
+* Gradle 9's `jvm-test-suite` plugin no longer launches JUnit Platform without `org.junit.platform:junit-platform-launcher` on the test runtime classpath. Add it as `testRuntimeOnly` to any project that runs Spock or JUnit 5 tests.
 
 === 2.0.0
 

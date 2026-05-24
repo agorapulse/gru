@@ -18,15 +18,15 @@
 package com.agorapulse.gru.okhttp
 
 import com.agorapulse.gru.Gru
-import com.stehno.ersatz.ContentType
-import com.stehno.ersatz.ErsatzServer
+import io.github.cjstehno.ersatz.GroovyErsatzServer
+import io.github.cjstehno.ersatz.cfg.ContentType
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
 class HttpRedirectSpec extends Specification {
 
-    @AutoCleanup @Shared ErsatzServer server = new ErsatzServer({
+    @AutoCleanup @Shared GroovyErsatzServer server = new GroovyErsatzServer({
         autoStart(true)
     })
 
@@ -34,15 +34,14 @@ class HttpRedirectSpec extends Specification {
 
     void setup() {
         server.expectations {
-            get('/test') {
+            GET('/test') {
                 responds()
                     .cookie('Test-Cookie', 'true')
                     .header('Location', '/test/1')
                     .code(303)
                     .body('')
-
             }
-            get('/test/1') {
+            GET('/test/1') {
                 responds()
                     .code(200)
                     .body('{"message":"OK"}', ContentType.APPLICATION_JSON)

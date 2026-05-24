@@ -26,7 +26,7 @@ import com.agorapulse.gru.jsonunit.MatchesPattern
 import com.agorapulse.gru.minions.Command
 import com.agorapulse.gru.minions.HttpMinion
 import grails.testing.web.controllers.ControllerUnitTest
-import groovy.transform.NotYetImplemented
+import spock.lang.PendingFeature
 import org.springframework.http.HttpStatus
 import org.springframework.web.servlet.ModelAndView
 import spock.lang.Specification
@@ -156,7 +156,7 @@ class MoonControllerSpec extends Specification implements ControllerUnitTest<Moo
             }
     }
 
-    @NotYetImplemented
+    @PendingFeature
     void 'good interceptor with exception'() {
         expect:
             gru.test {

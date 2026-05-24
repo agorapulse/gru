@@ -22,12 +22,12 @@ import spock.lang.Specification
 
 class HttpSpec extends Specification{
 
-    Gru gru = Gru.create('https://despicableme.fandom.com')                             // <1>
+    Gru gru = Gru.create('https://example.com')                                         // <1>
 
-    void 'despicable me'() {
+    void 'example get'() {
         expect:
             gru.test {
-                get "/wiki/Felonius_Gru"                                                // <2>
+                get '/'                                                                 // <2>
             }
     }
 

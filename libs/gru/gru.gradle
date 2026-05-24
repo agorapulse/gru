@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2025 Agorapulse.
+ * Copyright 2018-2026 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
  */
 dependencies {
     api 'space.jasan:groovy-closure-support:0.6.3'
-    api 'com.agorapulse.testing:fixt:0.2.3'
+    api 'com.agorapulse.testing:fixt:1.0.0.RC5'
 
     api "net.javacrumbs.json-unit:json-unit-assertj:$jsonUnitVersion"
 
@@ -27,16 +27,20 @@ dependencies {
     implementation "com.fasterxml.jackson.core:jackson-databind:$jacksonVersion"
     implementation 'org.hamcrest:hamcrest:2.2'
 
-    compileOnly "org.codehaus.groovy:groovy:$groovyVersion"
+    compileOnly "org.apache.groovy:groovy:$groovyVersion"
     compileOnly 'org.jetbrains:annotations:13.0'
     compileOnly "org.spockframework:spock-core:$spockVersion"
 
     testImplementation "joda-time:joda-time:${jodaTimeVersion}"
     testImplementation 'org.assertj:assertj-core:3.11.0'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.1.0'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 
-    testImplementation "com.stehno.ersatz:ersatz:$ersatzVersion"
+    testImplementation "io.github.cjstehno.ersatz:ersatz:$ersatzVersion"
+    testImplementation "io.github.cjstehno.ersatz:ersatz-groovy:$ersatzVersion"
     testImplementation "io.undertow:undertow-core:$undertowVersion"
     testImplementation 'org.apache.logging.log4j:log4j-slf4j-impl:2.20.0'
     testImplementation 'javax.activation:activation:1.1.1'
+
+    testImplementation "org.spockframework:spock-core:$spockVersion"
 }

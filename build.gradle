@@ -1,7 +1,7 @@
 /*
  * SPDX-License-Identifier: Apache-2.0
  *
- * Copyright 2018-2025 Agorapulse.
+ * Copyright 2018-2026 Agorapulse.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,158 +16,34 @@
  * limitations under the License.
  */
 plugins {
-    id 'org.kordamp.gradle.groovy-project'
-    id 'org.kordamp.gradle.checkstyle'
-    id 'org.kordamp.gradle.codenarc'
-    id 'org.kordamp.gradle.coveralls'
+    id 'com.agorapulse.gradle.root-project'
 }
 
-if (!project.hasProperty('mavenCentralUsername'))       ext.mavenCentralUsername            = System.getenv('MAVEN_CENTRAL_USERNAME') ?: '**UNDEFINED**'
-if (!project.hasProperty('mavenCentralPassword'))       ext.mavenCentralPassword            = System.getenv('MAVEN_CENTRAL_PASSWORD') ?: '**UNDEFINED**'
-if (!project.hasProperty('signingInMemoryKeyId'))       ext.signingInMemoryKeyId            = System.getenv('SIGNING_KEY_ID') ?: '**UNDEFINED**'
-if (!project.hasProperty('signingInMemoryKeyPassword')) ext.signingInMemoryKeyPassword      = System.getenv('SIGNING_PASSWORD') ?: '**UNDEFINED**'
-if (!project.hasProperty('signingInMemoryKey'))         ext.signingInMemoryKey              = System.getenv('SIGNING_SECRET_KEY_PATH') ? rootProject.file(System.getenv('SIGNING_SECRET_KEY_PATH')).text : '**UNDEFINED**'
-
-config {
-    release = (rootProject.findProperty('release') ?: false).toBoolean()
-
-    info {
-        name = 'Gru'
-        vendor = 'Agorapulse'
-        description = 'HTTP Testing Framework'
-
-        links {
-            website = "https://github.com/${slug}"
-            issueTracker = "https://github.com/${slug}/issues"
-            scm = "https://github.com/${slug}.git"
-        }
-
-        people {
-            person {
-                id = 'musketyr'
-                name = 'Vladimir Orany'
-                roles = ['developer']
-            }
-        }
-
-        repositories {
-            repository {
-                name = 'localRelease'
-                url = "${project.rootProject.buildDir}/repos/local/release"
-            }
-            repository {
-                name = 'localSnapshot'
-                url = "${project.rootProject.buildDir}/repos/local/snapshot"
-            }
-        }
-    }
-
-    licensing {
-        licenses {
-            license {
-                id = 'Apache-2.0'
-            }
-        }
-    }
-
-    publishing {
-        enabled = false
-        signing {
-            enabled = false
-        }
-    }
-
-    artifacts {
-        source {
-            enabled = false
-        }
-    }
-
-    quality {
-        checkstyle {
-            toolVersion = '8.27'
-            maxErrors = 12
-        }
-
-        codenarc {
-            toolVersion = '1.5'
-            maxPriority2Violations = 19
-            maxPriority3Violations = 91
-        }
-    }
-
-    coverage {
-        coveralls {
-            enabled = true
-        }
-    }
-
-    docs {
-        javadoc {
-            enabled = false
-            autoLinks {
-                enabled = false
-            }
-            aggregate {
-                enabled = false
-            }
-        }
-        groovydoc {
-            enabled = false
-            aggregate {
-                enabled = false
-            }
-        }
-    }
-
-}
-
+if (!project.hasProperty('mavenCentralUsername'))       ext.mavenCentralUsername       = System.getenv('MAVEN_CENTRAL_USERNAME') ?: '**UNDEFINED**'
+if (!project.hasProperty('mavenCentralPassword'))       ext.mavenCentralPassword       = System.getenv('MAVEN_CENTRAL_PASSWORD') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingInMemoryKeyId'))       ext.signingInMemoryKeyId       = System.getenv('SIGNING_KEY_ID') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingInMemoryKeyPassword')) ext.signingInMemoryKeyPassword = System.getenv('SIGNING_PASSWORD') ?: '**UNDEFINED**'
+if (!project.hasProperty('signingInMemoryKey'))         ext.signingInMemoryKey         = System.getenv('SIGNING_SECRET_KEY_PATH') ? rootProject.file(System.getenv('SIGNING_SECRET_KEY_PATH')).text : '**UNDEFINED**'
 
 allprojects {
     repositories {
         mavenCentral()
-        maven { url 'https://repo1.maven.org/maven2/' }
-        maven { url "https://repo.grails.org/grails/core" }
+        maven { url 'https://repo.grails.org/grails/core' }
         maven { url 'https://repo.spring.io/release/' }
-    }
-
-    license {
-        exclude '**/*.json'
-        exclude '**/*.yml'
-        exclude '**/*.txt'
-        exclude '**/*.html'
-        exclude '**/*.dtd'
-    }
-}
-
-
-subprojects {
-    dependencies {
-        codenarc "org.codenarc:CodeNarc:${config.quality.codenarc.toolVersion}"
-        codenarc "org.codehaus.groovy:groovy-templates:$groovyVersion"
     }
 }
 
 gradleProjects {
     subprojects {
-        dirs(['libs', 'examples']) { Project subproject ->
-            java {
-                toolchain {
-                    languageVersion.set(JavaLanguageVersion.of(11))
+        dirs(['libs']) {
+            plugins.withId('com.agorapulse.gradle.micronaut-library') {
+                micronaut {
+                    importMicronautPlatform = true
+                    testRuntime 'spock'
+                    processing {
+                        incremental false
+                    }
                 }
-            }
-
-            repositories {
-                mavenCentral()
-            }
-
-            tasks.withType(JavaCompile) {
-                options.encoding = "UTF-8"
-                options.compilerArgs.add('-parameters')
-            }
-
-            tasks.withType(GroovyCompile) {
-                groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
             }
         }
 
@@ -177,28 +53,32 @@ gradleProjects {
                 signAllPublications()
 
                 pom {
-                    name = "Gru"
-                    description = 'HTTP Testing Framework'
-                    inceptionYear = "2018"
-                    url = "https://github.com/${slug}"
+                    name = project.name
+                    description = 'HTTP Interactions Test Framework'
+                    inceptionYear = '2018'
+                    url = "https://github.com/${rootProject.slug}"
                     licenses {
                         license {
-                            name = "The Apache License, Version 2.0"
-                            url = "https://www.apache.org/licenses/LICENSE-2.0.txt"
-                            distribution = "https://www.apache.org/licenses/LICENSE-2.0.txt"
+                            name = 'The Apache Software License, Version 2.0'
+                            url = 'https://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution = 'repo'
                         }
                     }
                     developers {
                         developer {
-                            id = "musketyr"
-                            name = "Vladimir Orany"
-                            url = "https://github.com/musketyr/"
+                            id = 'musketyr'
+                            name = 'Vladimir Orany'
+                            url = 'https://github.com/musketyr/'
                         }
                     }
                     scm {
-                        url = "https://github.com/${slug}.git"
-                        connection = "scm:git:git://github.com/${slug}.git"
-                        developerConnection = "scm:git:ssh://git@github.com/${slug}.git"
+                        url = "https://github.com/${rootProject.slug}"
+                        connection = "scm:git:https://github.com/${rootProject.slug}.git"
+                        developerConnection = "scm:git:git@github.com:${rootProject.slug}.git"
+                    }
+                    issueManagement {
+                        system = 'GitHub'
+                        url = "https://github.com/${rootProject.slug}/issues"
                     }
                 }
             }
@@ -209,68 +89,26 @@ gradleProjects {
             }
         }
 
-        dir('libs') {
-            processResources {
-                filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
-                    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: version])
+        dirs(['libs', 'kotlin-libs']) {
+            afterEvaluate {
+                if (plugins.hasPlugin('java')) {
+                    tasks.named('jar').configure {
+                        manifest.attributes provider: 'gradle'
+                    }
                 }
-            }
 
-            jar {
-                manifest.attributes provider: 'gradle'
-            }
+                tasks.withType(Test).configureEach {
+                    useJUnitPlatform()
+                }
 
-            dependencies {
-                testImplementation "org.spockframework:spock-core:$spockVersion"
-            }
+                rootProject.project(':gru-bom').dependencies.constraints.api project
 
-            tasks.withType(Test) {
-                useJUnitPlatform()
-            }
-
-            project(':gru-bom').dependencies.constraints.api it
-        }
-
-        dir ('examples') {
-            groovydoc.onlyIf { false }
-            config {
-                quality {
-                    codenarc {
-                        enabled = false
+                tasks.findByName('processResources')?.with {
+                    filesMatching('**/org.codehaus.groovy.runtime.ExtensionModule') {
+                        filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: project.version.toString()])
                     }
                 }
             }
-        }
-
-        dir('platforms') {
-            // fix for NullPointerException in Kordamp PublishingPlugin
-            publishing {
-                publications {
-                    main(MavenPublication) {
-                        pom {
-                            properties = [
-                                'gru.version': version,
-                            ]
-                        }
-                    }
-                }
-            }
-        }
-
-        dir('kotlin-libs') {
-            repositories {
-                mavenCentral()
-            }
-
-            jar {
-                manifest.attributes provider: 'gradle'
-            }
-
-            tasks.withType(Test) {
-                useJUnitPlatform()
-            }
-
-            project(':gru-bom').dependencies.constraints.api it
         }
     }
 }

@@ -1,7 +1,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 #
-# Copyright 2018-2021 Agorapulse.
+# Copyright 2018-2026 Agorapulse.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -29,25 +29,35 @@ jobs:
       GRADLE_OPTS: "-Xmx6g -Xms4g"
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Java 17
-        uses: actions/setup-java@v3
+      - uses: actions/setup-java@v4
         with:
           distribution: zulu
-          java-version: 17
-          cache: gradle
+          java-version: 25
       - name: Decode PGP
         id: write_file
         uses: timheuer/base64-to-file@v1
         with:
           fileName: 'secret.pgp'
           encodedString: ${{ secrets.SIGNING_SECRET_KEY_BASE64 }}
-      - uses: gradle/actions/setup-gradle@v4
+      - uses: gradle/actions/setup-gradle@v5
+      - name: Configure git identity for gitPublishCommit
+        run: |
+          git config --global user.name 'Agorapulse Bot'
+          git config --global user.email 'oss@agorapulse.com'
       - name: Release
         env:
           SIGNING_KEY_ID: ${{ secrets.SIGNING_KEY_ID }}
           SIGNING_PASSWORD: ${{ secrets.SIGNING_PASSWORD }}
           SIGNING_SECRET_KEY_PATH: ${{ steps.write_file.outputs.filePath }}
-        run: ./gradlew gitPublishPush publishAndReleaseToMavenCentral "-Pversion=${{ github.ref_name }}" -PmavenCentralUsername=${{ secrets.MAVEN_CENTRAL_USERNAME }} -PmavenCentralPassword=${{ secrets.MAVEN_CENTRAL_PASSWORD }} -Prelease=true "-Dorg.ajoberstar.grgit.auth.username=${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }}" --stacktrace
+          GIT_PUBLISH_USERNAME: agorapulse-bot
+          GIT_PUBLISH_PASSWORD: ${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }}
+        run: |
+          ./gradlew :guide:gitPublishPush publishAndReleaseToMavenCentral \
+            -Pversion=${{ github.ref_name }} \
+            -PmavenCentralUsername=${{ secrets.MAVEN_CENTRAL_USERNAME }} \
+            -PmavenCentralPassword=${{ secrets.MAVEN_CENTRAL_PASSWORD }} \
+            -Prelease=true \
+            --stacktrace
   ping:
     if: ${{ !github.event.release.prerelease }}
     name: Notify Upstream Repositories
@@ -63,7 +73,7 @@ jobs:
       - name: Dispatch to ${{ matrix.repository }}
         uses: peter-evans/repository-dispatch@v1
         with:
-          token: ${{ secrets.PERSONAL_TOKEN }}
+          token: ${{ secrets.AGORAPULSE_BOT_PERSONAL_TOKEN }}
           repository: ${{ matrix.repository }}
           event-type: ap-new-version-released-event
-          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [4], "version": "${{ github.ref_name }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'
+          client-payload: '{ "group": "com.agorapulse", "module": "gru", "micronautCompatibility": [5], "version": "${{ github.ref_name }}", "property" : "gru.version", "github" : ${{ toJson(github) }} }'

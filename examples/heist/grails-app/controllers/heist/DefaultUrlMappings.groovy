@@ -19,7 +19,7 @@ package heist
 
 class DefaultUrlMappings {
     static mappings = {
-        "/$controller/$action?/$id?(.$format)?" {
+        "/$controller/$action?/$id?" {
             constraints {
                 // apply constraints here
             }

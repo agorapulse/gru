@@ -64,7 +64,7 @@ public class GruSpringResponse implements Client.Response {
 
     @Override
     public List<Cookie> getCookies() {
-        List<javax.servlet.http.Cookie> cookies = response.getCookies() != null ? Arrays.asList(response.getCookies()) : Collections.emptyList();
+        List<jakarta.servlet.http.Cookie> cookies = response.getCookies() != null ? Arrays.asList(response.getCookies()) : Collections.emptyList();
 
         return cookies.stream().map(it -> {
             Cookie.Builder builder = new Cookie.Builder()

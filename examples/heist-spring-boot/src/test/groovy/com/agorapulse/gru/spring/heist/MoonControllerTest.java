@@ -46,17 +46,17 @@ class MoonControllerTest {
             .get("/moons/earth/moon", req -> req
                 .command(RequestBuilderMinion.class, m -> m                             // <1>
                     .addBuildStep(mock -> mock
-                        .accept(MediaType.APPLICATION_JSON_UTF8)                        // <2>
+                        .accept(MediaType.APPLICATION_JSON)                        // <2>
                         .locale(Locale.CANADA)
                     )
                 )
             )
             .expect(resp -> resp
-                .header("Content-Type", "application/json;charset=UTF-8")
+                .header("Content-Type", "application/json")
                 .json("moonResponse.json")
                 .command(ResultMatcherMinion.class, m -> m                              // <3>
                     .addMatcher(content().encoding("UTF-8"))                            // <4>
-                    .addMatcher(content().contentType(MediaType.APPLICATION_JSON_UTF8))
+                    .addMatcher(content().contentType(MediaType.APPLICATION_JSON))
                 )
             )
         );
